@@ -3,345 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraAI.watch — Cinéma IA</title>
+    <title>AuroraAI.watch</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #030305;
-            color: white;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #030305; color: white; overflow-x: hidden; }
+        
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .glow { position: fixed; width: 100vw; height: 100vw; border-radius: 50%; filter: blur(100px); opacity: 0.4; z-index: -1; animation: breathe 15s infinite; }
+        .glow-1 { background: radial-gradient(circle, #f97316 0%, transparent 70%); top: -30%; left: -30%; }
+        .glow-2 { background: radial-gradient(circle, #7c3aed 0%, transparent 70%); bottom: -30%; right: -30%; animation-delay: -5s; }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 0.5; } }
 
-        /* FONDS ANIMÉS */
-        #canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -2;
-        }
-        .glow {
-            position: fixed;
-            width: 100vw; height: 100vw;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.4;
-            z-index: -1;
-            pointer-events: none;
-            animation: breathe 15s infinite ease-in-out;
-        }
-        .glow-1 {
-            background: radial-gradient(circle, #f97316 0%, transparent 70%);
-            top: -30%; left: -30%;
-        }
-        .glow-2 {
-            background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
-            bottom: -30%; right: -30%;
-            animation-delay: -5s;
-        }
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.5; }
-        }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem; background: rgba(3,3,5,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #fff, #f97316); -webkit-background-clip: text; color: transparent; }
+        .menu-btn { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.2rem; cursor: pointer; }
 
-        /* HEADER */
-        header {            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            padding: 1rem;
-            background: rgba(3,3,5,0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 1.3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #f97316);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .menu-btn {
-            width: 44px; height: 44px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
+        .mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3,3,5,0.98); backdrop-filter: blur(30px); z-index: 200; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.5rem; font-weight: 700; }
+        .close-btn { position: absolute; top: 1rem; right: 1rem; width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.3rem; cursor: pointer; }
 
-        /* MENU MOBILE */
-        .mobile-menu {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(3,3,5,0.98);
-            backdrop-filter: blur(30px);
-            z-index: 200;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-        }
-        .mobile-menu.active {
-            display: flex;
-        }
-        .mobile-menu a {
-            color: white;            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .close-btn {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            width: 44px; height: 44px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 6rem 1rem 3rem; }
+        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
+        .hero h1 span { background: linear-gradient(135deg, #f97316, #fbbf24); -webkit-background-clip: text; color: transparent; }
+        .hero p { font-size: 1rem; color: #94a3b8; max-width: 500px; margin-bottom: 2rem; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; margin: 0.5rem; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, #f97316, #ff8c00); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
 
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 6rem 1rem 3rem;
-        }
-        .hero h1 {
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        .hero h1 span {
-            background: linear-gradient(135deg, #f97316, #fbbf24);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .hero p {
-            font-size: 1rem;
-            color: #94a3b8;
-            max-width: 500px;
-            margin-bottom: 2rem;
-        }
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            max-width: 300px;            margin: 0.5rem;
-            font-family: inherit;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #f97316, #ff8c00);
-            color: white;
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-        }
+        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem; max-width: 1400px; margin: 0 auto; }
+        .filter-btn { padding: 0.5rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; color: #94a3b8; white-space: nowrap; cursor: pointer; font-family: inherit; }
+        .filter-btn.active { background: #f97316; border-color: #f97316; color: white; }
 
-        /* FILTRES CATÉGORIES */
-        .filters {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding: 1rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50px;
-            color: #94a3b8;
-            white-space: nowrap;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .filter-btn.active {
-            background: #f97316;
-            border-color: #f97316;
-            color: white;
-        }
+        .content { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .video-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        .video-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; cursor: pointer; }
+        .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); }
+        .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: rgba(249,115,22,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .card-info { padding: 1rem; }
+        .card-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.8rem; }        .card-actions { display: flex; gap: 0.5rem; }
+        .action-btn { flex: 1; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+        .action-btn.tip { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #f97316; }
 
-        /* VIDÉOS */
-        .content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        .video-grid {            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        .video-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .thumbnail {
-            position: relative;
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, #1a1a2e, #0a0a0f);
-        }
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .play-icon {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px; height: 50px;
-            background: rgba(249,115,22,0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        .card-info {
-            padding: 1rem;
-        }
-        .card-title {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 0.8rem;
-        }
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;        }
-        .action-btn {
-            flex: 1;
-            padding: 0.5rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.85rem;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .action-btn.tip {
-            background: rgba(249,115,22,0.1);
-            border-color: rgba(249,115,22,0.3);
-            color: #f97316;
-        }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal.active { display: flex; }
+        .modal-content { background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; color: white; cursor: pointer; }
+        .modal video { width: 100%; border-radius: 12px; margin-bottom: 1rem; }
+        .modal-btn { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-weight: 600; cursor: pointer; margin-bottom: 0.5rem; font-family: inherit; }
+        .modal-btn.primary { background: linear-gradient(135deg, #f97316, #ff8c00); border: none; }
 
-        /* MODAL */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 300;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            background: rgba(20,20,30,0.95);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 1.5rem;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        .modal-close {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50%;            color: white;
-            cursor: pointer;
-        }
-        .modal video {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        }
-        .modal-btn {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 0.5rem;
-            font-family: inherit;
-        }
-        .modal-btn.primary {
-            background: linear-gradient(135deg, #f97316, #ff8c00);
-            border: none;
-        }
-
-        /* UPLOAD MODAL */
-        .upload-form input,
-        .upload-form select,
-        .upload-form textarea {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: white;
-            font-family: inherit;
-        }
-
-        @media (min-width: 768px) {
-            .video-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .video-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas><div class="glow glow-1"></div>
+<canvas id="canvas"></canvas>
+<div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
 
 <header>
@@ -371,9 +96,7 @@
     <button class="filter-btn active" onclick="filterVideos('all')">Tous</button>
     <button class="filter-btn" onclick="filterVideos('Sci-Fi')">Sci-Fi</button>
     <button class="filter-btn" onclick="filterVideos('Onirique')">Onirique</button>
-    <button class="filter-btn" onclick="filterVideos('Thriller')">Thriller</button>
-    <button class="filter-btn" onclick="filterVideos('Romance')">Romance</button>
-</div>
+    <button class="filter-btn" onclick="filterVideos('Thriller')">Thriller</button></div>
 
 <section class="content" id="content">
     <h2 class="section-title">🔥 Tendances</h2>
@@ -382,7 +105,6 @@
     </div>
 </section>
 
-<!-- MODAL VIDÉO -->
 <div class="modal" id="videoModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
@@ -390,80 +112,47 @@
         <h3 id="modalTitle"></h3>
         <p id="modalAuthor" style="color:#f97316; margin:0.5rem 0 1rem;"></p>
         <button class="modal-btn" onclick="downloadVideo()"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="modal-btn primary" onclick="alert('Tip envoyé !')"><i class="fas fa-heart"></i> Tip</button>        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>
+        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>
     </div>
 </div>
 
-<!-- MODAL UPLOAD -->
 <div class="modal" id="uploadModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('uploadModal')"><i class="fas fa-times"></i></button>
         <h2>Uploader une vidéo AI</h2>
-        <div class="upload-form">
-            <input type="text" id="uploadTitle" placeholder="Titre de la vidéo">
-            <input type="text" id="uploadAuthor" placeholder="Ton pseudo">
-            <select id="uploadCategory">
-                <option value="Sci-Fi">Sci-Fi</option>
-                <option value="Onirique">Onirique</option>
-                <option value="Thriller">Thriller</option>
-                <option value="Romance">Romance</option>
-            </select>
-            <textarea id="uploadDesc" placeholder="Description" rows="3"></textarea>
-            <input type="file" id="uploadFile" accept="video/*">
-            <button class="modal-btn primary" onclick="uploadVideo()"><i class="fas fa-upload"></i> Soumettre</button>
-        </div>
+        <input type="text" id="uploadTitle" placeholder="Titre" style="width:100%; padding:0.8rem; margin:1rem 0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
+        <input type="text" id="uploadAuthor" placeholder="Auteur" style="width:100%; padding:0.8rem; margin:1rem 0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
+        <button class="modal-btn primary" onclick="alert('Fonctionnalité complète bientôt disponible !')"><i class="fas fa-upload"></i> Soumettre</button>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // SUPABASE
-    const SUPABASE_URL = 'https://kncqgspkalwepdwwpud.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // DONNÉES EN DUR (en attendant que Supabase fonctionne)
+    const videos = [
+        { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400" },
+        { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400" },
+        { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" }
+    ];
 
     let currentVideo = null;
-    let allVideos = [];
 
-    // CHARGER VIDÉOS
-    async function loadVideos() {
+    // AFFICHER LES VIDÉOS
+    function displayVideos(videosToDisplay) {
         const grid = document.getElementById('videoGrid');
-        grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1;">Chargement...</p>';
-
-        const { data, error } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
-
-        if (error) {
-            console.error('Erreur:', error);
-            grid.innerHTML = '<p style="text-align:center; color:#f97316; grid-column:1/-1;">Erreur de chargement</p>';
-            return;
-        }
-
-        allVideos = data || [];
-        displayVideos(allVideos);    }
-
-    function displayVideos(videos) {
-        const grid = document.getElementById('videoGrid');
-        
-        if (videos.length === 0) {
-            grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1;">Aucune vidéo</p>';
-            return;
-        }
-
-        grid.innerHTML = videos.map(v => `
+        grid.innerHTML = videosToDisplay.map(v => `
             <div class="video-card" onclick="openVideo(${v.id})">
                 <div class="thumbnail">
                     <img src="${v.thumbnail_url}" alt="${v.title}" onerror="this.style.display='none'">
                     <div class="play-icon"><i class="fas fa-play"></i></div>
                 </div>
-                <div class="card-info">
-                    <div class="card-title">${v.title}</div>
+                <div class="card-info">                    <div class="card-title">${v.title}</div>
                     <div class="card-meta">
                         <span><i class="fas fa-user"></i> ${v.author}</span>
                         <span><i class="fas fa-eye"></i> ${v.views}</span>
                     </div>
                     <div class="card-actions">
                         <button class="action-btn" onclick="event.stopPropagation(); downloadVideoById('${v.video_url}', '${v.title}')"><i class="fas fa-download"></i> Télécharger</button>
-                        <button class="action-btn tip" onclick="event.stopPropagation(); window.open('${v.tip_link}', '_blank')"><i class="fas fa-heart"></i> Tip</button>
+                        <button class="action-btn tip" onclick="event.stopPropagation(); alert('Tip envoyé à ${v.author} !')"><i class="fas fa-heart"></i> Tip</button>
                     </div>
                 </div>
             </div>
@@ -473,22 +162,18 @@
     function filterVideos(category) {
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-
         if (category === 'all') {
-            displayVideos(allVideos);
+            displayVideos(videos);
         } else {
-            const filtered = allVideos.filter(v => v.category === category);
-            displayVideos(filtered);
+            displayVideos(videos.filter(v => v.category === category));
         }
     }
 
     function openVideo(id) {
-        const video = allVideos.find(v => v.id === id);
-        if (!video) return;
-
-        currentVideo = video;
-        document.getElementById('modalVideo').src = video.video_url;
-        document.getElementById('modalTitle').textContent = video.title;        document.getElementById('modalAuthor').textContent = `Par ${video.author}`;
+        currentVideo = videos.find(v => v.id === id);
+        document.getElementById('modalVideo').src = currentVideo.video_url;
+        document.getElementById('modalTitle').textContent = currentVideo.title;
+        document.getElementById('modalAuthor').textContent = `Par ${currentVideo.author}`;
         document.getElementById('videoModal').classList.add('active');
     }
 
@@ -496,48 +181,30 @@
         document.getElementById(modalId).classList.remove('active');
         if (modalId === 'videoModal') {
             document.getElementById('modalVideo').pause();
-            document.getElementById('modalVideo').src = '';
         }
     }
 
     function downloadVideo() {
         if (!currentVideo) return;
-        downloadVideoById(currentVideo.video_url, currentVideo.title);
+        const link = document.createElement('a');
+        link.href = currentVideo.video_url;
+        link.download = currentVideo.title + '.mp4';
+        link.click();
     }
 
     function downloadVideoById(url, title) {
         const link = document.createElement('a');
-        link.href = url;
-        link.download = title.replace(/\s+/g, '_') + '.mp4';
+        link.href = url;        link.download = title + '.mp4';
         link.click();
     }
 
     function shareVideo() {
-        if (navigator.share && currentVideo) {
-            navigator.share({ title: currentVideo.title, url: window.location.href });
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Lien copié !');
-        }
+        navigator.clipboard.writeText(window.location.href);
+        alert('Lien copié !');
     }
 
     function openUploadModal() {
         document.getElementById('uploadModal').classList.add('active');
-    }
-
-    function uploadVideo() {
-        const title = document.getElementById('uploadTitle').value;
-        const author = document.getElementById('uploadAuthor').value;
-        const category = document.getElementById('uploadCategory').value;
-        const desc = document.getElementById('uploadDesc').value;
-        const file = document.getElementById('uploadFile').files[0];
-
-        if (!title || !author || !file) {
-            alert('Remplis tous les champs !');
-            return;
-        }
-
-        alert('Vidéo soumise pour modération ! (Fonctionnalité complète à venir)');        closeModal('uploadModal');
     }
 
     function toggleMenu() {
@@ -571,23 +238,20 @@
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         particles.forEach((p, i) => {
             p.x += p.vx;
             p.y += p.vy;
-            
             if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
             if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            
-            ctx.beginPath();
+                        ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fillStyle = '#f97316';
             ctx.fill();
             
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = p.x - particles[j].x;
-                const dy = p.y - particles[j].y;                const dist = Math.sqrt(dx * dx + dy * dy);
-                
+                const dy = p.y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < 120) {
                     ctx.beginPath();
                     ctx.moveTo(p.x, p.y);
@@ -597,7 +261,6 @@
                 }
             }
         });
-        
         requestAnimationFrame(animate);
     }
 
@@ -606,7 +269,9 @@
     animate();
 
     // INITIALISATION
-    window.addEventListener('DOMContentLoaded', loadVideos);
+    window.addEventListener('DOMContentLoaded', () => {
+        displayVideos(videos);
+    });
 </script>
 
 </body>
