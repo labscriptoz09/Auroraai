@@ -17,7 +17,6 @@
             min-height: 100vh;
         }
         
-        /* CANVAS - Fond animé */
         #canvas { 
             position: fixed; 
             top: 0; 
@@ -27,7 +26,6 @@
             z-index: 0;
         }
         
-        /* Lueurs */
         .glow { 
             position: fixed; 
             width: 100vw; 
@@ -47,13 +45,12 @@
             background: radial-gradient(circle, #7c3aed 0%, transparent 70%); 
             bottom: -30%; 
             right: -30%; 
-            animation-delay: -5s;         }
-        @keyframes breathe { 
-            0%, 100% { transform: scale(1); opacity: 0.3; } 
+            animation-delay: -5s; 
+        }
+        @keyframes breathe {             0%, 100% { transform: scale(1); opacity: 0.3; } 
             50% { transform: scale(1.2); opacity: 0.5; } 
         }
 
-        /* Header */
         header { 
             position: fixed; 
             top: 0; 
@@ -88,15 +85,35 @@
             color: white; 
             font-size: 1.2rem; 
             cursor: pointer; 
+            position: relative;
+        }
+        
+        /* NOUVEAU : Badge compteur favoris */
+        .fav-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #f97316;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .fav-badge.visible {
+            display: flex;
         }
 
-        /* Menu mobile */
         .mobile-menu { 
             position: fixed; 
             top: 0; 
             left: 0; 
             right: 0; 
-            bottom: 0;             background: rgba(3,3,5,0.98); 
+            bottom: 0; 
+            background: rgba(3,3,5,0.98); 
             backdrop-filter: blur(30px); 
             z-index: 200; 
             display: none; 
@@ -128,9 +145,7 @@
             cursor: pointer; 
         }
 
-        /* Hero */
-        .hero { 
-            min-height: 100vh; 
+        .hero {             min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
@@ -145,7 +160,8 @@
             font-weight: 800; 
             margin-bottom: 1rem; 
         }
-        .hero h1 span {             color: #f97316; 
+        .hero h1 span { 
+            color: #f97316; 
         }
         .hero p { 
             font-size: 1rem; 
@@ -174,13 +190,11 @@
             color: white; 
         }
 
-        /* NOUVEAU : Barre de recherche */
         .search-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 1rem 1rem;
-            position: relative;
-            z-index: 1;
+            position: relative;            z-index: 1;
         }
         .search-box {
             position: relative;
@@ -194,7 +208,8 @@
             border-radius: 50px;
             color: white;
             font-size: 1rem;
-            font-family: inherit;        }
+            font-family: inherit;
+        }
         .search-box input:focus {
             outline: none;
             border-color: #f97316;
@@ -207,7 +222,6 @@
             color: #94a3b8;
         }
 
-        /* NOUVEAU : Filtres */
         .filters {
             display: flex;
             gap: 0.5rem;
@@ -229,8 +243,7 @@
             border-radius: 50px;
             color: #94a3b8;
             white-space: nowrap;
-            cursor: pointer;
-            font-family: inherit;
+            cursor: pointer;            font-family: inherit;
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
@@ -243,7 +256,7 @@
             border-color: #f97316;
         }
 
-        /* Contenu */        .content { 
+        .content { 
             max-width: 1400px; 
             margin: 0 auto; 
             padding: 1rem; 
@@ -276,10 +289,10 @@
             overflow: hidden; 
             cursor: pointer;
             transition: transform 0.2s ease;
+            position: relative;
         }
         .video-card:hover {
-            transform: translateY(-2px);
-        }
+            transform: translateY(-2px);        }
         .thumbnail { 
             position: relative; 
             aspect-ratio: 16/9; 
@@ -292,7 +305,8 @@
         }
         .play-icon { 
             position: absolute; 
-            top: 50%;             left: 50%; 
+            top: 50%; 
+            left: 50%; 
             transform: translate(-50%, -50%); 
             width: 50px; 
             height: 50px; 
@@ -303,6 +317,35 @@
             justify-content: center; 
             color: white; 
         }
+        
+        /* NOUVEAU : Bouton favori */
+        .fav-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 36px;
+            height: 36px;
+            background: rgba(3,3,5,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+        .fav-btn:hover {
+            transform: scale(1.1);
+        }
+        .fav-btn.active {            color: #f97316;
+            background: rgba(249,115,22,0.2);
+            border-color: #f97316;
+        }
+
         .card-info { 
             padding: 1rem; 
         }
@@ -338,17 +381,16 @@
             color: #f97316; 
         }
 
-        /* NOUVEAU : Modal Vidéo */
         .modal {
             position: fixed;
-            inset: 0;            background: rgba(0,0,0,0.95);
+            inset: 0;
+            background: rgba(0,0,0,0.95);
             z-index: 300;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-        }
-        .modal.active {
+        }        .modal.active {
             display: flex;
         }
         .modal-content {
@@ -390,14 +432,14 @@
         }
         .modal-author {
             color: #f97316;
-            margin-bottom: 1rem;        }
+            margin-bottom: 1rem;
+        }
         .modal-actions {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             margin-top: 1rem;
-        }
-        .modal-btn {
+        }        .modal-btn {
             width: 100%;
             padding: 0.8rem;
             background: rgba(255,255,255,0.05);
@@ -417,36 +459,59 @@
             border: none;
         }
 
+        /* NOUVEAU : Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(20,20,30,0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-left: 3px solid #f97316;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 500;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
         @media (min-width: 768px) { 
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
         }
         @media (min-width: 1024px) { 
             .video-grid { grid-template-columns: repeat(3, 1fr); } 
         }
-    </style>
-</head>
+    </style></head>
 <body>
-<!-- FONDS ANIMÉS -->
 <canvas id="canvas"></canvas>
 <div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
 
-<!-- HEADER -->
 <header>
     <div class="header-container">
         <div class="logo"><i class="fas fa-bolt" style="color: #f97316;"></i> AURORAAI</div>
-        <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+            <span class="fav-badge" id="favBadge">0</span>
+        </button>
     </div>
 </header>
 
-<!-- MENU MOBILE --><div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu">
     <button class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
     <a href="#hero" onclick="toggleMenu()">Accueil</a>
-    <a href="#content" onclick="toggleMenu()">Explorer</a>
+    <a href="#content" onclick="toggleMenu(); showAllVideos()">Explorer</a>
+    <a href="#content" onclick="toggleMenu(); showFavorites()">❤️ Mes Favoris</a>
     <a href="#" onclick="toggleMenu()">Upload Vidéo</a>
 </div>
 
-<!-- HERO -->
 <section class="hero" id="hero">
     <h1>L'IA <span>réinvente</span> le cinéma</h1>
     <p>Films et séries créés par IA. Regardez, téléchargez gratuitement.</p>
@@ -456,7 +521,6 @@
     </div>
 </section>
 
-<!-- NOUVEAU : Barre de recherche -->
 <div class="search-container">
     <div class="search-box">
         <i class="fas fa-search"></i>
@@ -464,7 +528,6 @@
     </div>
 </div>
 
-<!-- NOUVEAU : Filtres -->
 <div class="filters">
     <button class="filter-btn active" onclick="filterVideos('all', this)">Tous</button>
     <button class="filter-btn" onclick="filterVideos('Sci-Fi', this)">Sci-Fi</button>
@@ -473,22 +536,18 @@
     <button class="filter-btn" onclick="filterVideos('Romance', this)">Romance</button>
 </div>
 
-<!-- CONTENU -->
 <section class="content" id="content">
-    <div class="section-header">
-        <h2 class="section-title">🔥 Tendances</h2>
+    <div class="section-header">        <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
         <span class="video-count" id="videoCount">4 vidéos</span>
     </div>
     <div class="video-grid" id="videoGrid"></div>
 </section>
 
-<!-- NOUVEAU : Modal Vidéo -->
 <div class="modal" id="videoModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-        <video id="modalVideo" controls>
-            <source src="" type="video/mp4">
-        </video>        <h3 class="modal-title" id="modalTitle"></h3>
+        <video id="modalVideo" controls></video>
+        <h3 class="modal-title" id="modalTitle"></h3>
         <p class="modal-author" id="modalAuthor"></p>
         <div class="modal-actions">
             <button class="modal-btn primary" onclick="downloadVideo()">
@@ -501,54 +560,24 @@
     </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// ============================================
-// 1. DONNÉES VIDÉOS
-// ============================================
+// DONNÉES VIDÉOS
 const videos = [
-    { 
-        id: 1, 
-        title: "Nexus Prime", 
-        author: "Cyber Alice", 
-        views: "124k", 
-        category: "Sci-Fi",
-        img: "https://picsum.photos/seed/nexus/400/225",
-        video_url: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-    { 
-        id: 2, 
-        title: "Rêves de Silicium", 
-        author: "Dream Weaver", 
-        views: "89k", 
-        category: "Onirique",
-        img: "https://picsum.photos/seed/reves/400/225",
-        video_url: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-    { 
-        id: 3, 
-        title: "Data Storm", 
-        author: "Chaos Core", 
-        views: "210k", 
-        category: "Thriller",
-        img: "https://picsum.photos/seed/data/400/225",
-        video_url: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-    { 
-        id: 4, 
-        title: "Neon Memories", 
-        author: "Future Citizen", 
-        views: "56k",         category: "Romance",
-        img: "https://picsum.photos/seed/neon/400/225",
-        video_url: "https://www.w3schools.com/html/mov_bbb.mp4"
-    }
+    { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", img: "https://picsum.photos/seed/reves/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", img: "https://picsum.photos/seed/data/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { id: 4, title: "Neon Memories", author: "Future Citizen", views: "56k", category: "Romance", img: "https://picsum.photos/seed/neon/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" }
 ];
 
 let currentVideo = null;
 let currentFilter = 'all';
 
-// ============================================
-// 2. AFFICHER LES VIDÉOS
-// ============================================
+// NOUVEAU : Favoris (stockés dans le navigateur)
+let favorites = JSON.parse(localStorage.getItem('aurora_favorites') || '[]');
+
+// AFFICHER LES VIDÉOS
 function displayVideos(videosToDisplay) {
     const grid = document.getElementById('videoGrid');
     const count = document.getElementById('videoCount');
@@ -557,15 +586,19 @@ function displayVideos(videosToDisplay) {
         grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
         count.textContent = '0 vidéo';
         return;
-    }
-    
+    }    
     count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
     
-    grid.innerHTML = videosToDisplay.map(v => `
+    grid.innerHTML = videosToDisplay.map(v => {
+        const isFav = favorites.includes(v.id);
+        return `
         <div class="video-card" onclick="openVideo(${v.id})">
             <div class="thumbnail">
                 <img src="${v.img}" alt="${v.title}">
                 <div class="play-icon"><i class="fas fa-play"></i></div>
+                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${v.id})">
+                    <i class="fas fa-heart"></i>
+                </button>
             </div>
             <div class="card-info">
                 <div class="card-title">${v.title}</div>
@@ -577,84 +610,111 @@ function displayVideos(videosToDisplay) {
                     <button class="action-btn" onclick="event.stopPropagation(); downloadById('${v.video_url}', '${v.title}')">
                         <i class="fas fa-download"></i> Télécharger
                     </button>
-                    <button class="action-btn tip" onclick="event.stopPropagation(); alert('Tip envoyé à ${v.author} !')">
+                    <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
                         <i class="fas fa-heart"></i> Tip
                     </button>
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-// ============================================// 3. NOUVEAU : FILTRER PAR CATÉGORIE
-// ============================================
+// NOUVEAU : Gérer les favoris
+function toggleFavorite(videoId) {
+    const index = favorites.indexOf(videoId);
+    if (index > -1) {
+        favorites.splice(index, 1);
+        showToast('Retiré des favoris');
+    } else {
+        favorites.push(videoId);
+        showToast('❤️ Ajouté aux favoris');
+    }
+    localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
+    updateFavBadge();
+    
+    // Rafraîchir l'affichage selon le filtre actuel
+    if (currentFilter === 'all') {
+        displayVideos(videos);    } else {
+        const filtered = videos.filter(v => v.category === currentFilter);
+        displayVideos(filtered);
+    }
+}
+
+function updateFavBadge() {
+    const badge = document.getElementById('favBadge');
+    if (favorites.length > 0) {
+        badge.textContent = favorites.length;
+        badge.classList.add('visible');
+    } else {
+        badge.classList.remove('visible');
+    }
+}
+
+function showFavorites() {
+    const favVideos = videos.filter(v => favorites.includes(v.id));
+    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';
+    document.getElementById('content').scrollIntoView({behavior:'smooth'});
+    displayVideos(favVideos);
+}
+
+function showAllVideos() {
+    currentFilter = 'all';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn').classList.add('active');
+    document.getElementById('sectionTitle').textContent = '🔥 Tendances';
+    displayVideos(videos);
+}
+
+// FILTRER PAR CATÉGORIE
 function filterVideos(category, btn) {
     currentFilter = category;
-    
-    // Mettre à jour les boutons actifs
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     
-    // Filtrer les vidéos
     let filtered = videos;
     if (category !== 'all') {
         filtered = videos.filter(v => v.category === category);
     }
     
-    // Mettre à jour le titre
     const title = category === 'all' ? '🔥 Tendances' : '🎬 ' + category;
-    document.querySelector('.section-title').textContent = title;
-    
-    // Afficher
+    document.getElementById('sectionTitle').textContent = title;
     displayVideos(filtered);
 }
 
-// ============================================
-// 4. NOUVEAU : RECHERCHE
-// ============================================
+// RECHERCHE
 document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    
+    const searchTerm = e.target.value.toLowerCase();    
     if (searchTerm === '') {
-        // Si vide, afficher selon le filtre actuel
         filterVideos(currentFilter, document.querySelector('.filter-btn.active'));
         return;
     }
     
-    // Filtrer par titre ou auteur
     const filtered = videos.filter(v => 
         v.title.toLowerCase().includes(searchTerm) || 
         v.author.toLowerCase().includes(searchTerm)
     );
     
-    document.querySelector('.section-title').textContent = '🔍 Résultats';
+    document.getElementById('sectionTitle').textContent = '🔍 Résultats';
     displayVideos(filtered);
 });
 
-// ============================================
-// 5. NOUVEAU : MODAL VIDÉO
-// ============================================
+// MODAL VIDÉO
 function openVideo(id) {
-    currentVideo = videos.find(v => v.id === id);    if (!currentVideo) return;
+    currentVideo = videos.find(v => v.id === id);
+    if (!currentVideo) return;
     
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    
-    video.src = currentVideo.video_url;
+    document.getElementById('modalVideo').src = currentVideo.video_url;
     document.getElementById('modalTitle').textContent = currentVideo.title;
     document.getElementById('modalAuthor').textContent = `Par ${currentVideo.author} • ${currentVideo.views} vues`;
-    
-    modal.classList.add('active');
+    document.getElementById('videoModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    
-    modal.classList.remove('active');
-    video.pause();
-    video.src = '';
+    document.getElementById('videoModal').classList.remove('active');
+    document.getElementById('modalVideo').pause();
+    document.getElementById('modalVideo').src = '';
     document.body.style.overflow = '';
 }
 
@@ -673,34 +733,34 @@ function downloadById(url, title) {
 
 function shareVideo() {
     if (navigator.share) {
-        navigator.share({
-            title: currentVideo.title,
+        navigator.share({            title: currentVideo.title,
             text: `Regarde "${currentVideo.title}" sur AuroraAI.watch`,
             url: window.location.href
         });
     } else {
         navigator.clipboard.writeText(window.location.href);
-        alert('Lien copié dans le presse-papier !');
+        showToast('Lien copié ! 📋');
     }
 }
 
-// Fermer le modal en cliquant à l'extérieurdocument.getElementById('videoModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
+document.getElementById('videoModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
 });
 
-// ============================================
-// 6. MENU HAMBURGER
-// ============================================
+// MENU HAMBURGER
 function toggleMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('active');
+    document.getElementById('mobileMenu').classList.toggle('active');
 }
 
-// ============================================
-// 7. ANIMATION CANVAS (FOND ANIMÉ)
-// ============================================
+// NOUVEAU : Toast notification
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ANIMATION CANVAS
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -712,7 +772,6 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Créer les particules
 const particles = [];
 const particleCount = window.innerWidth < 768 ? 30 : 50;
 
@@ -723,27 +782,23 @@ for (let i = 0; i < particleCount; i++) {
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
         radius: Math.random() * 2 + 1
-    });
-}
+    });}
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     particles.forEach((p, i) => {
-        // Déplacement
         p.x += p.vx;
         p.y += p.vy;
-                // Rebond sur les bords
+        
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         
-        // Dessiner la particule
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#f97316';
         ctx.fill();
         
-        // Dessiner les connexions
         for (let j = i + 1; j < particles.length; j++) {
             const dx = p.x - particles[j].x;
             const dy = p.y - particles[j].y;
@@ -763,17 +818,13 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// ============================================
-// 8. INITIALISATION
-// ============================================
+// INITIALISATION
 displayVideos(videos);
+updateFavBadge();
 animate();
 
 console.log('✅ Site AuroraAI chargé');
-console.log('✅ Vidéos :', videos.length);
-console.log('✅ Recherche active');
-console.log('✅ Filtres actifs');
-console.log('✅ Lecteur vidéo prêt');
+console.log('✅ Favoris :', favorites.length);
 </script>
 
 </body>
