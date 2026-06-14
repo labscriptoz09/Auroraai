@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraAI.watch</title>
+    <title>AuroraAI.watch — Cinéma IA Next-Gen</title>
+    
+    <!-- SEO & PARTAGE SOCIAL -->
+    <meta name="description" content="Découvrez, téléchargez et soutenez les meilleurs films et séries générés par Intelligence Artificielle.">
+    <meta property="og:title" content="AuroraAI.watch — Cinéma IA">
+    <meta property="og:description" content="La plateforme des créateurs de films IA. Téléchargement gratuit et tips directs.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,15 +28,26 @@
         @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 0.5; } }
 
         header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem; background: rgba(3,3,5,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #fff, #f97316); -webkit-background-clip: text; color: transparent; }
-        .menu-btn { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.2rem; cursor: pointer; }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #fff, #f97316); -webkit-background-clip: text; color: transparent; flex-shrink: 0; }
+        
+        .search-box {
+            flex: 1; max-width: 400px; position: relative; display: none;
+        }
+        .search-box input {
+            width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px; color: white; font-family: inherit; font-size: 0.9rem;
+        }
+        .search-box input:focus { outline: none; border-color: #f97316; }
+        .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        
+        .menu-btn { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; }
 
         .mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3,3,5,0.98); backdrop-filter: blur(30px); z-index: 200; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
         .mobile-menu.active { display: flex; }
         .mobile-menu a { color: white; text-decoration: none; font-size: 1.5rem; font-weight: 700; }
         .close-btn { position: absolute; top: 1rem; right: 1rem; width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.3rem; cursor: pointer; }
-
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 6rem 1rem 3rem; }
         .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
         .hero h1 span { background: linear-gradient(135deg, #f97316, #fbbf24); -webkit-background-clip: text; color: transparent; }
@@ -34,20 +56,23 @@
         .btn-primary { background: linear-gradient(135deg, #f97316, #ff8c00); color: white; }
         .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
 
-        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem; max-width: 1400px; margin: 0 auto; }
+        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem; max-width: 1400px; margin: 0 auto; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
         .filter-btn { padding: 0.5rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; color: #94a3b8; white-space: nowrap; cursor: pointer; font-family: inherit; }
         .filter-btn.active { background: #f97316; border-color: #f97316; color: white; }
 
         .content { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
         .video-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        .video-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; cursor: pointer; }
+        .video-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+        .video-card:active { transform: scale(0.98); }
         .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); }
         .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
         .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: rgba(249,115,22,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
         .card-info { padding: 1rem; }
         .card-title { font-weight: 700; margin-bottom: 0.5rem; }
-        .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.8rem; }        .card-actions { display: flex; gap: 0.5rem; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.8rem; }
+        .card-actions { display: flex; gap: 0.5rem; }
         .action-btn { flex: 1; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
         .action-btn.tip { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #f97316; }
 
@@ -59,7 +84,10 @@
         .modal-btn { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-weight: 600; cursor: pointer; margin-bottom: 0.5rem; font-family: inherit; }
         .modal-btn.primary { background: linear-gradient(135deg, #f97316, #ff8c00); border: none; }
 
-        @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { 
+            .video-grid { grid-template-columns: repeat(2, 1fr); } 
+            .search-box { display: block; }
+        }
         @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
@@ -68,10 +96,15 @@
 <canvas id="canvas"></canvas>
 <div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
-
 <header>
     <div class="header-container">
         <div class="logo"><i class="fas fa-bolt" style="color: #f97316;"></i> AURORAAI</div>
+        
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Rechercher une vidéo, un créateur...">
+        </div>
+
         <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     </div>
 </header>
@@ -93,16 +126,16 @@
 </section>
 
 <div class="filters">
-    <button class="filter-btn active" onclick="filterVideos('all')">Tous</button>
-    <button class="filter-btn" onclick="filterVideos('Sci-Fi')">Sci-Fi</button>
-    <button class="filter-btn" onclick="filterVideos('Onirique')">Onirique</button>
-    <button class="filter-btn" onclick="filterVideos('Thriller')">Thriller</button></div>
+    <button class="filter-btn active" onclick="filterVideos('all', this)">Tous</button>
+    <button class="filter-btn" onclick="filterVideos('Sci-Fi', this)">Sci-Fi</button>
+    <button class="filter-btn" onclick="filterVideos('Onirique', this)">Onirique</button>
+    <button class="filter-btn" onclick="filterVideos('Thriller', this)">Thriller</button>
+    <button class="filter-btn" onclick="filterVideos('Romance', this)">Romance</button>
+</div>
 
 <section class="content" id="content">
     <h2 class="section-title">🔥 Tendances</h2>
-    <div class="video-grid" id="videoGrid">
-        <p style="text-align:center; color:#94a3b8; grid-column:1/-1;">Chargement...</p>
-    </div>
+    <div class="video-grid" id="videoGrid"></div>
 </section>
 
 <div class="modal" id="videoModal">
@@ -112,61 +145,83 @@
         <h3 id="modalTitle"></h3>
         <p id="modalAuthor" style="color:#f97316; margin:0.5rem 0 1rem;"></p>
         <button class="modal-btn" onclick="downloadVideo()"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>
-    </div>
+        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>    </div>
 </div>
 
 <div class="modal" id="uploadModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('uploadModal')"><i class="fas fa-times"></i></button>
         <h2>Uploader une vidéo AI</h2>
-        <input type="text" id="uploadTitle" placeholder="Titre" style="width:100%; padding:0.8rem; margin:1rem 0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-        <input type="text" id="uploadAuthor" placeholder="Auteur" style="width:100%; padding:0.8rem; margin:1rem 0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-        <button class="modal-btn primary" onclick="alert('Fonctionnalité complète bientôt disponible !')"><i class="fas fa-upload"></i> Soumettre</button>
+        <p style="color:#94a3b8; margin-bottom:1rem;">Fonctionnalité complète en cours de développement.</p>
+        <input type="text" placeholder="Titre de la vidéo" style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
+        <button class="modal-btn primary" onclick="alert('Merci ! Nous examinerons ta vidéo bientôt.')"><i class="fas fa-upload"></i> Soumettre</button>
     </div>
 </div>
 
 <script>
-    // DONNÉES EN DUR (en attendant que Supabase fonctionne)
+    // DONNÉES
     const videos = [
         { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400" },
         { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400" },
-        { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" }
+        { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" },
+        { id: 4, title: "Neon Memories", author: "Future Citizen", views: "56k", category: "Romance", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400" }
     ];
 
     let currentVideo = null;
+    let currentFilter = 'all';
 
     // AFFICHER LES VIDÉOS
     function displayVideos(videosToDisplay) {
         const grid = document.getElementById('videoGrid');
+        if (videosToDisplay.length === 0) {
+            grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
+            return;
+        }
         grid.innerHTML = videosToDisplay.map(v => `
             <div class="video-card" onclick="openVideo(${v.id})">
                 <div class="thumbnail">
                     <img src="${v.thumbnail_url}" alt="${v.title}" onerror="this.style.display='none'">
                     <div class="play-icon"><i class="fas fa-play"></i></div>
                 </div>
-                <div class="card-info">                    <div class="card-title">${v.title}</div>
+                <div class="card-info">
+                    <div class="card-title">${v.title}</div>
                     <div class="card-meta">
                         <span><i class="fas fa-user"></i> ${v.author}</span>
                         <span><i class="fas fa-eye"></i> ${v.views}</span>
                     </div>
                     <div class="card-actions">
                         <button class="action-btn" onclick="event.stopPropagation(); downloadVideoById('${v.video_url}', '${v.title}')"><i class="fas fa-download"></i> Télécharger</button>
-                        <button class="action-btn tip" onclick="event.stopPropagation(); alert('Tip envoyé à ${v.author} !')"><i class="fas fa-heart"></i> Tip</button>
+                        <button class="action-btn tip" onclick="event.stopPropagation(); alert('Lien Tip du créateur')"><i class="fas fa-heart"></i> Tip</button>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            </div>        `).join('');
     }
 
-    function filterVideos(category) {
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        if (category === 'all') {
-            displayVideos(videos);
-        } else {
-            displayVideos(videos.filter(v => v.category === category));
+    // FILTRER PAR CATÉGORIE
+    function filterVideos(category, btn) {
+        currentFilter = category;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        applyFilters();
+    }
+
+    // RECHERCHE
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        applyFilters(e.target.value.toLowerCase());
+    });
+
+    function applyFilters(searchTerm = '') {
+        let filtered = videos;
+        if (currentFilter !== 'all') {
+            filtered = filtered.filter(v => v.category === currentFilter);
         }
+        if (searchTerm) {
+            filtered = filtered.filter(v => 
+                v.title.toLowerCase().includes(searchTerm) || 
+                v.author.toLowerCase().includes(searchTerm)
+            );
+        }
+        displayVideos(filtered);
     }
 
     function openVideo(id) {
@@ -179,28 +234,27 @@
 
     function closeModal(modalId) {
         document.getElementById(modalId).classList.remove('active');
-        if (modalId === 'videoModal') {
-            document.getElementById('modalVideo').pause();
-        }
+        if (modalId === 'videoModal') document.getElementById('modalVideo').pause();
     }
 
     function downloadVideo() {
         if (!currentVideo) return;
-        const link = document.createElement('a');
-        link.href = currentVideo.video_url;
-        link.download = currentVideo.title + '.mp4';
-        link.click();
+        downloadVideoById(currentVideo.video_url, currentVideo.title);
     }
 
     function downloadVideoById(url, title) {
-        const link = document.createElement('a');
-        link.href = url;        link.download = title + '.mp4';
+        const link = document.createElement('a');        link.href = url;
+        link.download = title + '.mp4';
         link.click();
     }
 
     function shareVideo() {
-        navigator.clipboard.writeText(window.location.href);
-        alert('Lien copié !');
+        if (navigator.share) {
+            navigator.share({ title: currentVideo.title, text: 'Regarde cette vidéo IA !', url: window.location.href });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Lien copié dans le presse-papier !');
+        }
     }
 
     function openUploadModal() {
@@ -215,64 +269,29 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        initParticles();
-    }
-
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); }
     function initParticles() {
         particles = [];
         const count = window.innerWidth < 768 ? 30 : 50;
-        for (let i = 0; i < count; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                r: Math.random() * 2 + 1
-            });
-        }
+        for (let i = 0; i < count; i++) particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, r: Math.random() * 2 + 1 });
     }
-
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach((p, i) => {
-            p.x += p.vx;
-            p.y += p.vy;
+            p.x += p.vx; p.y += p.vy;
             if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
             if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                        ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = '#f97316';
-            ctx.fill();
-            
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = '#f97316'; ctx.fill();
             for (let j = i + 1; j < particles.length; j++) {
-                const dx = p.x - particles[j].x;
-                const dy = p.y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(249, 115, 22, ${0.3 * (1 - dist / 120)})`;
-                    ctx.stroke();
-                }
+                const dx = p.x - particles[j].x, dy = p.y - particles[j].y, dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 120) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(249, 115, 22, ${0.3 * (1 - dist / 120)})`; ctx.stroke(); }
             }
         });
         requestAnimationFrame(animate);
     }
-
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
+    window.addEventListener('resize', resize); resize(); animate();
 
     // INITIALISATION
-    window.addEventListener('DOMContentLoaded', () => {
-        displayVideos(videos);
-    });
-</script>
-
+    window.addEventListener('DOMContentLoaded', () => displayVideos(videos));</script>
 </body>
 </html>
