@@ -31,16 +31,16 @@
         .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
         .logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #fff, #f97316); -webkit-background-clip: text; color: transparent; flex-shrink: 0; }
         
-        .search-box {
+        .search-box-desktop {
             flex: 1; max-width: 400px; position: relative; display: none;
         }
-        .search-box input {
+        .search-box-desktop input {
             width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem;
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 50px; color: white; font-family: inherit; font-size: 0.9rem;
         }
-        .search-box input:focus { outline: none; border-color: #f97316; }
-        .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-box-desktop input:focus { outline: none; border-color: #f97316; }
+        .search-box-desktop i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
         
         .menu-btn { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; }
 
@@ -56,12 +56,30 @@
         .btn-primary { background: linear-gradient(135deg, #f97316, #ff8c00); color: white; }
         .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
 
-        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem; max-width: 1400px; margin: 0 auto; scrollbar-width: none; }
+        /* NOUVEAU : Barre de recherche mobile */
+        .search-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem 1rem;
+        }
+        .search-box-mobile {
+            position: relative;
+            width: 100%;
+        }
+        .search-box-mobile input {
+            width: 100%; padding: 0.8rem 1rem 0.8rem 3rem;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px; color: white; font-family: inherit; font-size: 1rem;
+        }
+        .search-box-mobile input:focus { outline: none; border-color: #f97316; }
+        .search-box-mobile i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+
+        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0 1rem 1rem; max-width: 1400px; margin: 0 auto; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
         .filter-btn { padding: 0.5rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; color: #94a3b8; white-space: nowrap; cursor: pointer; font-family: inherit; }
         .filter-btn.active { background: #f97316; border-color: #f97316; color: white; }
 
-        .content { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; }
+        .content { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
         .video-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
         .video-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
@@ -78,15 +96,15 @@
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .modal.active { display: flex; }
-        .modal-content { background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
-        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; color: white; cursor: pointer; }
+        .modal-content { background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; color: white; cursor: pointer; }
         .modal video { width: 100%; border-radius: 12px; margin-bottom: 1rem; }
         .modal-btn { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-weight: 600; cursor: pointer; margin-bottom: 0.5rem; font-family: inherit; }
         .modal-btn.primary { background: linear-gradient(135deg, #f97316, #ff8c00); border: none; }
 
         @media (min-width: 768px) { 
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
-            .search-box { display: block; }
+            .search-box-desktop { display: block; }
+            .search-container { display: none; } /* Cache la version mobile sur desktop */
         }
         @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
@@ -96,13 +114,15 @@
 <canvas id="canvas"></canvas>
 <div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
+
 <header>
     <div class="header-container">
         <div class="logo"><i class="fas fa-bolt" style="color: #f97316;"></i> AURORAAI</div>
         
-        <div class="search-box">
+        <!-- Barre de recherche Desktop -->
+        <div class="search-box-desktop">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Rechercher une vidéo, un créateur...">
+            <input type="text" id="searchInputDesktop" placeholder="Rechercher une vidéo, un créateur...">
         </div>
 
         <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
@@ -125,6 +145,13 @@
     </div>
 </section>
 
+<!-- NOUVEAU : Barre de recherche Mobile (visible sous le Hero) --><div class="search-container">
+    <div class="search-box-mobile">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInputMobile" placeholder="Rechercher une vidéo, un créateur...">
+    </div>
+</div>
+
 <div class="filters">
     <button class="filter-btn active" onclick="filterVideos('all', this)">Tous</button>
     <button class="filter-btn" onclick="filterVideos('Sci-Fi', this)">Sci-Fi</button>
@@ -145,7 +172,8 @@
         <h3 id="modalTitle"></h3>
         <p id="modalAuthor" style="color:#f97316; margin:0.5rem 0 1rem;"></p>
         <button class="modal-btn" onclick="downloadVideo()"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>    </div>
+        <button class="modal-btn" onclick="shareVideo()"><i class="fas fa-share"></i> Partager</button>
+    </div>
 </div>
 
 <div class="modal" id="uploadModal">
@@ -166,7 +194,6 @@
         { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" },
         { id: 4, title: "Neon Memories", author: "Future Citizen", views: "56k", category: "Romance", video_url: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400" }
     ];
-
     let currentVideo = null;
     let currentFilter = 'all';
 
@@ -194,7 +221,8 @@
                         <button class="action-btn tip" onclick="event.stopPropagation(); alert('Lien Tip du créateur')"><i class="fas fa-heart"></i> Tip</button>
                     </div>
                 </div>
-            </div>        `).join('');
+            </div>
+        `).join('');
     }
 
     // FILTRER PAR CATÉGORIE
@@ -205,11 +233,16 @@
         applyFilters();
     }
 
-    // RECHERCHE
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        applyFilters(e.target.value.toLowerCase());
-    });
-
+    // RECHERCHE (Desktop + Mobile)
+    const searchDesktop = document.getElementById('searchInputDesktop');
+    const searchMobile = document.getElementById('searchInputMobile');
+    
+    if (searchDesktop) {
+        searchDesktop.addEventListener('input', (e) => applyFilters(e.target.value.toLowerCase()));
+    }
+    if (searchMobile) {
+        searchMobile.addEventListener('input', (e) => applyFilters(e.target.value.toLowerCase()));
+    }
     function applyFilters(searchTerm = '') {
         let filtered = videos;
         if (currentFilter !== 'all') {
@@ -243,7 +276,8 @@
     }
 
     function downloadVideoById(url, title) {
-        const link = document.createElement('a');        link.href = url;
+        const link = document.createElement('a');
+        link.href = url;
         link.download = title + '.mp4';
         link.click();
     }
@@ -258,8 +292,7 @@
     }
 
     function openUploadModal() {
-        document.getElementById('uploadModal').classList.add('active');
-    }
+        document.getElementById('uploadModal').classList.add('active');    }
 
     function toggleMenu() {
         document.getElementById('mobileMenu').classList.toggle('active');
@@ -292,6 +325,7 @@
     window.addEventListener('resize', resize); resize(); animate();
 
     // INITIALISATION
-    window.addEventListener('DOMContentLoaded', () => displayVideos(videos));</script>
+    window.addEventListener('DOMContentLoaded', () => displayVideos(videos));
+</script>
 </body>
 </html>
