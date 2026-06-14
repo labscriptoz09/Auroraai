@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraAI.watch</title>
+    <title>AuroraAI.watch — Cinéma IA Next-Gen</title>
+    
+    <!-- SEO -->
+    <meta name="description" content="Découvrez, téléchargez et soutenez les meilleurs films et séries générés par Intelligence Artificielle. Plateforme gratuite pour créateurs IA.">
+    <meta name="keywords" content="IA, cinéma, films, séries, intelligence artificielle, téléchargement gratuit, créateurs">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="AuroraAI.watch — Cinéma IA Next-Gen">
+    <meta property="og:description" content="La plateforme des créateurs de films IA. Téléchargement gratuit et tips directs.">
+    <meta property="og:image" content="https://picsum.photos/seed/nexus/1200/630">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -33,8 +47,7 @@
             border-radius: 50%; 
             filter: blur(100px); 
             opacity: 0.4; 
-            z-index: 0;
-            animation: breathe 15s infinite; 
+            z-index: 0;            animation: breathe 15s infinite; 
         }
         .glow-1 { 
             background: radial-gradient(circle, #f97316 0%, transparent 70%); 
@@ -47,7 +60,8 @@
             right: -30%; 
             animation-delay: -5s; 
         }
-        @keyframes breathe {             0%, 100% { transform: scale(1); opacity: 0.3; } 
+        @keyframes breathe { 
+            0%, 100% { transform: scale(1); opacity: 0.3; } 
             50% { transform: scale(1.2); opacity: 0.5; } 
         }
 
@@ -82,13 +96,11 @@
             background: rgba(255,255,255,0.05); 
             border: 1px solid rgba(255,255,255,0.1); 
             border-radius: 12px; 
-            color: white; 
-            font-size: 1.2rem; 
+            color: white;             font-size: 1.2rem; 
             cursor: pointer; 
             position: relative;
         }
         
-        /* NOUVEAU : Badge compteur favoris */
         .fav-badge {
             position: absolute;
             top: -5px;
@@ -96,7 +108,8 @@
             background: #f97316;
             color: white;
             font-size: 0.7rem;
-            font-weight: 700;            width: 20px;
+            font-weight: 700;
+            width: 20px;
             height: 20px;
             border-radius: 50%;
             display: none;
@@ -132,8 +145,7 @@
             font-weight: 700; 
         }
         .close-btn { 
-            position: absolute; 
-            top: 1rem; 
+            position: absolute;             top: 1rem; 
             right: 1rem; 
             width: 44px; 
             height: 44px; 
@@ -145,7 +157,8 @@
             cursor: pointer; 
         }
 
-        .hero {             min-height: 100vh; 
+        .hero { 
+            min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
@@ -181,8 +194,7 @@
             font-family: inherit; 
         }
         .btn-primary { 
-            background: linear-gradient(135deg, #f97316, #ff8c00); 
-            color: white; 
+            background: linear-gradient(135deg, #f97316, #ff8c00);             color: white; 
         }
         .btn-secondary { 
             background: rgba(255,255,255,0.05); 
@@ -194,7 +206,8 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 1rem 1rem;
-            position: relative;            z-index: 1;
+            position: relative;
+            z-index: 1;
         }
         .search-box {
             position: relative;
@@ -230,8 +243,7 @@
             max-width: 1400px;
             margin: 0 auto;
             scrollbar-width: none;
-            z-index: 1;
-            position: relative;
+            z-index: 1;            position: relative;
         }
         .filters::-webkit-scrollbar {
             display: none;
@@ -243,7 +255,8 @@
             border-radius: 50px;
             color: #94a3b8;
             white-space: nowrap;
-            cursor: pointer;            font-family: inherit;
+            cursor: pointer;
+            font-family: inherit;
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
@@ -279,8 +292,7 @@
         }
         .video-grid { 
             display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 1rem; 
+            grid-template-columns: 1fr;             gap: 1rem; 
         }
         .video-card { 
             background: rgba(255,255,255,0.03); 
@@ -292,7 +304,8 @@
             position: relative;
         }
         .video-card:hover {
-            transform: translateY(-2px);        }
+            transform: translateY(-2px);
+        }
         .thumbnail { 
             position: relative; 
             aspect-ratio: 16/9; 
@@ -318,7 +331,6 @@
             color: white; 
         }
         
-        /* NOUVEAU : Bouton favori */
         .fav-btn {
             position: absolute;
             top: 0.5rem;
@@ -329,8 +341,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
+            display: flex;            align-items: center;
             justify-content: center;
             color: white;
             font-size: 0.9rem;
@@ -341,7 +352,8 @@
         .fav-btn:hover {
             transform: scale(1.1);
         }
-        .fav-btn.active {            color: #f97316;
+        .fav-btn.active {
+            color: #f97316;
             background: rgba(249,115,22,0.2);
             border-color: #f97316;
         }
@@ -378,8 +390,7 @@
         .action-btn.tip { 
             background: rgba(249,115,22,0.1); 
             border-color: rgba(249,115,22,0.3); 
-            color: #f97316; 
-        }
+            color: #f97316;         }
 
         .modal {
             position: fixed;
@@ -390,7 +401,8 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-        }        .modal.active {
+        }
+        .modal.active {
             display: flex;
         }
         .modal-content {
@@ -427,8 +439,7 @@
         }
         .modal-title {
             font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-weight: 700;            margin-bottom: 0.5rem;
         }
         .modal-author {
             color: #f97316;
@@ -439,7 +450,8 @@
             flex-direction: column;
             gap: 0.5rem;
             margin-top: 1rem;
-        }        .modal-btn {
+        }
+        .modal-btn {
             width: 100%;
             padding: 0.8rem;
             background: rgba(255,255,255,0.05);
@@ -459,7 +471,81 @@
             border: none;
         }
 
-        /* NOUVEAU : Toast notification */
+        /* NOUVEAU : Footer */
+        .footer {
+            background: rgba(3,3,5,0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 1rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .footer-section h3 {            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f97316;
+        }
+        .footer-section p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #f97316;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-social a:hover {
+            background: #f97316;
+            border-color: #f97316;
+            transform: translateY(-2px);
+        }
+        .footer-bottom {            max-width: 1400px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -484,11 +570,13 @@
 
         @media (min-width: 768px) { 
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
+            .footer-content { grid-template-columns: repeat(3, 1fr); }
         }
         @media (min-width: 1024px) { 
             .video-grid { grid-template-columns: repeat(3, 1fr); } 
         }
-    </style></head>
+    </style>
+</head>
 <body>
 <canvas id="canvas"></canvas>
 <div class="glow glow-1"></div>
@@ -498,8 +586,7 @@
     <div class="header-container">
         <div class="logo"><i class="fas fa-bolt" style="color: #f97316;"></i> AURORAAI</div>
         <button class="menu-btn" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
-            <span class="fav-badge" id="favBadge">0</span>
+            <i class="fas fa-bars"></i>            <span class="fav-badge" id="favBadge">0</span>
         </button>
     </div>
 </header>
@@ -537,11 +624,48 @@
 </div>
 
 <section class="content" id="content">
-    <div class="section-header">        <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
+    <div class="section-header">
+        <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
         <span class="video-count" id="videoCount">4 vidéos</span>
     </div>
     <div class="video-grid" id="videoGrid"></div>
 </section>
+
+<!-- NOUVEAU : Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3><i class="fas fa-bolt" style="color: #f97316;"></i> AuroraAI.watch</h3>            <p>La première plateforme dédiée aux films et séries générés par Intelligence Artificielle. Découvrez, téléchargez et soutenez les créateurs.</p>
+            <div class="footer-social">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Navigation</h3>
+            <ul class="footer-links">
+                <li><a href="#hero">Accueil</a></li>
+                <li><a href="#content">Explorer</a></li>
+                <li><a href="#" onclick="toggleMenu(); showFavorites()">Mes Favoris</a></li>
+                <li><a href="#">Upload Vidéo</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Légal</h3>
+            <ul class="footer-links">
+                <li><a href="#">Mentions légales</a></li>
+                <li><a href="#">Conditions d'utilisation</a></li>
+                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 AuroraAI.watch — Tous droits réservés. Fait avec ❤️ pour les créateurs IA.</p>
+    </div>
+</footer>
 
 <div class="modal" id="videoModal">
     <div class="modal-content">
@@ -561,7 +685,6 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script>
 // DONNÉES VIDÉOS
 const videos = [
@@ -573,11 +696,8 @@ const videos = [
 
 let currentVideo = null;
 let currentFilter = 'all';
-
-// NOUVEAU : Favoris (stockés dans le navigateur)
 let favorites = JSON.parse(localStorage.getItem('aurora_favorites') || '[]');
 
-// AFFICHER LES VIDÉOS
 function displayVideos(videosToDisplay) {
     const grid = document.getElementById('videoGrid');
     const count = document.getElementById('videoCount');
@@ -586,7 +706,8 @@ function displayVideos(videosToDisplay) {
         grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
         count.textContent = '0 vidéo';
         return;
-    }    
+    }
+    
     count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
     
     grid.innerHTML = videosToDisplay.map(v => {
@@ -612,15 +733,13 @@ function displayVideos(videosToDisplay) {
                     </button>
                     <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
                         <i class="fas fa-heart"></i> Tip
-                    </button>
-                </div>
+                    </button>                </div>
             </div>
         </div>
         `;
     }).join('');
 }
 
-// NOUVEAU : Gérer les favoris
 function toggleFavorite(videoId) {
     const index = favorites.indexOf(videoId);
     if (index > -1) {
@@ -633,9 +752,9 @@ function toggleFavorite(videoId) {
     localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
     updateFavBadge();
     
-    // Rafraîchir l'affichage selon le filtre actuel
     if (currentFilter === 'all') {
-        displayVideos(videos);    } else {
+        displayVideos(videos);
+    } else {
         const filtered = videos.filter(v => v.category === currentFilter);
         displayVideos(filtered);
     }
@@ -663,10 +782,8 @@ function showAllVideos() {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.filter-btn').classList.add('active');
     document.getElementById('sectionTitle').textContent = '🔥 Tendances';
-    displayVideos(videos);
-}
+    displayVideos(videos);}
 
-// FILTRER PAR CATÉGORIE
 function filterVideos(category, btn) {
     currentFilter = category;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -682,9 +799,9 @@ function filterVideos(category, btn) {
     displayVideos(filtered);
 }
 
-// RECHERCHE
 document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();    
+    const searchTerm = e.target.value.toLowerCase();
+    
     if (searchTerm === '') {
         filterVideos(currentFilter, document.querySelector('.filter-btn.active'));
         return;
@@ -699,7 +816,6 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     displayVideos(filtered);
 });
 
-// MODAL VIDÉO
 function openVideo(id) {
     currentVideo = videos.find(v => v.id === id);
     if (!currentVideo) return;
@@ -712,9 +828,10 @@ function openVideo(id) {
 }
 
 function closeModal() {
-    document.getElementById('videoModal').classList.remove('active');
-    document.getElementById('modalVideo').pause();
-    document.getElementById('modalVideo').src = '';
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('modalVideo');
+    modal.classList.remove('active');
+    video.pause();    setTimeout(() => { video.src = ''; }, 300);
     document.body.style.overflow = '';
 }
 
@@ -733,7 +850,8 @@ function downloadById(url, title) {
 
 function shareVideo() {
     if (navigator.share) {
-        navigator.share({            title: currentVideo.title,
+        navigator.share({
+            title: currentVideo.title,
             text: `Regarde "${currentVideo.title}" sur AuroraAI.watch`,
             url: window.location.href
         });
@@ -747,12 +865,10 @@ document.getElementById('videoModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
 
-// MENU HAMBURGER
 function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('active');
 }
 
-// NOUVEAU : Toast notification
 function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
@@ -764,8 +880,7 @@ function showToast(message) {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
+function resizeCanvas() {    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 
@@ -782,7 +897,8 @@ for (let i = 0; i < particleCount; i++) {
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
         radius: Math.random() * 2 + 1
-    });}
+    });
+}
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -813,18 +929,13 @@ function animate() {
                 ctx.stroke();
             }
         }
-    });
-    
+    });    
     requestAnimationFrame(animate);
 }
 
-// INITIALISATION
 displayVideos(videos);
 updateFavBadge();
 animate();
-
-console.log('✅ Site AuroraAI chargé');
-console.log('✅ Favoris :', favorites.length);
 </script>
 
 </body>
