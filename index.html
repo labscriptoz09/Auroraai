@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>AuroraAI.watch — Cinéma IA Next-Gen</title>
     
     <meta name="description" content="Découvrez, téléchargez et soutenez les meilleurs films et séries générés par Intelligence Artificielle.">
@@ -372,12 +372,12 @@
     <div class="menu-categories">
         <div class="menu-categories-title">📂 Catégories</div>
         <div class="menu-category-grid">
-            <button class="menu-category-btn active" onclick="filterFromMenu('all', this)">🌟 Tous</button>
+            <button class="menu-category-btn active" onclick="filterFromMenu('all', this)"> Tous</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)">🚀 Sci-Fi</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Onirique', this)">🌙 Onirique</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)">🔪 Thriller</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Romance', this)">💜 Romance</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)">📢 Pub</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)"> Pub</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Dessin animé', this)">🎨 Dessin animé</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Divers', this)">✨ Divers</button>
         </div>
@@ -413,7 +413,7 @@
 <section class="content" id="content">
     <div class="section-header">
         <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
-        <span class="video-count" id="videoCount">4 vidéos</span>
+        <span class="video-count" id="videoCount">0 vidéo</span>
     </div>
     <div class="video-grid" id="videoGrid"></div>
 </section>
@@ -483,15 +483,14 @@
             <input type="text" id="uploadTitle" placeholder="Titre de la vidéo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
             <input type="text" id="uploadAuthor" placeholder="Ton pseudo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
             <select id="uploadCategory" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-                <option value="Sci-Fi">🚀 Sci-Fi</option>
+                <option value="Sci-Fi"> Sci-Fi</option>
                 <option value="Onirique">🌙 Onirique</option>
-                <option value="Thriller">🔪 Thriller</option>
+                <option value="Thriller"> Thriller</option>
                 <option value="Romance">💜 Romance</option>
                 <option value="Pub">📢 Pub</option>
                 <option value="Dessin animé">🎨 Dessin animé</option>                <option value="Divers">✨ Divers</option>
             </select>
             
-            <!-- Upload vidéo via Cloudinary -->
             <div style="margin-bottom:1rem;">
                 <label style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.5rem; display:block;">Vidéo *</label>
                 <button type="button" onclick="openCloudinaryWidget('video')" 
@@ -502,7 +501,6 @@
                 <div id="videoFileName" style="margin-top:0.5rem; font-size:0.85rem; color:#10b981;"></div>
             </div>
             
-            <!-- Upload miniature via Cloudinary -->
             <div style="margin-bottom:1rem;">
                 <label style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.5rem; display:block;">Miniature</label>
                 <button type="button" onclick="openCloudinaryWidget('image')" 
@@ -530,18 +528,16 @@
 const SUPABASE_URL = 'https://knecqgspkalwepdwwpud.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
 
-// Cloudinary (déjà configuré avec tes infos)
 const CLOUDINARY_CLOUD_NAME = 'dcnldgsyn';
 const CLOUDINARY_UPLOAD_PRESET = 'auroraai_upload';
 
-// Widget Cloudinary
 let cloudinaryWidget = null;
 
-// ============================================// FONCTIONS MENU ET UPLOAD
+// ============================================
+// FONCTIONS MENU ET UPLOAD
 // ============================================
 function toggleMenu() { 
-    const menu = document.getElementById('mobileMenu');
-    if (menu) menu.classList.toggle('active');
+    const menu = document.getElementById('mobileMenu');    if (menu) menu.classList.toggle('active');
 }
 
 function openUploadModal() { 
@@ -562,7 +558,7 @@ function openCloudinaryWidget(type) {
             uploadPreset: CLOUDINARY_UPLOAD_PRESET,
             sources: ['local', 'camera'],
             multiple: false,
-            maxFileSize: 50000000, // 50 MB
+            maxFileSize: 50000000,
             clientAllowedFormats: type === 'video' ? ['mp4', 'webm', 'mov'] : ['jpg', 'jpeg', 'png', 'gif'],
             cropping: type === 'image',
             croppingAspectRatio: 16/9,
@@ -571,8 +567,6 @@ function openCloudinaryWidget(type) {
             resourceType: type
         }, (error, result) => {
             if (!error && result && result.event === "success") {
-                console.log('Upload réussi:', result.info);
-                
                 if (type === 'video') {
                     document.getElementById('uploadVideoUrl').value = result.info.secure_url;
                     document.getElementById('videoFileName').textContent = '✅ ' + result.info.original_filename;
@@ -580,20 +574,18 @@ function openCloudinaryWidget(type) {
                     document.getElementById('uploadThumbnail').value = result.info.secure_url;
                     document.getElementById('thumbnailFileName').textContent = '✅ ' + result.info.original_filename;
                 }
-                
                 showToast('✅ Upload réussi !');
             }
         });
     }
-    
-    cloudinaryWidget.open();}
+    cloudinaryWidget.open();
+}
 
 // ============================================
 // ANIMATION FOND : CIRCUIT FLOW
 // ============================================
 const circuitCanvas = document.getElementById('circuitCanvas');
 const cCtx = circuitCanvas.getContext('2d', { alpha: false });
-
 let cWidth, cHeight;
 let circuits = [];
 let signals = [];
@@ -635,15 +627,15 @@ function initCircuits() {
                 connections: [],
                 active: false,
                 pulse: 0
-            });        }
+            });
+        }
     }
 
     circuits.forEach((node, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
         if (col < cols - 1 && Math.random() > 0.3) node.connections.push(circuits[i + 1]);
-        if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);
-        if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
+        if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);        if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
     });
 }
 
@@ -684,15 +676,15 @@ function animateCircuit() {
             cCtx.moveTo(node.x, node.y);
             cCtx.lineTo(target.x, target.y);
         });
-    });    cCtx.stroke();
+    });
+    cCtx.stroke();
 
     cCtx.globalCompositeOperation = 'lighter';
 
     signals = signals.filter(signal => {
         signal.progress += signal.speed;
         const currentX = signal.node1.x + (signal.node2.x - signal.node1.x) * signal.progress;
-        const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;
-        
+        const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;        
         signal.trail.push({x: currentX, y: currentY, life: 1});
         signal.trail = signal.trail.filter(t => { t.life -= 0.12; return t.life > 0; });
 
@@ -733,15 +725,15 @@ function animateCircuit() {
     });
 
     circuits.forEach(node => {
-        if (node.active) {            node.pulse *= 0.95;
+        if (node.active) {
+            node.pulse *= 0.95;
             if (node.pulse > 0.1) {
                 const glow = cCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, CONFIG.glowRadius);
                 glow.addColorStop(0, ORANGE + Math.floor(node.pulse * CONFIG.glowOpacity).toString(16).padStart(2, '0'));
                 glow.addColorStop(1, 'transparent');
                 cCtx.fillStyle = glow;
                 cCtx.beginPath();
-                cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);
-                cCtx.fill();
+                cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);                cCtx.fill();
             }
             if (node.pulse < 0.1) node.active = false;
         }
@@ -762,9 +754,9 @@ resizeCircuit();
 animateCircuit();
 
 // ============================================
-// LOGIQUE DU SITE
+// LOGIQUE DU SITE AVEC CHARGEMENT SUPABASE
 // ============================================
-const videos = [
+let videos = [
     { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
     { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", img: "https://picsum.photos/seed/reves/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
     { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", img: "https://picsum.photos/seed/data/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
@@ -775,6 +767,53 @@ let currentVideo = null;
 let currentFilter = 'all';
 let favorites = JSON.parse(localStorage.getItem('aurora_favorites') || '[]');
 
+function formatViews(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(0) + 'k';
+    return num.toString();
+}
+
+function getFilteredVideos() {
+    if (currentFilter === 'all') return videos;
+    return videos.filter(v => v.category === currentFilter);
+}
+
+// Charger les vidéos depuis Supabase au démarrage
+async function loadVideosFromSupabase() {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
+            headers: {                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data && data.length > 0) {
+                const supabaseVideos = data.map(v => ({
+                    id: 'supa-' + v.id,
+                    title: v.title,
+                    author: v.author,
+                    views: formatViews(v.views || 0),
+                    category: v.category,
+                    img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
+                    video_url: v.video_url,
+                    tip_link: v.tip_link || '',
+                    description: v.description || ''
+                }));
+                
+                // Ajouter les vidéos Supabase AVANT les démos
+                videos = [...supabaseVideos, ...videos];
+                console.log('✅ ' + supabaseVideos.length + ' vidéos chargées');
+            }
+        }
+    } catch (error) {
+        console.error('Erreur chargement:', error);
+    }
+    
+    displayVideos(getFilteredVideos());
+}
+
 function displayVideos(videosToDisplay) {
     const grid = document.getElementById('videoGrid');
     const count = document.getElementById('videoCount');
@@ -782,26 +821,26 @@ function displayVideos(videosToDisplay) {
         grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
         count.textContent = '0 vidéo';
         return;
-    }    count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
+    }
+    count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
     grid.innerHTML = videosToDisplay.map(v => {
         const isFav = favorites.includes(v.id);
         return `
-        <div class="video-card" onclick="openVideo(${v.id})">
+        <div class="video-card" onclick="openVideo('${v.id}')">
             <div class="thumbnail">
-                <img src="${v.img}" alt="${v.title}" onerror="this.style.display='none'">
+                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">
                 <div class="play-icon"><i class="fas fa-play"></i></div>
-                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${v.id})">
-                    <i class="fas fa-heart"></i>
-                </button>
+                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${v.id}')">
+                    <i class="fas fa-heart"></i>                </button>
             </div>
             <div class="card-info">
                 <div class="card-title">${v.title}</div>
                 <div class="card-meta">
                     <span><i class="fas fa-user"></i> ${v.author}</span>
-                    <span><i class="fas fa-eye"></i> ${v.views}</span>
+                    <span><i class="fas fa-eye"></i> ${v.views} vues</span>
                 </div>
                 <div class="card-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); downloadById('${v.video_url}', '${v.title}')">
+                    <button class="action-btn" onclick="event.stopPropagation(); downloadById('${v.video_url}', '${v.title.replace(/'/g, "\\'")}')">
                         <i class="fas fa-download"></i> Télécharger
                     </button>
                     <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
@@ -819,8 +858,7 @@ function toggleFavorite(videoId) {
     else { favorites.push(videoId); showToast('❤️ Ajouté aux favoris'); }
     localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
     updateFavBadge();
-    if (currentFilter === 'all') displayVideos(videos);
-    else displayVideos(videos.filter(v => v.category === currentFilter));
+    displayVideos(getFilteredVideos());
 }
 
 function updateFavBadge() {
@@ -831,7 +869,8 @@ function updateFavBadge() {
 
 function showFavorites() {
     const favVideos = videos.filter(v => favorites.includes(v.id));
-    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';    document.getElementById('content').scrollIntoView({behavior:'smooth'});
+    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';
+    document.getElementById('content').scrollIntoView({behavior:'smooth'});
     displayVideos(favVideos);
 }
 
@@ -841,16 +880,14 @@ function showAllVideos() {
     document.querySelector('.filter-btn').classList.add('active');
     document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.menu-category-btn').classList.add('active');
-    document.getElementById('sectionTitle').textContent = '🔥 Tendances';
-    displayVideos(videos);
+    document.getElementById('sectionTitle').textContent = '🔥 Tendances';    displayVideos(getFilteredVideos());
 }
 
 function filterVideos(category, btn) {
     currentFilter = category;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    let filtered = videos;
-    if (category !== 'all') filtered = videos.filter(v => v.category === category);
+    let filtered = getFilteredVideos();
     const title = category === 'all' ? '🔥 Tendances' : '🎬 ' + category;
     document.getElementById('sectionTitle').textContent = title;
     displayVideos(filtered);
@@ -865,22 +902,18 @@ function filterVideos(category, btn) {
 
 function filterFromMenu(category, btn) {
     currentFilter = category;
-    
     document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    
     document.querySelectorAll('.filter-btn').forEach(b => {
         b.classList.remove('active');
         if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent === 'Tous')) {
             b.classList.add('active');
         }
     });
-    
-    let filtered = videos;
-    if (category !== 'all') filtered = videos.filter(v => v.category === category);
-    const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
+    let filtered = getFilteredVideos();
+    const title = category === 'all' ? '🔥 Tendances' : '🎬 ' + category;
     document.getElementById('sectionTitle').textContent = title;
-    displayVideos(filtered);    
+    displayVideos(filtered);
     toggleMenu();
     document.getElementById('content').scrollIntoView({behavior:'smooth'});
 }
@@ -894,10 +927,9 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 });
 
 function openVideo(id) {
-    currentVideo = videos.find(v => v.id === id);
+    currentVideo = videos.find(v => v.id == id);
     if (!currentVideo) return;
-    document.getElementById('modalVideo').src = currentVideo.video_url;
-    document.getElementById('modalTitle').textContent = currentVideo.title;
+    document.getElementById('modalVideo').src = currentVideo.video_url;    document.getElementById('modalTitle').textContent = currentVideo.title;
     document.getElementById('modalAuthor').textContent = `Par ${currentVideo.author} • ${currentVideo.views} vues`;
     document.getElementById('videoModal').classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -929,8 +961,6 @@ document.getElementById('videoModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal('videoModal'); 
 });
 
-// ============================================// UPLOAD VIA SUPABASE + CLOUDINARY
-// ============================================
 async function submitVideo(event) {
     event.preventDefault();
     
@@ -948,8 +978,7 @@ async function submitVideo(event) {
     const submitBtn = document.getElementById('submitBtn');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication...';
-    submitBtn.disabled = true;
-    
+    submitBtn.disabled = true;    
     const newVideo = {
         title: title,
         author: author,
@@ -978,7 +1007,8 @@ async function submitVideo(event) {
         
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`Erreur ${response.status}: ${errorText}`);        }
+            throw new Error(`Erreur ${response.status}: ${errorText}`);
+        }
         
         const data = await response.json();
         
@@ -990,18 +1020,17 @@ async function submitVideo(event) {
                 author: v.author,
                 views: '0',
                 category: v.category,
-                img: v.thumbnail_url,
+                img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
                 video_url: v.video_url,
                 tip_link: v.tip_link || ''
             });
         }
         
         showToast('🎉 Vidéo publiée !');
-        document.getElementById('uploadForm').reset();
-        document.getElementById('videoFileName').textContent = '';
+        document.getElementById('uploadForm').reset();        document.getElementById('videoFileName').textContent = '';
         document.getElementById('thumbnailFileName').textContent = '';
         closeModal('uploadModal');
-        displayVideos(currentFilter === 'all' ? videos : videos.filter(v => v.category === currentFilter));
+        displayVideos(getFilteredVideos());
         
     } catch (error) {
         console.error('Erreur complète:', error);
@@ -1019,8 +1048,8 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Initialisation
-displayVideos(videos);
+// Initialisation - Charge les vidéos depuis Supabase + affiche les démos
+loadVideosFromSupabase();
 updateFavBadge();
 </script>
 
