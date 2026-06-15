@@ -456,7 +456,7 @@
 <div class="modal" id="videoModal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
-        <video id="modalVideo" controls></video>
+        <video id="modalVideo" controls playsinline></video>
         <h3 class="modal-title" id="modalTitle"></h3>
         <p class="modal-author" id="modalAuthor"></p>
         <div class="modal-actions">
@@ -532,12 +532,15 @@ const CLOUDINARY_CLOUD_NAME = 'dcnldgsyn';
 const CLOUDINARY_UPLOAD_PRESET = 'auroraai_upload';
 
 let cloudinaryWidget = null;
+let viewsCache = JSON.parse(localStorage.getItem('aurora_views') || '{}');
+let viewedVideos = JSON.parse(localStorage.getItem('aurora_viewed') || '{}');
+let currentOpenVideo = null;
 
 // ============================================
-// FONCTIONS MENU ET UPLOAD
-// ============================================
+// FONCTIONS MENU ET UPLOAD// ============================================
 function toggleMenu() { 
-    const menu = document.getElementById('mobileMenu');    if (menu) menu.classList.toggle('active');
+    const menu = document.getElementById('mobileMenu');
+    if (menu) menu.classList.toggle('active');
 }
 
 function openUploadModal() { 
@@ -549,7 +552,7 @@ function openUploadModal() {
 }
 
 // ============================================
-// CLOUDINARY UPLOAD WIDGET CORRIGÉ
+// CLOUDINARY UPLOAD WIDGET
 // ============================================
 function openCloudinaryWidget(type) {
     if (!cloudinaryWidget) {
@@ -564,7 +567,7 @@ function openCloudinaryWidget(type) {
             croppingAspectRatio: 16/9,
             croppingShowDimensions: true,
             folder: 'auroraai_videos',
-            resourceType: type // CORRECTION : Spécifie 'video' ou 'image'
+            resourceType: type
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 if (type === 'video') {
@@ -583,9 +586,9 @@ function openCloudinaryWidget(type) {
 
 // ============================================
 // ANIMATION FOND : CIRCUIT FLOW
-// ============================================
-const circuitCanvas = document.getElementById('circuitCanvas');
+// ============================================const circuitCanvas = document.getElementById('circuitCanvas');
 const cCtx = circuitCanvas.getContext('2d', { alpha: false });
+
 let cWidth, cHeight;
 let circuits = [];
 let signals = [];
@@ -632,10 +635,10 @@ function initCircuits() {
     }
 
     circuits.forEach((node, i) => {
-        const col = i % cols;
-        const row = Math.floor(i / cols);
+        const col = i % cols;        const row = Math.floor(i / cols);
         if (col < cols - 1 && Math.random() > 0.3) node.connections.push(circuits[i + 1]);
-        if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);        if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
+        if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);
+        if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
     });
 }
 
@@ -681,10 +684,10 @@ function animateCircuit() {
 
     cCtx.globalCompositeOperation = 'lighter';
 
-    signals = signals.filter(signal => {
-        signal.progress += signal.speed;
+    signals = signals.filter(signal => {        signal.progress += signal.speed;
         const currentX = signal.node1.x + (signal.node2.x - signal.node1.x) * signal.progress;
-        const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;        
+        const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;
+        
         signal.trail.push({x: currentX, y: currentY, life: 1});
         signal.trail = signal.trail.filter(t => { t.life -= 0.12; return t.life > 0; });
 
@@ -730,10 +733,10 @@ function animateCircuit() {
             if (node.pulse > 0.1) {
                 const glow = cCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, CONFIG.glowRadius);
                 glow.addColorStop(0, ORANGE + Math.floor(node.pulse * CONFIG.glowOpacity).toString(16).padStart(2, '0'));
-                glow.addColorStop(1, 'transparent');
-                cCtx.fillStyle = glow;
+                glow.addColorStop(1, 'transparent');                cCtx.fillStyle = glow;
                 cCtx.beginPath();
-                cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);                cCtx.fill();
+                cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);
+                cCtx.fill();
             }
             if (node.pulse < 0.1) node.active = false;
         }
@@ -754,7 +757,7 @@ resizeCircuit();
 animateCircuit();
 
 // ============================================
-// LOGIQUE DU SITE AVEC COMPTAGE DES VUES CORRIGÉ
+// LOGIQUE DU SITE
 // ============================================
 let videos = [
     { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
@@ -779,29 +782,32 @@ function getFilteredVideos() {
 }
 
 async function loadVideosFromSupabase() {
-    try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
+    try {        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
             headers: {
-                'apikey': SUPABASE_KEY,                'Authorization': `Bearer ${SUPABASE_KEY}`
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
             }
         });
         
         if (response.ok) {
             const data = await response.json();
             if (data && data.length > 0) {
-                const supabaseVideos = data.map(v => ({
-                    id: 'supa-' + v.id,
-                    title: v.title,
-                    author: v.author,
-                    views: formatViews(v.views || 0),
-                    category: v.category,
-                    img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
-                    video_url: v.video_url,
-                    tip_link: v.tip_link || '',
-                    description: v.description || '',
-                    dbId: v.id,
-                    rawViews: v.views || 0
-                }));
+                const supabaseVideos = data.map(v => {
+                    const localViews = viewsCache[v.id] || v.views || 0;
+                    return {
+                        id: 'supa-' + v.id,
+                        title: v.title,
+                        author: v.author,
+                        views: formatViews(localViews),
+                        category: v.category,
+                        img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
+                        video_url: v.video_url,
+                        tip_link: v.tip_link || '',
+                        description: v.description || '',
+                        dbId: v.id,
+                        rawViews: localViews
+                    };
+                });
                 
                 videos = [...supabaseVideos, ...videos];
                 console.log('✅ ' + supabaseVideos.length + ' vidéos chargées');
@@ -814,38 +820,49 @@ async function loadVideosFromSupabase() {
     displayVideos(getFilteredVideos());
 }
 
-// CORRECTION : Incrémenter les vues avec PATCH direct
 async function incrementViews(videoId, dbId) {
-    if (!dbId || dbId.toString().startsWith('supa-')) return;
+    if (!dbId) return;
     
-    try {
-        // Récupérer les vues actuelles
+    const now = Date.now();
+    const lastViewed = viewedVideos[videoId] || 0;
+    const timeSinceLastView = now - lastViewed;
+    
+    if (timeSinceLastView < 3600000) {
+        console.log('⏭️ Vue déjà comptée');
+        return;
+    }
+        try {
         const video = videos.find(v => v.id == videoId);
         if (!video) return;
         
         const currentViews = video.rawViews || 0;
         const newViews = currentViews + 1;
         
-        // Mettre à jour dans Supabase
+        viewedVideos[videoId] = now;
+        localStorage.setItem('aurora_viewed', JSON.stringify(viewedVideos));
+        
+        viewsCache[dbId] = newViews;
+        localStorage.setItem('aurora_views', JSON.stringify(viewsCache));
+        
+        video.rawViews = newViews;
+        video.views = formatViews(newViews);
+        displayVideos(getFilteredVideos());
+        
         const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?id=eq.${dbId}`, {
             method: 'PATCH',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ views: newViews })
         });
         
         if (response.ok) {
-            // Mettre à jour localement
-            video.rawViews = newViews;
-            video.views = formatViews(newViews);
-            displayVideos(getFilteredVideos());
-            console.log('✅ Vues incrémentées:', newViews);
+            console.log('✅ +1 vue (total:', newViews, ')');
         }
     } catch (error) {
-        console.error('Erreur increment views:', error);
+        console.error('Erreur views:', error);
     }
 }
 
@@ -863,8 +880,7 @@ function displayVideos(videosToDisplay) {
         return `
         <div class="video-card" onclick="openVideo('${v.id}')">
             <div class="thumbnail">
-                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">
-                <div class="play-icon"><i class="fas fa-play"></i></div>
+                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">                <div class="play-icon"><i class="fas fa-play"></i></div>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${v.id}')">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -880,7 +896,8 @@ function displayVideos(videosToDisplay) {
                         <i class="fas fa-download"></i> Télécharger
                     </button>
                     <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
-                        <i class="fas fa-heart"></i> Tip                    </button>
+                        <i class="fas fa-heart"></i> Tip
+                    </button>
                 </div>
             </div>
         </div>`;
@@ -912,8 +929,7 @@ function showFavorites() {
 function showAllVideos() {
     currentFilter = 'all';
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn').classList.add('active');
-    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn').classList.add('active');    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.menu-category-btn').classList.add('active');
     document.getElementById('sectionTitle').textContent = '🔥 Tendances';
     displayVideos(getFilteredVideos());
@@ -929,7 +945,8 @@ function filterVideos(category, btn) {
     displayVideos(filtered);
     
     document.querySelectorAll('.menu-category-btn').forEach(b => {
-        b.classList.remove('active');        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent.includes('Tous'))) {
+        b.classList.remove('active');
+        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent.includes('Tous'))) {
             b.classList.add('active');
         }
     });
@@ -961,26 +978,42 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     displayVideos(filtered);
 });
 
-function openVideo(id) {
-    currentVideo = videos.find(v => v.id == id);
-    if (!currentVideo) return;
+function openVideo(id) {    if (currentOpenVideo === id) return;
+    currentOpenVideo = id;
     
-    // Incrémenter les vues
+    currentVideo = videos.find(v => v.id == id);
+    if (!currentVideo) {
+        currentOpenVideo = null;
+        return;
+    }
+    
+    console.log('🎬 Ouverture:', currentVideo.title);
+    console.log('📹 URL:', currentVideo.video_url);
+    
     incrementViews(id, currentVideo.dbId);
     
-    document.getElementById('modalVideo').src = currentVideo.video_url;
+    const videoElement = document.getElementById('modalVideo');
+    videoElement.src = currentVideo.video_url;
+    videoElement.load();
+    
     document.getElementById('modalTitle').textContent = currentVideo.title;
     document.getElementById('modalAuthor').textContent = `Par ${currentVideo.author} • ${currentVideo.views} vues`;
     document.getElementById('videoModal').classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        videoElement.play().catch(e => console.log('Lecture:', e));
+    }, 100);
 }
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.remove('active');
-    if (modalId === 'videoModal') {        const video = document.getElementById('modalVideo');
+    if (modalId === 'videoModal') {
+        const video = document.getElementById('modalVideo');
         video.pause();
         setTimeout(() => { video.src = ''; }, 300);
+        currentOpenVideo = null;
     }
     document.body.style.overflow = '';
 }
@@ -995,7 +1028,6 @@ function shareVideo() {
     if (navigator.share) { navigator.share({ title: currentVideo.title, text: `Regarde "${currentVideo.title}" sur AuroraAI.watch`, url: window.location.href }); } 
     else { navigator.clipboard.writeText(window.location.href); showToast('Lien copié ! 📋'); }
 }
-
 document.getElementById('videoModal').addEventListener('click', function(e) { 
     if (e.target === this) closeModal('videoModal'); 
 });
@@ -1027,7 +1059,8 @@ async function submitVideo(event) {
         thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(title),
         tip_link: document.getElementById('uploadTipLink').value.trim() || '',
         description: document.getElementById('uploadDesc').value.trim() || '',
-        views: 0,        status: 'approved'
+        views: 0,
+        status: 'approved'
     };
     
     try {
@@ -1043,8 +1076,7 @@ async function submitVideo(event) {
             },
             body: JSON.stringify(newVideo)
         });
-        
-        if (!response.ok) {
+                if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Erreur ${response.status}: ${errorText}`);
         }
@@ -1075,8 +1107,9 @@ async function submitVideo(event) {
         displayVideos(getFilteredVideos());
         
     } catch (error) {
-        console.error('Erreur complète:', error);
-        showToast('❌ Erreur : ' + error.message);    } finally {
+        console.error('Erreur:', error);
+        showToast('❌ Erreur : ' + error.message);
+    } finally {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
@@ -1093,6 +1126,5 @@ function showToast(message, type = 'success') {
 loadVideosFromSupabase();
 updateFavBadge();
 </script>
-
 </body>
 </html>
