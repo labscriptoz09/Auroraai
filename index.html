@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AuroraAI.watch — Cinéma IA Next-Gen</title>
     
     <meta name="description" content="Découvrez, téléchargez et soutenez les meilleurs films et séries générés par Intelligence Artificielle.">
     <meta property="og:title" content="AuroraAI.watch — Cinéma IA Next-Gen">
     <meta property="og:description" content="La plateforme des créateurs de films IA.">
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,7 +18,7 @@
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: #030305; 
@@ -26,6 +26,7 @@
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            touch-action: manipulation;
         }
         
         #circuitCanvas { 
@@ -46,8 +47,8 @@
         .logo { 
             font-size: 1.3rem; 
             font-weight: 800; 
-            position: relative;
-            display: inline-flex;            align-items: center;
+            position: relative;            display: inline-flex;
+            align-items: center;
             gap: 0.5rem;
             text-decoration: none;
         }        
@@ -95,8 +96,8 @@
         }
         
         @keyframes underline-glow {
-            0%, 100% { opacity: 0; transform: scaleX(0); }
-            50% { opacity: 0.6; transform: scaleX(1); }        }
+            0%, 100% { opacity: 0; transform: scaleX(0); }            50% { opacity: 0.6; transform: scaleX(1); }
+        }
 
         .menu-btn {
             width: 44px; height: 44px; background: rgba(255,255,255,0.05); 
@@ -144,8 +145,8 @@
             max-width: 400px;
             margin: 1rem 0;
             padding: 1rem;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);            border-radius: 16px;
+            background: rgba(255,255,255,0.03);            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
         }        
         .menu-categories-title {
             font-size: 0.9rem;
@@ -193,8 +194,8 @@
             justify-content: center; align-items: center; text-align: center; 
             padding: 6rem 1rem 3rem; position: relative; z-index: 1;
         }
-        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
-        .hero h1 span { color: #f97316; }        .hero p { font-size: 1rem; color: #94a3b8; max-width: 500px; margin-bottom: 2rem; }
+        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }        .hero h1 span { color: #f97316; }
+        .hero p { font-size: 1rem; color: #94a3b8; max-width: 500px; margin-bottom: 2rem; }
         .btn { 
             padding: 1rem 2rem; border: none; border-radius: 50px;
             font-weight: 700; cursor: pointer; width: 100%; 
@@ -242,8 +243,8 @@
         .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); }
         .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
         .play-icon { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 50px; height: 50px; background: rgba(249,115,22,0.9);             border-radius: 50%; display: flex; align-items: center;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);             width: 50px; height: 50px; background: rgba(249,115,22,0.9); 
+            border-radius: 50%; display: flex; align-items: center;
             justify-content: center; color: white; 
         }        
         .fav-btn {
@@ -291,8 +292,8 @@
         .modal-author { color: #f97316; margin-bottom: 1rem; }
         .modal-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
         .modal-btn {
-            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;            color: white; font-weight: 600; cursor: pointer;
+            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05);            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            color: white; font-weight: 600; cursor: pointer;
             font-family: inherit; display: flex; align-items: center;
             justify-content: center; gap: 0.5rem;
         }
@@ -340,8 +341,8 @@
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
             .footer-content { grid-template-columns: repeat(3, 1fr); }
             .menu-category-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }    </style>
+        }        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
+    </style>
 </head>
 <body>
 
@@ -371,12 +372,12 @@
     <div class="menu-categories">
         <div class="menu-categories-title">📂 Catégories</div>
         <div class="menu-category-grid">
-            <button class="menu-category-btn active" onclick="filterFromMenu('all', this)"> Tous</button>
+            <button class="menu-category-btn active" onclick="filterFromMenu('all', this)">🌟 Tous</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)">🚀 Sci-Fi</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Onirique', this)">🌙 Onirique</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)">🔪 Thriller</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Romance', this)">💜 Romance</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)"> Pub</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)">📢 Pub</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Dessin animé', this)">🎨 Dessin animé</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Divers', this)">✨ Divers</button>
         </div>
@@ -389,8 +390,8 @@
     <div>
         <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"><i class="fas fa-download"></i> Télécharger</button>
         <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>
-    </div>
-</section>
+    </div></section>
+
 <div class="search-container">
     <div class="search-box">
         <i class="fas fa-search"></i>
@@ -438,8 +439,8 @@
                 <li><a href="#" onclick="openUploadModal()">Upload Vidéo</a></li>
             </ul>
         </div>
-        <div class="footer-section">
-            <h3>Légal</h3>            <ul class="footer-links">
+        <div class="footer-section">            <h3>Légal</h3>
+            <ul class="footer-links">
                 <li><a href="#">Mentions légales</a></li>
                 <li><a href="#">Conditions d'utilisation</a></li>
                 <li><a href="#">Politique de confidentialité</a></li>
@@ -482,13 +483,13 @@
             <input type="text" id="uploadTitle" placeholder="Titre de la vidéo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
             <input type="text" id="uploadAuthor" placeholder="Ton pseudo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
             <select id="uploadCategory" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-                <option value="Sci-Fi"> Sci-Fi</option>
+                <option value="Sci-Fi">🚀 Sci-Fi</option>
                 <option value="Onirique">🌙 Onirique</option>
-                <option value="Thriller"> Thriller</option>
+                <option value="Thriller">🔪 Thriller</option>
                 <option value="Romance">💜 Romance</option>
                 <option value="Pub">📢 Pub</option>
-                <option value="Dessin animé">🎨 Dessin animé</option>
-                <option value="Divers">✨ Divers</option>            </select>
+                <option value="Dessin animé">🎨 Dessin animé</option>                <option value="Divers">✨ Divers</option>
+            </select>
             
             <!-- Upload vidéo via Cloudinary -->
             <div style="margin-bottom:1rem;">
@@ -536,8 +537,8 @@ const CLOUDINARY_UPLOAD_PRESET = 'auroraai_upload';
 // Widget Cloudinary
 let cloudinaryWidget = null;
 
+// ============================================// FONCTIONS MENU ET UPLOAD
 // ============================================
-// FONCTIONS MENU ET UPLOAD// ============================================
 function toggleMenu() { 
     const menu = document.getElementById('mobileMenu');
     if (menu) menu.classList.toggle('active');
@@ -585,8 +586,8 @@ function openCloudinaryWidget(type) {
         });
     }
     
-    cloudinaryWidget.open();
-}
+    cloudinaryWidget.open();}
+
 // ============================================
 // ANIMATION FOND : CIRCUIT FLOW
 // ============================================
@@ -634,8 +635,8 @@ function initCircuits() {
                 connections: [],
                 active: false,
                 pulse: 0
-            });
-        }    }
+            });        }
+    }
 
     circuits.forEach((node, i) => {
         const col = i % cols;
@@ -683,8 +684,8 @@ function animateCircuit() {
             cCtx.moveTo(node.x, node.y);
             cCtx.lineTo(target.x, target.y);
         });
-    });
-    cCtx.stroke();
+    });    cCtx.stroke();
+
     cCtx.globalCompositeOperation = 'lighter';
 
     signals = signals.filter(signal => {
@@ -732,8 +733,8 @@ function animateCircuit() {
     });
 
     circuits.forEach(node => {
-        if (node.active) {
-            node.pulse *= 0.95;            if (node.pulse > 0.1) {
+        if (node.active) {            node.pulse *= 0.95;
+            if (node.pulse > 0.1) {
                 const glow = cCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, CONFIG.glowRadius);
                 glow.addColorStop(0, ORANGE + Math.floor(node.pulse * CONFIG.glowOpacity).toString(16).padStart(2, '0'));
                 glow.addColorStop(1, 'transparent');
@@ -781,8 +782,8 @@ function displayVideos(videosToDisplay) {
         grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
         count.textContent = '0 vidéo';
         return;
-    }
-    count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');    grid.innerHTML = videosToDisplay.map(v => {
+    }    count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
+    grid.innerHTML = videosToDisplay.map(v => {
         const isFav = favorites.includes(v.id);
         return `
         <div class="video-card" onclick="openVideo(${v.id})">
@@ -830,8 +831,8 @@ function updateFavBadge() {
 
 function showFavorites() {
     const favVideos = videos.filter(v => favorites.includes(v.id));
-    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';
-    document.getElementById('content').scrollIntoView({behavior:'smooth'});    displayVideos(favVideos);
+    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';    document.getElementById('content').scrollIntoView({behavior:'smooth'});
+    displayVideos(favVideos);
 }
 
 function showAllVideos() {
@@ -879,8 +880,8 @@ function filterFromMenu(category, btn) {
     if (category !== 'all') filtered = videos.filter(v => v.category === category);
     const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
     document.getElementById('sectionTitle').textContent = title;
-    displayVideos(filtered);
-        toggleMenu();
+    displayVideos(filtered);    
+    toggleMenu();
     document.getElementById('content').scrollIntoView({behavior:'smooth'});
 }
 
@@ -928,13 +929,16 @@ document.getElementById('videoModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal('videoModal'); 
 });
 
+// ============================================// UPLOAD VIA SUPABASE + CLOUDINARY
 // ============================================
-// UPLOAD VIA SUPABASE + CLOUDINARY// ============================================
 async function submitVideo(event) {
     event.preventDefault();
     
     const videoUrl = document.getElementById('uploadVideoUrl').value;
     const thumbnailUrl = document.getElementById('uploadThumbnail').value;
+    const title = document.getElementById('uploadTitle').value.trim();
+    const author = document.getElementById('uploadAuthor').value.trim();
+    const category = document.getElementById('uploadCategory').value;
     
     if (!videoUrl) {
         showToast('❌ Sélectionne une vidéo', 'error');
@@ -947,11 +951,11 @@ async function submitVideo(event) {
     submitBtn.disabled = true;
     
     const newVideo = {
-        title: document.getElementById('uploadTitle').value.trim(),
-        author: document.getElementById('uploadAuthor').value.trim(),
-        category: document.getElementById('uploadCategory').value,
+        title: title,
+        author: author,
+        category: category,
         video_url: videoUrl,
-        thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(document.getElementById('uploadTitle').value),
+        thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(title),
         tip_link: document.getElementById('uploadTipLink').value.trim() || '',
         description: document.getElementById('uploadDesc').value.trim() || '',
         views: 0,
@@ -959,7 +963,9 @@ async function submitVideo(event) {
     };
     
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos`, {
+        const url = `${SUPABASE_URL}/rest/v1/videos`;
+        
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'apikey': SUPABASE_KEY,
@@ -970,7 +976,9 @@ async function submitVideo(event) {
             body: JSON.stringify(newVideo)
         });
         
-        if (!response.ok) throw new Error('Erreur serveur');
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erreur ${response.status}: ${errorText}`);        }
         
         const data = await response.json();
         
@@ -978,7 +986,8 @@ async function submitVideo(event) {
             const v = data[0];
             videos.unshift({
                 id: 'supa-' + v.id,
-                title: v.title,                author: v.author,
+                title: v.title,
+                author: v.author,
                 views: '0',
                 category: v.category,
                 img: v.thumbnail_url,
@@ -995,6 +1004,7 @@ async function submitVideo(event) {
         displayVideos(currentFilter === 'all' ? videos : videos.filter(v => v.category === currentFilter));
         
     } catch (error) {
+        console.error('Erreur complète:', error);
         showToast('❌ Erreur : ' + error.message);
     } finally {
         submitBtn.innerHTML = originalText;
