@@ -549,7 +549,7 @@ function openUploadModal() {
 }
 
 // ============================================
-// CLOUDINARY UPLOAD WIDGET
+// CLOUDINARY UPLOAD WIDGET CORRIGÉ
 // ============================================
 function openCloudinaryWidget(type) {
     if (!cloudinaryWidget) {
@@ -559,12 +559,12 @@ function openCloudinaryWidget(type) {
             sources: ['local', 'camera'],
             multiple: false,
             maxFileSize: 50000000,
-            clientAllowedFormats: type === 'video' ? ['mp4', 'webm', 'mov'] : ['jpg', 'jpeg', 'png', 'gif'],
+            clientAllowedFormats: type === 'video' ? ['mp4', 'webm', 'mov'] : ['jpg', 'jpeg', 'png', 'gif', 'webp'],
             cropping: type === 'image',
             croppingAspectRatio: 16/9,
             croppingShowDimensions: true,
             folder: 'auroraai_videos',
-            resourceType: type
+            resourceType: type // CORRECTION : Spécifie 'video' ou 'image'
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 if (type === 'video') {
@@ -754,7 +754,7 @@ resizeCircuit();
 animateCircuit();
 
 // ============================================
-// LOGIQUE DU SITE AVEC COMPTAGE DES VUES
+// LOGIQUE DU SITE AVEC COMPTAGE DES VUES CORRIGÉ
 // ============================================
 let videos = [
     { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
@@ -778,12 +778,11 @@ function getFilteredVideos() {
     return videos.filter(v => v.category === currentFilter);
 }
 
-// Charger les vidéos depuis Supabase au démarrage
 async function loadVideosFromSupabase() {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
-            headers: {                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
+            headers: {
+                'apikey': SUPABASE_KEY,                'Authorization': `Bearer ${SUPABASE_KEY}`
             }
         });
         
@@ -800,7 +799,8 @@ async function loadVideosFromSupabase() {
                     video_url: v.video_url,
                     tip_link: v.tip_link || '',
                     description: v.description || '',
-                    dbId: v.id
+                    dbId: v.id,
+                    rawViews: v.views || 0
                 }));
                 
                 videos = [...supabaseVideos, ...videos];
@@ -814,28 +814,35 @@ async function loadVideosFromSupabase() {
     displayVideos(getFilteredVideos());
 }
 
-// Incrémenter les vues
+// CORRECTION : Incrémenter les vues avec PATCH direct
 async function incrementViews(videoId, dbId) {
     if (!dbId || dbId.toString().startsWith('supa-')) return;
     
     try {
-        await fetch(`${SUPABASE_URL}/rest/v1/videos?id=eq.${dbId}`, {
+        // Récupérer les vues actuelles
+        const video = videos.find(v => v.id == videoId);
+        if (!video) return;
+        
+        const currentViews = video.rawViews || 0;
+        const newViews = currentViews + 1;
+        
+        // Mettre à jour dans Supabase
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?id=eq.${dbId}`, {
             method: 'PATCH',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${SUPABASE_KEY}`,                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
             },
-            body: JSON.stringify({ 
-                views: supabase.rpc('increment', { count: 1 })
-            })
+            body: JSON.stringify({ views: newViews })
         });
         
-        // Mettre à jour l'affichage local        const video = videos.find(v => v.id == videoId);
-        if (video) {
-            const currentViews = parseInt(video.views.replace(/\D/g, '')) || 0;
-            video.views = formatViews(currentViews + 1);
+        if (response.ok) {
+            // Mettre à jour localement
+            video.rawViews = newViews;
+            video.views = formatViews(newViews);
             displayVideos(getFilteredVideos());
+            console.log('✅ Vues incrémentées:', newViews);
         }
     } catch (error) {
         console.error('Erreur increment views:', error);
@@ -873,13 +880,13 @@ function displayVideos(videosToDisplay) {
                         <i class="fas fa-download"></i> Télécharger
                     </button>
                     <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
-                        <i class="fas fa-heart"></i> Tip
-                    </button>
+                        <i class="fas fa-heart"></i> Tip                    </button>
                 </div>
             </div>
         </div>`;
     }).join('');
 }
+
 function toggleFavorite(videoId) {
     const index = favorites.indexOf(videoId);
     if (index > -1) { favorites.splice(index, 1); showToast('Retiré des favoris'); } 
@@ -922,14 +929,14 @@ function filterVideos(category, btn) {
     displayVideos(filtered);
     
     document.querySelectorAll('.menu-category-btn').forEach(b => {
-        b.classList.remove('active');
-        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent.includes('Tous'))) {
+        b.classList.remove('active');        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent.includes('Tous'))) {
             b.classList.add('active');
         }
     });
 }
 
-function filterFromMenu(category, btn) {    currentFilter = category;
+function filterFromMenu(category, btn) {
+    currentFilter = category;
     document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.querySelectorAll('.filter-btn').forEach(b => {
@@ -971,13 +978,13 @@ function openVideo(id) {
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.remove('active');
-    if (modalId === 'videoModal') {
-        const video = document.getElementById('modalVideo');
+    if (modalId === 'videoModal') {        const video = document.getElementById('modalVideo');
         video.pause();
         setTimeout(() => { video.src = ''; }, 300);
     }
     document.body.style.overflow = '';
 }
+
 function downloadVideo() { if (!currentVideo) return; downloadById(currentVideo.video_url, currentVideo.title); }
 function downloadById(url, title) {
     const link = document.createElement('a');
@@ -1020,14 +1027,14 @@ async function submitVideo(event) {
         thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(title),
         tip_link: document.getElementById('uploadTipLink').value.trim() || '',
         description: document.getElementById('uploadDesc').value.trim() || '',
-        views: 0,
-        status: 'approved'
+        views: 0,        status: 'approved'
     };
     
     try {
         const url = `${SUPABASE_URL}/rest/v1/videos`;
         
-        const response = await fetch(url, {            method: 'POST',
+        const response = await fetch(url, {
+            method: 'POST',
             headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${SUPABASE_KEY}`,
@@ -1055,7 +1062,8 @@ async function submitVideo(event) {
                 img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
                 video_url: v.video_url,
                 tip_link: v.tip_link || '',
-                dbId: v.id
+                dbId: v.id,
+                rawViews: 0
             });
         }
         
@@ -1068,15 +1076,15 @@ async function submitVideo(event) {
         
     } catch (error) {
         console.error('Erreur complète:', error);
-        showToast('❌ Erreur : ' + error.message);
-    } finally {
+        showToast('❌ Erreur : ' + error.message);    } finally {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
 }
 
 function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');    toast.textContent = message;
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
     toast.className = 'toast show ' + type;
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
