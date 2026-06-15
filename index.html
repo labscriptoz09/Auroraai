@@ -35,6 +35,7 @@
             width: 100%; height: 100%; 
             z-index: 0; 
             pointer-events: none;
+            background: #030305;
         }
         
         header { 
@@ -46,8 +47,8 @@
         
         .logo { 
             font-size: 1.3rem; 
-            font-weight: 800; 
-            position: relative;            display: inline-flex;
+            font-weight: 800;             position: relative;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
@@ -95,8 +96,8 @@
             animation: underline-glow 3s ease-in-out infinite;
         }
         
-        @keyframes underline-glow {
-            0%, 100% { opacity: 0; transform: scaleX(0); }            50% { opacity: 0.6; transform: scaleX(1); }
+        @keyframes underline-glow {            0%, 100% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 0.6; transform: scaleX(1); }
         }
 
         .menu-btn {
@@ -144,8 +145,8 @@
             width: 100%;
             max-width: 400px;
             margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255,255,255,0.03);            border: 1px solid rgba(255,255,255,0.08);
+            padding: 1rem;            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px;
         }        
         .menu-categories-title {
@@ -193,8 +194,8 @@
             min-height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center; 
             padding: 6rem 1rem 3rem; position: relative; z-index: 1;
-        }
-        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }        .hero h1 span { color: #f97316; }
+        }        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
+        .hero h1 span { color: #f97316; }
         .hero p { font-size: 1rem; color: #94a3b8; max-width: 500px; margin-bottom: 2rem; }
         .btn { 
             padding: 1rem 2rem; border: none; border-radius: 50px;
@@ -242,8 +243,8 @@
         .video-card:hover { transform: translateY(-2px); }
         .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); }
         .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-        .play-icon { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);             width: 50px; height: 50px; background: rgba(249,115,22,0.9); 
+        .play-icon {             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 50px; height: 50px; background: rgba(249,115,22,0.9); 
             border-radius: 50%; display: flex; align-items: center;
             justify-content: center; color: white; 
         }        
@@ -291,8 +292,8 @@
         .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
         .modal-author { color: #f97316; margin-bottom: 1rem; }
         .modal-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-        .modal-btn {
-            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05);            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+        .modal-btn {            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
             color: white; font-weight: 600; cursor: pointer;
             font-family: inherit; display: flex; align-items: center;
             justify-content: center; gap: 0.5rem;
@@ -340,8 +341,8 @@
         @media (min-width: 768px) { 
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
             .footer-content { grid-template-columns: repeat(3, 1fr); }
-            .menu-category-grid { grid-template-columns: repeat(3, 1fr); }
-        }        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
+            .menu-category-grid { grid-template-columns: repeat(3, 1fr); }        }
+        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
@@ -373,9 +374,9 @@
         <div class="menu-categories-title">📂 Catégories</div>
         <div class="menu-category-grid">
             <button class="menu-category-btn active" onclick="filterFromMenu('all', this)">🌟 Tous</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)">🚀 Sci-Fi</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)"> Sci-Fi</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Onirique', this)">🌙 Onirique</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)">🔪 Thriller</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)"> Thriller</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Romance', this)">💜 Romance</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)">📢 Pub</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Dessin animé', this)">🎨 Dessin animé</button>
@@ -389,8 +390,8 @@
     <p>Films et séries créés par IA. Regardez, téléchargez gratuitement.</p>
     <div>
         <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>
-    </div></section>
+        <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>    </div>
+</section>
 
 <div class="search-container">
     <div class="search-box">
@@ -438,8 +439,8 @@
                 <li><a href="#" onclick="toggleMenu(); showFavorites()">Mes Favoris</a></li>
                 <li><a href="#" onclick="openUploadModal()">Upload Vidéo</a></li>
             </ul>
-        </div>
-        <div class="footer-section">            <h3>Légal</h3>
+        </div>        <div class="footer-section">
+            <h3>Légal</h3>
             <ul class="footer-links">
                 <li><a href="#">Mentions légales</a></li>
                 <li><a href="#">Conditions d'utilisation</a></li>
@@ -487,8 +488,8 @@
                 <option value="Onirique">🌙 Onirique</option>
                 <option value="Thriller">🔪 Thriller</option>
                 <option value="Romance">💜 Romance</option>
-                <option value="Pub">📢 Pub</option>
-                <option value="Dessin animé">🎨 Dessin animé</option>                <option value="Divers">✨ Divers</option>
+                <option value="Pub"> Pub</option>                <option value="Dessin animé">🎨 Dessin animé</option>
+                <option value="Divers">✨ Divers</option>
             </select>
             
             <div style="margin-bottom:1rem;">
@@ -531,13 +532,14 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const CLOUDINARY_CLOUD_NAME = 'dcnldgsyn';
 const CLOUDINARY_UPLOAD_PRESET = 'auroraai_upload';
 
-let cloudinaryWidget = null;
+let videoWidget = null;
+let imageWidget = null;
 let viewsCache = JSON.parse(localStorage.getItem('aurora_views') || '{}');
 let viewedVideos = JSON.parse(localStorage.getItem('aurora_viewed') || '{}');
 let currentOpenVideo = null;
-
 // ============================================
-// FONCTIONS MENU ET UPLOAD// ============================================
+// FONCTIONS MENU ET UPLOAD
+// ============================================
 function toggleMenu() { 
     const menu = document.getElementById('mobileMenu');
     if (menu) menu.classList.toggle('active');
@@ -552,41 +554,58 @@ function openUploadModal() {
 }
 
 // ============================================
-// CLOUDINARY UPLOAD WIDGET
+// CLOUDINARY - 2 WIDGETS SÉPARÉS
 // ============================================
 function openCloudinaryWidget(type) {
-    if (!cloudinaryWidget) {
-        cloudinaryWidget = cloudinary.createUploadWidget({
-            cloudName: CLOUDINARY_CLOUD_NAME,
-            uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-            sources: ['local', 'camera'],
-            multiple: false,
-            maxFileSize: 50000000,
-            clientAllowedFormats: type === 'video' ? ['mp4', 'webm', 'mov'] : ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-            cropping: type === 'image',
-            croppingAspectRatio: 16/9,
-            croppingShowDimensions: true,
-            folder: 'auroraai_videos',
-            resourceType: type
-        }, (error, result) => {
-            if (!error && result && result.event === "success") {
-                if (type === 'video') {
+    if (type === 'video') {
+        if (!videoWidget) {
+            videoWidget = cloudinary.createUploadWidget({
+                cloudName: CLOUDINARY_CLOUD_NAME,
+                uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+                sources: ['local', 'camera'],
+                multiple: false,
+                maxFileSize: 50000000,
+                clientAllowedFormats: ['mp4', 'webm', 'mov'],
+                folder: 'auroraai_videos',
+                resourceType: 'video'
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
                     document.getElementById('uploadVideoUrl').value = result.info.secure_url;
                     document.getElementById('videoFileName').textContent = '✅ ' + result.info.original_filename;
-                } else {
+                    showToast('✅ Vidéo uploadée !');
+                }
+            });
+        }
+        videoWidget.open();
+    } else {
+        if (!imageWidget) {
+            imageWidget = cloudinary.createUploadWidget({
+                cloudName: CLOUDINARY_CLOUD_NAME,
+                uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+                sources: ['local', 'camera'],
+                multiple: false,
+                maxFileSize: 10000000,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                cropping: true,                croppingAspectRatio: 16/9,
+                croppingShowDimensions: true,
+                folder: 'auroraai_thumbnails',
+                resourceType: 'image'
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
                     document.getElementById('uploadThumbnail').value = result.info.secure_url;
                     document.getElementById('thumbnailFileName').textContent = '✅ ' + result.info.original_filename;
+                    showToast('✅ Image uploadée !');
                 }
-                showToast('✅ Upload réussi !');
-            }
-        });
+            });
+        }
+        imageWidget.open();
     }
-    cloudinaryWidget.open();
 }
 
 // ============================================
-// ANIMATION FOND : CIRCUIT FLOW
-// ============================================const circuitCanvas = document.getElementById('circuitCanvas');
+// ANIMATION FOND : CIRCUIT FLOW - DÉMARRAGE IMMÉDIAT
+// ============================================
+const circuitCanvas = document.getElementById('circuitCanvas');
 const cCtx = circuitCanvas.getContext('2d', { alpha: false });
 
 let cWidth, cHeight;
@@ -616,7 +635,6 @@ function resizeCircuit() {
     initCircuits();
     initSignals();
 }
-
 function initCircuits() {
     circuits = [];
     const cols = Math.ceil(cWidth / SPACING) + 2;
@@ -635,7 +653,8 @@ function initCircuits() {
     }
 
     circuits.forEach((node, i) => {
-        const col = i % cols;        const row = Math.floor(i / cols);
+        const col = i % cols;
+        const row = Math.floor(i / cols);
         if (col < cols - 1 && Math.random() > 0.3) node.connections.push(circuits[i + 1]);
         if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);
         if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
@@ -665,7 +684,6 @@ function spawnSignal() {
     startNode.active = true;
     startNode.pulse = 1;
 }
-
 function animateCircuit() {
     cTime++;
     cCtx.fillStyle = `rgba(3, 3, 5, ${CONFIG.fadeSpeed})`;
@@ -684,7 +702,8 @@ function animateCircuit() {
 
     cCtx.globalCompositeOperation = 'lighter';
 
-    signals = signals.filter(signal => {        signal.progress += signal.speed;
+    signals = signals.filter(signal => {
+        signal.progress += signal.speed;
         const currentX = signal.node1.x + (signal.node2.x - signal.node1.x) * signal.progress;
         const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;
         
@@ -714,8 +733,7 @@ function animateCircuit() {
         if (signal.progress > 0.9) { signal.node2.active = true; signal.node2.pulse = 1; }
 
         if (signal.progress >= 1) {
-            if (signal.node2.connections.length > 0) {
-                const nextNode = signal.node2.connections[Math.floor(Math.random() * signal.node2.connections.length)];
+            if (signal.node2.connections.length > 0) {                const nextNode = signal.node2.connections[Math.floor(Math.random() * signal.node2.connections.length)];
                 signals.push({
                     node1: signal.node2, node2: nextNode,
                     progress: 0, speed: signal.speed, color: signal.color,
@@ -733,7 +751,8 @@ function animateCircuit() {
             if (node.pulse > 0.1) {
                 const glow = cCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, CONFIG.glowRadius);
                 glow.addColorStop(0, ORANGE + Math.floor(node.pulse * CONFIG.glowOpacity).toString(16).padStart(2, '0'));
-                glow.addColorStop(1, 'transparent');                cCtx.fillStyle = glow;
+                glow.addColorStop(1, 'transparent');
+                cCtx.fillStyle = glow;
                 cCtx.beginPath();
                 cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);
                 cCtx.fill();
@@ -753,15 +772,17 @@ function animateCircuit() {
 }
 
 window.addEventListener('resize', resizeCircuit);
+
+// DÉMARRAGE IMMÉDIAT DU FOND ANIMÉ
 resizeCircuit();
 animateCircuit();
+console.log('🎨 Circuit Flow démarré');
 
 // ============================================
 // LOGIQUE DU SITE
 // ============================================
 let videos = [
-    { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-    { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", img: "https://picsum.photos/seed/reves/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },    { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", img: "https://picsum.photos/seed/reves/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
     { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", img: "https://picsum.photos/seed/data/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
     { id: 4, title: "Neon Memories", author: "Future Citizen", views: "56k", category: "Romance", img: "https://picsum.photos/seed/neon/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" }
 ];
@@ -782,7 +803,8 @@ function getFilteredVideos() {
 }
 
 async function loadVideosFromSupabase() {
-    try {        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
             headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${SUPABASE_KEY}`
@@ -809,8 +831,7 @@ async function loadVideosFromSupabase() {
                     };
                 });
                 
-                videos = [...supabaseVideos, ...videos];
-                console.log('✅ ' + supabaseVideos.length + ' vidéos chargées');
+                videos = [...supabaseVideos, ...videos];                console.log('✅ ' + supabaseVideos.length + ' vidéos chargées');
             }
         }
     } catch (error) {
@@ -831,7 +852,8 @@ async function incrementViews(videoId, dbId) {
         console.log('⏭️ Vue déjà comptée');
         return;
     }
-        try {
+    
+    try {
         const video = videos.find(v => v.id == videoId);
         if (!video) return;
         
@@ -858,8 +880,7 @@ async function incrementViews(videoId, dbId) {
             body: JSON.stringify({ views: newViews })
         });
         
-        if (response.ok) {
-            console.log('✅ +1 vue (total:', newViews, ')');
+        if (response.ok) {            console.log('✅ +1 vue (total:', newViews, ')');
         }
     } catch (error) {
         console.error('Erreur views:', error);
@@ -880,7 +901,8 @@ function displayVideos(videosToDisplay) {
         return `
         <div class="video-card" onclick="openVideo('${v.id}')">
             <div class="thumbnail">
-                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">                <div class="play-icon"><i class="fas fa-play"></i></div>
+                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">
+                <div class="play-icon"><i class="fas fa-play"></i></div>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${v.id}')">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -907,8 +929,7 @@ function displayVideos(videosToDisplay) {
 function toggleFavorite(videoId) {
     const index = favorites.indexOf(videoId);
     if (index > -1) { favorites.splice(index, 1); showToast('Retiré des favoris'); } 
-    else { favorites.push(videoId); showToast('❤️ Ajouté aux favoris'); }
-    localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
+    else { favorites.push(videoId); showToast('❤️ Ajouté aux favoris'); }    localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
     updateFavBadge();
     displayVideos(getFilteredVideos());
 }
@@ -929,7 +950,8 @@ function showFavorites() {
 function showAllVideos() {
     currentFilter = 'all';
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn').classList.add('active');    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn').classList.add('active');
+    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.menu-category-btn').classList.add('active');
     document.getElementById('sectionTitle').textContent = '🔥 Tendances';
     displayVideos(getFilteredVideos());
@@ -940,7 +962,7 @@ function filterVideos(category, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     let filtered = getFilteredVideos();
-    const title = category === 'all' ? '🔥 Tendances' : '🎬 ' + category;
+    const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
     document.getElementById('sectionTitle').textContent = title;
     displayVideos(filtered);
     
@@ -956,14 +978,13 @@ function filterFromMenu(category, btn) {
     currentFilter = category;
     document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    document.querySelectorAll('.filter-btn').forEach(b => {
-        b.classList.remove('active');
+    document.querySelectorAll('.filter-btn').forEach(b => {        b.classList.remove('active');
         if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent === 'Tous')) {
             b.classList.add('active');
         }
     });
     let filtered = getFilteredVideos();
-    const title = category === 'all' ? '🔥 Tendances' : '🎬 ' + category;
+    const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
     document.getElementById('sectionTitle').textContent = title;
     displayVideos(filtered);
     toggleMenu();
@@ -978,7 +999,8 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     displayVideos(filtered);
 });
 
-function openVideo(id) {    if (currentOpenVideo === id) return;
+function openVideo(id) {
+    if (currentOpenVideo === id) return;
     currentOpenVideo = id;
     
     currentVideo = videos.find(v => v.id == id);
@@ -1005,7 +1027,6 @@ function openVideo(id) {    if (currentOpenVideo === id) return;
         videoElement.play().catch(e => console.log('Lecture:', e));
     }, 100);
 }
-
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.remove('active');
@@ -1028,6 +1049,7 @@ function shareVideo() {
     if (navigator.share) { navigator.share({ title: currentVideo.title, text: `Regarde "${currentVideo.title}" sur AuroraAI.watch`, url: window.location.href }); } 
     else { navigator.clipboard.writeText(window.location.href); showToast('Lien copié ! 📋'); }
 }
+
 document.getElementById('videoModal').addEventListener('click', function(e) { 
     if (e.target === this) closeModal('videoModal'); 
 });
@@ -1042,7 +1064,7 @@ async function submitVideo(event) {
     const category = document.getElementById('uploadCategory').value;
     
     if (!videoUrl) {
-        showToast('❌ Sélectionne une vidéo', 'error');
+        showToast(' Sélectionne une vidéo', 'error');
         return;
     }
     
@@ -1054,8 +1076,7 @@ async function submitVideo(event) {
     const newVideo = {
         title: title,
         author: author,
-        category: category,
-        video_url: videoUrl,
+        category: category,        video_url: videoUrl,
         thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(title),
         tip_link: document.getElementById('uploadTipLink').value.trim() || '',
         description: document.getElementById('uploadDesc').value.trim() || '',
@@ -1076,7 +1097,8 @@ async function submitVideo(event) {
             },
             body: JSON.stringify(newVideo)
         });
-                if (!response.ok) {
+        
+        if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Erreur ${response.status}: ${errorText}`);
         }
@@ -1103,8 +1125,7 @@ async function submitVideo(event) {
         document.getElementById('uploadForm').reset();
         document.getElementById('videoFileName').textContent = '';
         document.getElementById('thumbnailFileName').textContent = '';
-        closeModal('uploadModal');
-        displayVideos(getFilteredVideos());
+        closeModal('uploadModal');        displayVideos(getFilteredVideos());
         
     } catch (error) {
         console.error('Erreur:', error);
@@ -1122,9 +1143,10 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Initialisation
+// Initialisation du site
 loadVideosFromSupabase();
 updateFavBadge();
 </script>
+
 </body>
-</html>
+</html>>
