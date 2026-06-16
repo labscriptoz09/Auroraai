@@ -14,14 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Cloudinary Upload Widget -->
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #030305; 
+            background: #00040a; 
             color: white; 
             overflow-x: hidden;
             position: relative;
@@ -29,191 +28,173 @@
             touch-action: manipulation;
         }
         
-        #circuitCanvas { 
-            position: fixed; 
-            top: 0; left: 0; 
+        /* ============================================
+           FOND ANIMÉ BLEU FONCÉ
+           ============================================ */
+        #bgCanvas { 
+            position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; 
-            z-index: 0; 
-            pointer-events: none;
-            background: #030305;
+            z-index: 0; pointer-events: none;
         }
         
+        /* ============================================
+           HEADER + LOGO AURORA GLOW
+           ============================================ */
         header { 
             position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-            padding: 1rem; background: rgba(3,3,5,0.85); 
-            backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding: 1rem; background: rgba(0,6,16,0.85); 
+            backdrop-filter: blur(20px); border-bottom: 1px solid rgba(220,140,40,0.1); 
         }
         .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
-        .logo { 
-            font-size: 1.3rem; 
-            font-weight: 800;             position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }        
+        .logo {             font-size: 1.3rem; font-weight: 800; position: relative;
+            display: inline-flex; align-items: center; gap: 0.7rem;
+            text-decoration: none; cursor: pointer;
+        }
+        
+        .aurora-logo-svg { width: 36px; height: 36px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .arc-1 { position: absolute; width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; border-top-color: #00aaff; border-right-color: #0088dd; animation: aw1 3s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(0,170,255,0.5)); }
+        .arc-2 { position: absolute; width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; border-bottom-color: #00ddcc; border-left-color: #00bbaa; animation: aw2 3.5s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(0,221,204,0.5)); }
+        .arc-3 { position: absolute; width: 17px; height: 17px; border-radius: 50%; border: 2px solid transparent; border-top-color: #c83050; border-right-color: #a82040; animation: aw3 2.8s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(200,48,80,0.5)); }
+        .core-dot { width: 5px; height: 5px; border-radius: 50%; background: white; animation: cpulse 2s ease-in-out infinite; box-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 20px rgba(0,170,255,0.4); }
+        @keyframes aw1 { 0%,100%{transform:rotate(0) scale(1);opacity:.9} 25%{transform:rotate(30deg) scale(1.05);opacity:1} 50%{transform:rotate(-10deg) scale(.95);opacity:.8} 75%{transform:rotate(15deg) scale(1.02);opacity:.95} }
+        @keyframes aw2 { 0%,100%{transform:rotate(0) scale(1);opacity:.85} 30%{transform:rotate(-25deg) scale(1.08);opacity:1} 60%{transform:rotate(20deg) scale(.92);opacity:.75} 80%{transform:rotate(-5deg) scale(1.03);opacity:.9} }
+        @keyframes aw3 { 0%,100%{transform:rotate(0) scale(1);opacity:.9} 35%{transform:rotate(40deg) scale(1.1);opacity:1} 65%{transform:rotate(-15deg) scale(.9);opacity:.8} }
+        @keyframes cpulse { 0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(255,255,255,.8),0 0 20px rgba(0,170,255,.4)} 50%{transform:scale(1.3);box-shadow:0 0 15px #fff,0 0 35px rgba(0,170,255,.6)} }
+        
         .logo-text {
-            background: linear-gradient(135deg, #fff 0%, #f97316 50%, #fff 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: shimmer 3s linear infinite;
+            background: linear-gradient(90deg, #ffffff 0%, #00aaff 25%, #00ddcc 50%, #c83050 75%, #ffffff 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: textGradientFlow 6s ease-in-out infinite;
         }
+        @keyframes textGradientFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         
-        @keyframes shimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-        
-        .logo-icon {
-            color: #f97316;
-            animation: pulse-glow 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.5));
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% { 
-                filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.5));
-                transform: scale(1);
-            }
-            50% { 
-                filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.8));
-                transform: scale(1.05);
-            }
-        }
-        
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #f97316, transparent);
-            opacity: 0;
-            animation: underline-glow 3s ease-in-out infinite;
-        }
-        
-        @keyframes underline-glow {            0%, 100% { opacity: 0; transform: scaleX(0); }
-            50% { opacity: 0.6; transform: scaleX(1); }
-        }
-
         .menu-btn {
             width: 44px; height: 44px; background: rgba(255,255,255,0.05); 
             border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; 
-            color: white; font-size: 1.2rem; cursor: pointer; position: relative;
-            z-index: 101;
+            color: white; font-size: 1.2rem; cursor: pointer; position: relative; z-index: 101;
         }
-        
         .fav-badge {
             position: absolute; top: -5px; right: -5px;
-            background: #f97316; color: white;
-            font-size: 0.7rem; font-weight: 700;
+            background: #e8a840; color: #000; font-size: 0.7rem; font-weight: 700;
             width: 20px; height: 20px; border-radius: 50%;
             display: none; align-items: center; justify-content: center;
         }
         .fav-badge.visible { display: flex; }
 
+        /* Mobile Menu */
         .mobile-menu { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(3,3,5,0.98); backdrop-filter: blur(30px); 
+            background: rgba(0,6,16,0.98); backdrop-filter: blur(30px); 
             z-index: 200; display: none; flex-direction: column; 
             justify-content: center; align-items: center; gap: 1.5rem; 
-            padding: 2rem;
-            overflow-y: auto;
+            padding: 2rem; overflow-y: auto;
         }
         .mobile-menu.active { display: flex; }
         .mobile-menu a { 
-            color: white; 
-            text-decoration: none; 
-            font-size: 1.3rem; 
-            font-weight: 700; 
-            transition: color 0.3s ease;
-        }
-        .mobile-menu a:hover { color: #f97316; }
-        
+            color: #d4364b; text-decoration: none; font-size: 1.3rem; font-weight: 700; 
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }        .mobile-menu a:hover { color: #ff4d6a; text-shadow: 0 0 20px rgba(212,54,75,0.4); }
         .close-btn { 
             position: absolute; top: 1rem; right: 1rem;
             width: 44px; height: 44px; background: rgba(255,255,255,0.05); 
             border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; 
             color: white; font-size: 1.3rem; cursor: pointer; 
         }
-        
-        .menu-categories {
-            width: 100%;
-            max-width: 400px;
-            margin: 1rem 0;
-            padding: 1rem;            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-        }        
-        .menu-categories-title {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-            text-align: center;
+        .menu-categories { width: 100%; max-width: 400px; margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; }
+        .menu-categories-title { 
+            font-size: 0.9rem; color: #d4364b; text-transform: uppercase; letter-spacing: 1px; 
+            margin-bottom: 1rem; text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
+        .menu-category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
         
-        .menu-category-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-        
+        /* CATÉGORIES MOBILE EN BORDEAUX VISIBLE */
         .menu-category-btn {
-            padding: 0.7rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-family: inherit;
+            padding: 0.7rem; background: rgba(168,32,64,0.08); border: 1px solid rgba(168,32,64,0.2);
+            border-radius: 10px; color: #d4364b; font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s ease; text-align: center; font-family: inherit;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
         }
-        
-        .menu-category-btn:hover {
-            background: rgba(249,115,22,0.1);
-            border-color: rgba(249,115,22,0.3);
-            color: #f97316;
+        .menu-category-btn:hover { 
+            background: rgba(168,32,64,0.2); border-color: rgba(212,54,75,0.5); color: #ff4d6a;
+            text-shadow: 0 0 15px rgba(212,54,75,0.4);
         }
-        
-        .menu-category-btn.active {
-            background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(124,58,237,0.2));
-            border-color: #f97316;
-            color: white;
+        .menu-category-btn.active { 
+            background: rgba(168,32,64,0.25); border-color: #d4364b; color: #ff6b82; 
+            text-shadow: 0 0 15px rgba(212,54,75,0.5);
         }
 
+        /* ============================================
+           HERO
+           ============================================ */
         .hero { 
             min-height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center; 
             padding: 6rem 1rem 3rem; position: relative; z-index: 1;
-        }        .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
-        .hero h1 span { color: #f97316; }
-        .hero p { font-size: 1rem; color: #94a3b8; max-width: 500px; margin-bottom: 2rem; }
+        }
+        .badge { 
+            display: inline-block; padding: 0.4rem 1rem; 
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px; font-size: 0.7rem; letter-spacing: 3px;
+            text-transform: uppercase; color: #ffffff; margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 30px rgba(255,255,255,0.3);
+            animation: badgeFlash 3s ease-in-out infinite;
+        }
+        @keyframes badgeFlash { 
+            0%,100%{text-shadow:0 0 10px rgba(255,255,255,.6),0 0 30px rgba(255,255,255,.3);border-color:rgba(255,255,255,.2)} 
+            50%{text-shadow:0 0 15px rgba(255,255,255,.9),0 0 40px rgba(255,255,255,.5);border-color:rgba(255,255,255,.35)}         }
+        .hero h1 { 
+            font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin-bottom: 1rem;
+            background: linear-gradient(180deg, #e8a840 0%, #c07828 50%, #985818 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 2px 25px rgba(0,10,30,0.9));
+        }
+        .hero p { 
+            font-size: 1rem; color: #d4364b; max-width: 500px; margin-bottom: 2rem;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+            font-weight: 600;
+        }
         .btn { 
             padding: 1rem 2rem; border: none; border-radius: 50px;
             font-weight: 700; cursor: pointer; width: 100%; 
             max-width: 300px; margin: 0.5rem; font-family: inherit; 
         }
-        .btn-primary { background: linear-gradient(135deg, #f97316, #ff8c00); color: white; }
-        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
+        .btn-primary { background: linear-gradient(135deg, #e8a840, #c07828); color: #000; }
+        
+        /* BOUTON PARTAGER EN BORDEAUX VISIBLE */
+        .btn-secondary { 
+            background: rgba(168,32,64,0.15); 
+            border: 1px solid rgba(212,54,75,0.4); 
+            color: #d4364b;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .btn-secondary:hover {
+            background: rgba(168,32,64,0.25);
+            border-color: #d4364b;
+            color: #ff4d6a;
+            box-shadow: 0 0 25px rgba(212,54,75,0.2);
+            text-shadow: 0 0 15px rgba(212,54,75,0.4);
+        }
 
+        /* ============================================
+           SEARCH & FILTERS
+           ============================================ */
         .search-container { max-width: 1400px; margin: 0 auto; padding: 0 1rem 1rem; position: relative; z-index: 1; }
         .search-box { position: relative; width: 100%; }
+        
+        /* BARRE DE RECHERCHE EN BORDEAUX */
         .search-box input {
             width: 100%; padding: 0.8rem 1rem 0.8rem 3rem;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50px; color: white; font-size: 1rem; font-family: inherit;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50px; color: #d4364b; font-size: 1rem; font-family: inherit;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.8);
         }
-        .search-box input:focus { outline: none; border-color: #f97316; }
-        .search-box i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-box input::placeholder { color: rgba(212,54,75,0.4); }
+        .search-box input:focus { outline: none; border-color: rgba(212,54,75,0.5); box-shadow: 0 0 20px rgba(212,54,75,0.15); }        .search-box i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(212,54,75,0.6); }
 
         .filters {
             display: flex; gap: 0.5rem; overflow-x: auto;
@@ -221,63 +202,83 @@
             scrollbar-width: none; z-index: 1; position: relative;
         }
         .filters::-webkit-scrollbar { display: none; }
+        
+        /* FILTRES EN BORDEAUX VISIBLE */
         .filter-btn {
-            padding: 0.5rem 1rem; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
-            color: #94a3b8; white-space: nowrap; cursor: pointer;
-            font-family: inherit; font-size: 0.9rem; transition: all 0.3s ease;
+            padding: 0.5rem 1rem; background: rgba(168,32,64,0.06);
+            border: 1px solid rgba(168,32,64,0.15); border-radius: 50px;
+            color: #d4364b; white-space: nowrap; cursor: pointer;
+            font-family: inherit; font-size: 0.9rem; font-weight: 700;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
         }
-        .filter-btn:hover { background: rgba(249,115,22,0.1); }
-        .filter-btn.active { background: #f97316; color: white; border-color: #f97316; }
+        .filter-btn:hover { 
+            background: rgba(168,32,64,0.15); border-color: rgba(212,54,75,0.4); color: #ff4d6a;
+            text-shadow: 0 0 12px rgba(212,54,75,0.3);
+        }
+        .filter-btn.active { 
+            background: rgba(168,32,64,0.2); color: #ff6b82; border-color: #d4364b;
+            text-shadow: 0 0 15px rgba(212,54,75,0.4);
+        }
 
+        /* Content Grid */
         .content { max-width: 1400px; margin: 0 auto; padding: 1rem; position: relative; z-index: 1; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .section-title { font-size: 1.5rem; font-weight: 700; }
-        .video-count { font-size: 0.9rem; color: #94a3b8; }
+        
+        /* TITRE TENDANCES EN BORDEAUX */
+        .section-title { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: #d4364b;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+        }
+        
+        .video-count { font-size: 0.9rem; color: rgba(255,255,255,0.35); }
         .video-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
         .video-card { 
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); 
             border-radius: 16px; overflow: hidden; cursor: pointer;
-            transition: transform 0.2s ease; position: relative;
+            transition: all 0.3s ease; position: relative;
         }
-        .video-card:hover { transform: translateY(-2px); }
-        .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); }
+        .video-card:hover { transform: translateY(-4px); border-color: rgba(220,140,40,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .thumbnail { position: relative; aspect-ratio: 16/9; background: linear-gradient(135deg, #001230, #000c20); }
         .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
         .play-icon {             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 50px; height: 50px; background: rgba(249,115,22,0.9); 
+            width: 50px; height: 50px; background: rgba(220,140,40,0.9); 
             border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; color: white; 
-        }        
+            justify-content: center; color: #000; box-shadow: 0 0 20px rgba(220,140,40,0.4);
+        }
         .fav-btn {
             position: absolute; top: 0.5rem; right: 0.5rem;
-            width: 36px; height: 36px; background: rgba(3,3,5,0.7);
+            width: 36px; height: 36px; background: rgba(0,6,16,0.7);
             backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 50%; display: flex; align-items: center;
             justify-content: center; color: white; font-size: 0.9rem;
             cursor: pointer; z-index: 10; transition: all 0.2s ease;
         }
         .fav-btn:hover { transform: scale(1.1); }
-        .fav-btn.active { color: #f97316; background: rgba(249,115,22,0.2); border-color: #f97316; }
+        .fav-btn.active { color: #e8a840; background: rgba(220,140,40,0.2); border-color: #e8a840; }
 
         .card-info { padding: 1rem; }
-        .card-title { font-weight: 700; margin-bottom: 0.5rem; }
-        .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.8rem; }
+        .card-title { font-weight: 700; margin-bottom: 0.5rem; color: #d0d8e8; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.35); margin-bottom: 0.8rem; }
         .card-actions { display: flex; gap: 0.5rem; }
         .action-btn { 
             flex: 1; padding: 0.5rem; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
             color: white; font-size: 0.85rem; cursor: pointer; font-family: inherit; 
         }
-        .action-btn.tip { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #f97316; }
+        .action-btn.tip { background: rgba(220,140,40,0.1); border-color: rgba(220,140,40,0.3); color: #e8a840; }
 
+        /* Modal */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            position: fixed; inset: 0; background: rgba(0,4,10,0.95);
             z-index: 300; display: none; align-items: center;
             justify-content: center; padding: 1rem;
         }
         .modal.active { display: flex; }
         .modal-content {
-            background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,12,30,0.95); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px; padding: 1.5rem; max-width: 600px;
             width: 100%; max-height: 90vh; overflow-y: auto; position: relative;
         }
@@ -285,12 +286,11 @@
             position: absolute; top: 1rem; right: 1rem;
             width: 36px; height: 36px; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
-            color: white; cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
+            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
         .modal video { width: 100%; border-radius: 12px; margin-bottom: 1rem; background: #000; }
-        .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .modal-author { color: #f97316; margin-bottom: 1rem; }
+        .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: #d0d8e8; }
+        .modal-author { color: #e8a840; margin-bottom: 1rem; }
         .modal-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
         .modal-btn {            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
@@ -298,21 +298,21 @@
             font-family: inherit; display: flex; align-items: center;
             justify-content: center; gap: 0.5rem;
         }
-        .modal-btn.primary { background: linear-gradient(135deg, #f97316, #ff8c00); border: none; }
+        .modal-btn.primary { background: linear-gradient(135deg, #e8a840, #c07828); border: none; color: #000; }
 
+        /* Footer */
         .footer {
-            background: rgba(3,3,5,0.9); backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 3rem 1rem 2rem; margin-top: 4rem;
-            position: relative; z-index: 1;
+            background: rgba(0,6,16,0.9); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 3rem 1rem 2rem; margin-top: 4rem; position: relative; z-index: 1;
         }
         .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        .footer-section h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: #f97316; }
-        .footer-section p { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+        .footer-section h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: #e8a840; }
+        .footer-section p { color: rgba(255,255,255,0.4); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 0.5rem; }
-        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
-        .footer-links a:hover { color: #f97316; }
+        .footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
+        .footer-links a:hover { color: #e8a840; }
         .footer-social { display: flex; gap: 1rem; margin-top: 1rem; }
         .footer-social a {
             width: 40px; height: 40px; background: rgba(255,255,255,0.05);
@@ -320,18 +320,19 @@
             display: flex; align-items: center; justify-content: center;
             color: white; text-decoration: none; transition: all 0.3s ease;
         }
-        .footer-social a:hover { background: #f97316; border-color: #f97316; transform: translateY(-2px); }
+        .footer-social a:hover { background: #e8a840; border-color: #e8a840; color: #000; transform: translateY(-2px); }
         .footer-bottom {
             max-width: 1400px; margin: 2rem auto 0; padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center; color: #94a3b8; font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            text-align: center; color: rgba(255,255,255,0.25); font-size: 0.85rem;
         }
 
+        /* Toast */
         .toast {
             position: fixed; bottom: 2rem; left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1);
-            border-left: 3px solid #f97316; padding: 1rem 1.5rem;
+            background: rgba(0,12,30,0.95); border: 1px solid rgba(255,255,255,0.1);
+            border-left: 3px solid #d4364b; padding: 1rem 1.5rem;
             border-radius: 12px; color: white; font-weight: 600;
             z-index: 500; backdrop-filter: blur(20px);
             transition: transform 0.3s ease; max-width: 90%; text-align: center;
@@ -340,20 +341,25 @@
 
         @media (min-width: 768px) { 
             .video-grid { grid-template-columns: repeat(2, 1fr); } 
-            .footer-content { grid-template-columns: repeat(3, 1fr); }
-            .menu-category-grid { grid-template-columns: repeat(3, 1fr); }        }
+            .footer-content { grid-template-columns: repeat(3, 1fr); }            .menu-category-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
 
-<canvas id="circuitCanvas"></canvas>
+<canvas id="bgCanvas"></canvas>
 
 <header>
     <div class="header-container">
-        <div class="logo">
-            <i class="fas fa-bolt logo-icon"></i>
-            <span class="logo-text">AURORAAI</span>
+        <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+            <div class="aurora-logo-svg">
+                <div class="arc-1"></div>
+                <div class="arc-2"></div>
+                <div class="arc-3"></div>
+                <div class="core-dot"></div>
+            </div>
+            <span class="logo-text">AuroraAI</span>
         </div>
         <button class="menu-btn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
@@ -364,19 +370,17 @@
 
 <div class="mobile-menu" id="mobileMenu">
     <button class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
-    
     <a href="#hero" onclick="toggleMenu()">Accueil</a>
     <a href="#content" onclick="toggleMenu(); showAllVideos()">Explorer</a>
     <a href="#content" onclick="toggleMenu(); showFavorites()">❤️ Mes Favoris</a>
     <a href="#" onclick="toggleMenu(); openUploadModal()">Upload Vidéo</a>
-    
     <div class="menu-categories">
         <div class="menu-categories-title">📂 Catégories</div>
         <div class="menu-category-grid">
             <button class="menu-category-btn active" onclick="filterFromMenu('all', this)">🌟 Tous</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)"> Sci-Fi</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Sci-Fi', this)">🚀 Sci-Fi</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Onirique', this)">🌙 Onirique</button>
-            <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)"> Thriller</button>
+            <button class="menu-category-btn" onclick="filterFromMenu('Thriller', this)">🔪 Thriller</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Romance', this)">💜 Romance</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Pub', this)">📢 Pub</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Dessin animé', this)">🎨 Dessin animé</button>
@@ -386,11 +390,12 @@
 </div>
 
 <section class="hero" id="hero">
-    <h1>L'IA <span>réinvente</span> le cinéma</h1>
-    <p>Films et séries créés par IA. Regardez, téléchargez gratuitement.</p>
+    <div class="badge">Plateforme Cinéma & Séries IA</div>    <h1>L'IA réinvente<br>le cinéma</h1>
+    <p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
     <div>
         <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>    </div>
+        <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>
+    </div>
 </section>
 
 <div class="search-container">
@@ -422,731 +427,243 @@
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-section">
-            <h3><i class="fas fa-bolt" style="color: #f97316;"></i> AuroraAI.watch</h3>
-            <p>La première plateforme dédiée aux films et séries générés par IA. Découvrez, téléchargez et soutenez les créateurs.</p>
-            <div class="footer-social">
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
-                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            </div>
+            <h3><i class="fas fa-bolt" style="color:#e8a840;"></i> AuroraAI.watch</h3>
+            <p>La première plateforme dédiée aux films et séries générés par IA. Découvrez, téléchargez et soutenez les créateurs du cinéma de demain.</p>
         </div>
         <div class="footer-section">
             <h3>Navigation</h3>
             <ul class="footer-links">
                 <li><a href="#hero">Accueil</a></li>
                 <li><a href="#content">Explorer</a></li>
-                <li><a href="#" onclick="toggleMenu(); showFavorites()">Mes Favoris</a></li>
                 <li><a href="#" onclick="openUploadModal()">Upload Vidéo</a></li>
             </ul>
-        </div>        <div class="footer-section">
-            <h3>Légal</h3>
-            <ul class="footer-links">
-                <li><a href="#">Mentions légales</a></li>
-                <li><a href="#">Conditions d'utilisation</a></li>
-                <li><a href="#">Politique de confidentialité</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Suivez-nous</h3>            <div class="footer-social">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
         </div>
     </div>
-    <div class="footer-bottom">
-        <p>© 2026 AuroraAI.watch — Tous droits réservés. Fait avec ❤️ pour les créateurs IA.</p>
-    </div>
+    <div class="footer-bottom">© 2026 AuroraAI.watch — Tous droits réservés</div>
 </footer>
+
+<div class="toast" id="toast"></div>
 
 <div class="modal" id="videoModal">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
+        <button class="modal-close" onclick="closeVideoModal()"><i class="fas fa-times"></i></button>
         <video id="modalVideo" controls playsinline></video>
-        <h3 class="modal-title" id="modalTitle"></h3>
-        <p class="modal-author" id="modalAuthor"></p>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-author" id="modalAuthor"></div>
         <div class="modal-actions">
-            <button class="modal-btn primary" onclick="downloadVideo()">
-                <i class="fas fa-download"></i> Télécharger gratuitement
-            </button>
-            <button class="modal-btn" onclick="shareVideo()">
-                <i class="fas fa-share"></i> Partager
-            </button>
+            <button class="modal-btn primary" id="modalDownload"><i class="fas fa-download"></i> Télécharger</button>
+            <button class="modal-btn" id="modalTip"><i class="fas fa-heart"></i> Soutenir le créateur</button>
         </div>
     </div>
 </div>
 
-<div class="modal" id="uploadModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('uploadModal')"><i class="fas fa-times"></i></button>
-        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">
-            <i class="fas fa-upload" style="color: #f97316;"></i> Soumettre une vidéo
-        </h2>
-        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">
-            Partage ta création avec la communauté AuroraAI
-        </p>
-        <form class="upload-form" id="uploadForm" onsubmit="submitVideo(event)">
-            <input type="text" id="uploadTitle" placeholder="Titre de la vidéo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-            <input type="text" id="uploadAuthor" placeholder="Ton pseudo *" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-            <select id="uploadCategory" required style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-                <option value="Sci-Fi">🚀 Sci-Fi</option>
-                <option value="Onirique">🌙 Onirique</option>
-                <option value="Thriller">🔪 Thriller</option>
-                <option value="Romance">💜 Romance</option>
-                <option value="Pub"> Pub</option>                <option value="Dessin animé">🎨 Dessin animé</option>
-                <option value="Divers">✨ Divers</option>
-            </select>
-            
-            <div style="margin-bottom:1rem;">
-                <label style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.5rem; display:block;">Vidéo *</label>
-                <button type="button" onclick="openCloudinaryWidget('video')" 
-                        style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #3498db, #2980b9); border:none; border-radius:10px; color:white; font-weight:600; cursor:pointer; font-family:inherit;">
-                    <i class="fas fa-cloud-upload-alt"></i> Choisir un fichier vidéo
-                </button>
-                <input type="hidden" id="uploadVideoUrl" required>
-                <div id="videoFileName" style="margin-top:0.5rem; font-size:0.85rem; color:#10b981;"></div>
-            </div>
-            
-            <div style="margin-bottom:1rem;">
-                <label style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.5rem; display:block;">Miniature</label>
-                <button type="button" onclick="openCloudinaryWidget('image')" 
-                        style="width:100%; padding:0.8rem; background:linear-gradient(135deg, #3498db, #2980b9); border:none; border-radius:10px; color:white; font-weight:600; cursor:pointer; font-family:inherit;">
-                    <i class="fas fa-cloud-upload-alt"></i> Choisir une image
-                </button>
-                <input type="hidden" id="uploadThumbnail">
-                <div id="thumbnailFileName" style="margin-top:0.5rem; font-size:0.85rem; color:#10b981;"></div>
-            </div>
-            
-            <input type="url" id="uploadTipLink" placeholder="Lien Ko-fi/PayPal (optionnel)" style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white;">
-            <textarea id="uploadDesc" placeholder="Description (optionnel)" style="width:100%; padding:0.8rem; margin-bottom:1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; min-height:80px;"></textarea>
-            <button type="submit" class="modal-btn primary" id="submitBtn">
-                <i class="fas fa-paper-plane"></i> Publier maintenant
-            </button>
-        </form>
-    </div>
-</div>
-<div class="toast" id="toast"></div>
-
 <script>
-// ============================================
-// CONFIGURATION
-// ============================================
-const SUPABASE_URL = 'https://knecqgspkalwepdwwpud.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
+// =============================================
+// FOND ANIMÉ BLEU FONCÉ (IIFE isolée)
+// =============================================
+(function() {
+    var canvas = document.getElementById('bgCanvas');
+    var ctx = canvas.getContext('2d');
+    var W, H, t = 0;
+    var flowLines = [];
 
-const CLOUDINARY_CLOUD_NAME = 'dcnldgsyn';
-const CLOUDINARY_UPLOAD_PRESET = 'auroraai_upload';
-
-let videoWidget = null;
-let imageWidget = null;
-let viewsCache = JSON.parse(localStorage.getItem('aurora_views') || '{}');
-let viewedVideos = JSON.parse(localStorage.getItem('aurora_viewed') || '{}');
-let currentOpenVideo = null;
-// ============================================
-// FONCTIONS MENU ET UPLOAD
-// ============================================
-function toggleMenu() { 
-    const menu = document.getElementById('mobileMenu');
-    if (menu) menu.classList.toggle('active');
-}
-
-function openUploadModal() { 
-    const modal = document.getElementById('uploadModal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        initFlowLines();
     }
-}
 
-// ============================================
-// CLOUDINARY - 2 WIDGETS SÉPARÉS
-// ============================================
-function openCloudinaryWidget(type) {
-    if (type === 'video') {
-        if (!videoWidget) {
-            videoWidget = cloudinary.createUploadWidget({
-                cloudName: CLOUDINARY_CLOUD_NAME,
-                uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-                sources: ['local', 'camera'],
-                multiple: false,
-                maxFileSize: 50000000,
-                clientAllowedFormats: ['mp4', 'webm', 'mov'],
-                folder: 'auroraai_videos',
-                resourceType: 'video'
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    document.getElementById('uploadVideoUrl').value = result.info.secure_url;
-                    document.getElementById('videoFileName').textContent = '✅ ' + result.info.original_filename;
-                    showToast('✅ Vidéo uploadée !');
-                }
+    function drawBackground() {
+        var grad = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, Math.max(W, H) * 0.9);
+        grad.addColorStop(0, '#001230');
+        grad.addColorStop(0.4, '#000c20');
+        grad.addColorStop(0.8, '#000610');
+        grad.addColorStop(1, '#00040a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+    }
+    var halos = [
+        {x:0.2,y:0.3,r:400,c:'0,180,255',sx:0.06,sy:0.04,ph:0},
+        {x:0.8,y:0.6,r:350,c:'180,0,255',sx:-0.05,sy:0.03,ph:2},
+        {x:0.5,y:0.45,r:450,c:'0,240,220',sx:0.04,sy:-0.05,ph:4},
+        {x:0.12,y:0.7,r:320,c:'255,20,130',sx:0.07,sy:0.02,ph:1},
+        {x:0.88,y:0.25,r:300,c:'0,140,255',sx:-0.04,sy:-0.06,ph:3},
+        {x:0.35,y:0.82,r:360,c:'255,140,0',sx:0.05,sy:-0.03,ph:5},
+        {x:0.68,y:0.18,r:330,c:'0,255,160',sx:-0.06,sy:0.05,ph:6},
+        {x:0.28,y:0.55,r:370,c:'230,0,230',sx:0.03,sy:0.04,ph:7},
+        {x:0.72,y:0.78,r:310,c:'255,50,50',sx:-0.04,sy:-0.03,ph:8},
+        {x:0.08,y:0.42,r:340,c:'60,190,255',sx:0.05,sy:0.03,ph:9},
+        {x:0.55,y:0.15,r:290,c:'255,210,0',sx:-0.03,sy:0.04,ph:10},
+        {x:0.42,y:0.68,r:350,c:'0,255,100',sx:0.04,sy:-0.04,ph:11},
+        {x:0.9,y:0.5,r:280,c:'255,100,200',sx:-0.05,sy:0.02,ph:12},
+        {x:0.15,y:0.2,r:320,c:'100,0,255',sx:0.03,sy:-0.05,ph:13}
+    ];
+
+    function drawHalos() {
+        ctx.globalCompositeOperation = 'screen';
+        for (var i = 0; i < halos.length; i++) {
+            var h = halos[i];
+            var hx = (h.x + Math.sin(t * h.sx + h.ph) * 0.14) * W;
+            var hy = (h.y + Math.cos(t * h.sy + h.ph) * 0.1) * H;
+            var pulse = 1 + Math.sin(t * 0.4 + h.ph) * 0.15;
+            var g = ctx.createRadialGradient(hx, hy, 0, hx, hy, h.r * pulse);
+            g.addColorStop(0, 'rgba(' + h.c + ',0.14)');
+            g.addColorStop(0.4, 'rgba(' + h.c + ',0.07)');
+            g.addColorStop(1, 'rgba(' + h.c + ',0)');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(hx, hy, h.r * pulse, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+    }
+
+    var waves = [
+        {amp:120,freq:0.002,spd:0.8,yOff:0.24,r:0,g:100,b:230,a:0.2},
+        {amp:100,freq:0.003,spd:1.1,yOff:0.38,r:0,g:160,b:255,a:0.17},
+        {amp:140,freq:0.0015,spd:0.55,yOff:0.54,r:0,g:80,b:190,a:0.15},
+        {amp:85,freq:0.0025,spd:0.95,yOff:0.68,r:0,g:120,b:240,a:0.16},
+        {amp:75,freq:0.0035,spd:1.2,yOff:0.8,r:0,g:140,b:255,a:0.14},
+        {amp:80,freq:0.004,spd:1.4,yOff:0.29,r:0,g:240,b:255,a:0.14},
+        {amp:70,freq:0.0035,spd:1.2,yOff:0.48,r:0,g:220,b:200,a:0.13},
+        {amp:60,freq:0.0045,spd:1.5,yOff:0.62,r:0,g:255,b:230,a:0.11},
+        {amp:95,freq:0.002,spd:0.85,yOff:0.34,r:150,g:0,b:255,a:0.13},
+        {amp:85,freq:0.0028,spd:0.65,yOff:0.59,r:210,g:0,b:230,a:0.12},
+        {amp:70,freq:0.0038,spd:1.0,yOff:0.74,r:120,g:20,b:200,a:0.1},
+        {amp:75,freq:0.003,spd:1.3,yOff:0.44,r:255,g:30,b:140,a:0.12},        {amp:65,freq:0.0045,spd:1.5,yOff:0.64,r:250,g:0,b:180,a:0.11},
+        {amp:55,freq:0.005,spd:1.6,yOff:0.76,r:255,g:80,b:200,a:0.09},
+        {amp:70,freq:0.0032,spd:1.05,yOff:0.32,r:0,g:255,b:170,a:0.11},
+        {amp:60,freq:0.004,spd:1.3,yOff:0.52,r:0,g:240,b:130,a:0.1},
+        {amp:50,freq:0.0048,spd:1.4,yOff:0.72,r:50,g:255,b:100,a:0.08},
+        {amp:60,freq:0.0038,spd:1.15,yOff:0.42,r:255,g:150,b:0,a:0.1},
+        {amp:50,freq:0.005,spd:1.4,yOff:0.66,r:255,g:90,b:30,a:0.09},
+        {amp:55,freq:0.0042,spd:1.25,yOff:0.36,r:255,g:40,b:60,a:0.09},
+        {amp:45,freq:0.0055,spd:1.5,yOff:0.58,r:255,g:20,b:80,a:0.08},
+        {amp:50,freq:0.0048,spd:1.35,yOff:0.46,r:255,g:210,b:0,a:0.08},
+        {amp:40,freq:0.006,spd:1.6,yOff:0.7,r:255,g:180,b:50,a:0.07},
+        {amp:105,freq:0.0018,spd:0.6,yOff:0.84,r:70,g:50,b:255,a:0.15}
+    ];
+
+    function drawWaves() {
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 0; i < waves.length; i++) {
+            var w = waves[i];
+            ctx.beginPath();
+            ctx.moveTo(0, H);
+            for (var x = 0; x <= W; x += 5) {
+                var y = H * w.yOff
+                    + Math.sin(x * w.freq + t * w.spd) * w.amp
+                    + Math.cos(x * w.freq * 2.1 + t * w.spd * 0.6) * w.amp * 0.3
+                    + Math.sin(x * w.freq * 0.5 + t * w.spd * 1.3) * w.amp * 0.15;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(W, H);
+            ctx.closePath();
+            var grad = ctx.createLinearGradient(0, H * w.yOff - w.amp, 0, H);
+            grad.addColorStop(0, 'rgba(' + w.r + ',' + w.g + ',' + w.b + ',0)');
+            grad.addColorStop(0.35, 'rgba(' + w.r + ',' + w.g + ',' + w.b + ',' + w.a + ')');
+            grad.addColorStop(0.7, 'rgba(' + w.r + ',' + w.g + ',' + w.b + ',' + (w.a * 0.4) + ')');
+            grad.addColorStop(1, 'rgba(' + w.r + ',' + w.g + ',' + w.b + ',0)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function initFlowLines() {
+        flowLines = [];
+        for (var i = 0; i < 25; i++) {
+            flowLines.push({
+                x: Math.random() * W, y: Math.random() * H,
+                len: 100 + Math.random() * 300, spd: 1.5 + Math.random() * 3.5,
+                alpha: 0.08 + Math.random() * 0.15, width: 0.5 + Math.random() * 1.5,
+                hue: Math.random() * 360
             });
+        }    }
+
+    function drawFlowLines() {
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 0; i < flowLines.length; i++) {
+            var fl = flowLines[i];
+            fl.x += fl.spd;
+            if (fl.x > W + fl.len) { fl.x = -fl.len; fl.y = Math.random() * H; }
+            var grad = ctx.createLinearGradient(fl.x, fl.y, fl.x + fl.len, fl.y);
+            grad.addColorStop(0, 'hsla(' + fl.hue + ',95%,60%,0)');
+            grad.addColorStop(0.3, 'hsla(' + fl.hue + ',95%,65%,' + fl.alpha + ')');
+            grad.addColorStop(0.7, 'hsla(' + fl.hue + ',95%,65%,' + fl.alpha + ')');
+            grad.addColorStop(1, 'hsla(' + fl.hue + ',95%,60%,0)');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = fl.width;
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = 'hsla(' + fl.hue + ',90%,60%,' + (fl.alpha * 0.5) + ')';
+            ctx.beginPath();
+            ctx.moveTo(fl.x, fl.y);
+            ctx.lineTo(fl.x + fl.len, fl.y);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
         }
-        videoWidget.open();
-    } else {
-        if (!imageWidget) {
-            imageWidget = cloudinary.createUploadWidget({
-                cloudName: CLOUDINARY_CLOUD_NAME,
-                uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-                sources: ['local', 'camera'],
-                multiple: false,
-                maxFileSize: 10000000,
-                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-                cropping: true,                croppingAspectRatio: 16/9,
-                croppingShowDimensions: true,
-                folder: 'auroraai_thumbnails',
-                resourceType: 'image'
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    document.getElementById('uploadThumbnail').value = result.info.secure_url;
-                    document.getElementById('thumbnailFileName').textContent = '✅ ' + result.info.original_filename;
-                    showToast('✅ Image uploadée !');
-                }
-            });
-        }
-        imageWidget.open();
-    }
-}
-
-// ============================================
-// ANIMATION FOND : CIRCUIT FLOW - DÉMARRAGE IMMÉDIAT
-// ============================================
-const circuitCanvas = document.getElementById('circuitCanvas');
-const cCtx = circuitCanvas.getContext('2d', { alpha: false });
-
-let cWidth, cHeight;
-let circuits = [];
-let signals = [];
-let cTime = 0;
-
-const ORANGE = '#f97316';
-const VIOLET = '#7c3aed';
-const SPACING = 80;
-
-const CONFIG = {
-    speed: 0.012,
-    maxWidth: 0.4,
-    minWidth: 0.3,
-    maxSignals: 40,
-    spawnRate: 2,
-    fadeSpeed: 0.15,
-    trailOpacity: 0.6,
-    glowRadius: 6,
-    glowOpacity: 60
-};
-
-function resizeCircuit() {
-    cWidth = circuitCanvas.width = window.innerWidth;
-    cHeight = circuitCanvas.height = window.innerHeight;
-    initCircuits();
-    initSignals();
-}
-function initCircuits() {
-    circuits = [];
-    const cols = Math.ceil(cWidth / SPACING) + 2;
-    const rows = Math.ceil(cHeight / SPACING) + 2;
-
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            circuits.push({
-                x: x * SPACING - SPACING/2,
-                y: y * SPACING - SPACING/2,
-                connections: [],
-                active: false,
-                pulse: 0
-            });
-        }
+        ctx.globalCompositeOperation = 'source-over';
     }
 
-    circuits.forEach((node, i) => {
-        const col = i % cols;
-        const row = Math.floor(i / cols);
-        if (col < cols - 1 && Math.random() > 0.3) node.connections.push(circuits[i + 1]);
-        if (row < rows - 1 && Math.random() > 0.3) node.connections.push(circuits[i + cols]);
-        if (col < cols - 1 && row < rows - 1 && Math.random() > 0.85) node.connections.push(circuits[i + cols + 1]);
-    });
-}
-
-function initSignals() {
-    signals = [];
-    const signalCount = Math.floor((cWidth * cHeight) / 25000);
-    for (let i = 0; i < signalCount; i++) spawnSignal();
-}
-
-function spawnSignal() {
-    if (circuits.length === 0) return;
-    const startNode = circuits[Math.floor(Math.random() * circuits.length)];
-    if (startNode.connections.length === 0) return;
-    const endNode = startNode.connections[Math.floor(Math.random() * startNode.connections.length)];
-    
-    signals.push({
-        node1: startNode, node2: endNode,
-        progress: 0,
-        speed: CONFIG.speed + Math.random() * 0.01,
-        color: Math.random() > 0.5 ? ORANGE : VIOLET,
-        width: CONFIG.minWidth + Math.random() * (CONFIG.maxWidth - CONFIG.minWidth),
-        trail: []
-    });
-    startNode.active = true;
-    startNode.pulse = 1;
-}
-function animateCircuit() {
-    cTime++;
-    cCtx.fillStyle = `rgba(3, 3, 5, ${CONFIG.fadeSpeed})`;
-    cCtx.fillRect(0, 0, cWidth, cHeight);
-
-    cCtx.strokeStyle = 'rgba(249, 115, 22, 0.03)';
-    cCtx.lineWidth = 0.3;
-    cCtx.beginPath();
-    circuits.forEach(node => {
-        node.connections.forEach(target => {
-            cCtx.moveTo(node.x, node.y);
-            cCtx.lineTo(target.x, target.y);
-        });
-    });
-    cCtx.stroke();
-
-    cCtx.globalCompositeOperation = 'lighter';
-
-    signals = signals.filter(signal => {
-        signal.progress += signal.speed;
-        const currentX = signal.node1.x + (signal.node2.x - signal.node1.x) * signal.progress;
-        const currentY = signal.node1.y + (signal.node2.y - signal.node1.y) * signal.progress;
-        
-        signal.trail.push({x: currentX, y: currentY, life: 1});
-        signal.trail = signal.trail.filter(t => { t.life -= 0.12; return t.life > 0; });
-
-        if (signal.trail.length > 1) {
-            for (let i = 1; i < signal.trail.length; i++) {
-                const t = signal.trail[i];
-                const prevT = signal.trail[i - 1];
-                cCtx.beginPath();
-                cCtx.moveTo(prevT.x, prevT.y);
-                cCtx.lineTo(t.x, t.y);
-                cCtx.strokeStyle = signal.color;
-                cCtx.lineWidth = signal.width * t.life;
-                cCtx.globalAlpha = t.life * CONFIG.trailOpacity;
-                cCtx.stroke();
-            }
-        }
-
-        cCtx.beginPath();
-        cCtx.arc(currentX, currentY, signal.width * 1.2, 0, Math.PI * 2);
-        cCtx.fillStyle = '#ffffff';
-        cCtx.globalAlpha = 0.9;
-        cCtx.fill();
-
-        if (signal.progress > 0.9) { signal.node2.active = true; signal.node2.pulse = 1; }
-
-        if (signal.progress >= 1) {
-            if (signal.node2.connections.length > 0) {                const nextNode = signal.node2.connections[Math.floor(Math.random() * signal.node2.connections.length)];
-                signals.push({
-                    node1: signal.node2, node2: nextNode,
-                    progress: 0, speed: signal.speed, color: signal.color,
-                    width: signal.width, trail: []
-                });
-            }
-            return false;
-        }
-        return true;
-    });
-
-    circuits.forEach(node => {
-        if (node.active) {
-            node.pulse *= 0.95;
-            if (node.pulse > 0.1) {
-                const glow = cCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, CONFIG.glowRadius);
-                glow.addColorStop(0, ORANGE + Math.floor(node.pulse * CONFIG.glowOpacity).toString(16).padStart(2, '0'));
-                glow.addColorStop(1, 'transparent');
-                cCtx.fillStyle = glow;
-                cCtx.beginPath();
-                cCtx.arc(node.x, node.y, CONFIG.glowRadius, 0, Math.PI * 2);
-                cCtx.fill();
-            }
-            if (node.pulse < 0.1) node.active = false;
-        }
-    });
-
-    cCtx.globalCompositeOperation = 'source-over';
-    cCtx.globalAlpha = 1;
-
-    if (signals.length < CONFIG.maxSignals) {
-        for (let i = 0; i < CONFIG.spawnRate; i++) spawnSignal();
+    function animate() {
+        requestAnimationFrame(animate);
+        t += 0.01;
+        drawBackground();
+        drawHalos();
+        drawWaves();
+        drawFlowLines();
     }
 
-    requestAnimationFrame(animateCircuit);
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+})();
+
+// =============================================
+// ⚠️ REMPLACEZ PAR VOTRE JS COMPLET CI-DESSOUS
+// =============================================
+
+function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('active');
 }
 
-window.addEventListener('resize', resizeCircuit);
-
-// DÉMARRAGE IMMÉDIAT DU FOND ANIMÉ
-resizeCircuit();
-animateCircuit();
-console.log('🎨 Circuit Flow démarré');
-
-// ============================================
-// LOGIQUE DU SITE
-// ============================================
-let videos = [
-    { id: 1, title: "Nexus Prime", author: "Cyber Alice", views: "124k", category: "Sci-Fi", img: "https://picsum.photos/seed/nexus/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },    { id: 2, title: "Rêves de Silicium", author: "Dream Weaver", views: "89k", category: "Onirique", img: "https://picsum.photos/seed/reves/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-    { id: 3, title: "Data Storm", author: "Chaos Core", views: "210k", category: "Thriller", img: "https://picsum.photos/seed/data/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-    { id: 4, title: "Neon Memories", author: "Future Citizen", views: "56k", category: "Romance", img: "https://picsum.photos/seed/neon/400/225", video_url: "https://www.w3schools.com/html/mov_bbb.mp4" }
-];
-
-let currentVideo = null;
-let currentFilter = 'all';
-let favorites = JSON.parse(localStorage.getItem('aurora_favorites') || '[]');
-
-function formatViews(num) {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(0) + 'k';
-    return num.toString();
-}
-
-function getFilteredVideos() {
-    if (currentFilter === 'all') return videos;
-    return videos.filter(v => v.category === currentFilter);
-}
-
-async function loadVideosFromSupabase() {
-    try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?order=created_at.desc&status=eq.approved`, {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            if (data && data.length > 0) {
-                const supabaseVideos = data.map(v => {
-                    const localViews = viewsCache[v.id] || v.views || 0;
-                    return {
-                        id: 'supa-' + v.id,
-                        title: v.title,
-                        author: v.author,
-                        views: formatViews(localViews),
-                        category: v.category,
-                        img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
-                        video_url: v.video_url,
-                        tip_link: v.tip_link || '',
-                        description: v.description || '',
-                        dbId: v.id,
-                        rawViews: localViews
-                    };
-                });
-                
-                videos = [...supabaseVideos, ...videos];                console.log('✅ ' + supabaseVideos.length + ' vidéos chargées');
-            }
-        }
-    } catch (error) {
-        console.error('Erreur chargement:', error);
-    }
-    
-    displayVideos(getFilteredVideos());
-}
-
-async function incrementViews(videoId, dbId) {
-    if (!dbId) return;
-    
-    const now = Date.now();
-    const lastViewed = viewedVideos[videoId] || 0;
-    const timeSinceLastView = now - lastViewed;
-    
-    if (timeSinceLastView < 3600000) {
-        console.log('⏭️ Vue déjà comptée');
-        return;
-    }
-    
-    try {
-        const video = videos.find(v => v.id == videoId);
-        if (!video) return;
-        
-        const currentViews = video.rawViews || 0;
-        const newViews = currentViews + 1;
-        
-        viewedVideos[videoId] = now;
-        localStorage.setItem('aurora_viewed', JSON.stringify(viewedVideos));
-        
-        viewsCache[dbId] = newViews;
-        localStorage.setItem('aurora_views', JSON.stringify(viewsCache));
-        
-        video.rawViews = newViews;
-        video.views = formatViews(newViews);
-        displayVideos(getFilteredVideos());
-        
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/videos?id=eq.${dbId}`, {
-            method: 'PATCH',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ views: newViews })
-        });
-        
-        if (response.ok) {            console.log('✅ +1 vue (total:', newViews, ')');
-        }
-    } catch (error) {
-        console.error('Erreur views:', error);
-    }
-}
-
-function displayVideos(videosToDisplay) {
-    const grid = document.getElementById('videoGrid');
-    const count = document.getElementById('videoCount');
-    if (videosToDisplay.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; color:#94a3b8; grid-column:1/-1; padding:2rem;">Aucune vidéo trouvée.</p>';
-        count.textContent = '0 vidéo';
-        return;
-    }
-    count.textContent = videosToDisplay.length + ' vidéo' + (videosToDisplay.length > 1 ? 's' : '');
-    grid.innerHTML = videosToDisplay.map(v => {
-        const isFav = favorites.includes(v.id);
-        return `
-        <div class="video-card" onclick="openVideo('${v.id}')">
-            <div class="thumbnail">
-                <img src="${v.img}" alt="${v.title}" onerror="this.src='https://via.placeholder.com/400x225/1a1a2e/f97316?text=Video'">
-                <div class="play-icon"><i class="fas fa-play"></i></div>
-                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${v.id}')">
-                    <i class="fas fa-heart"></i>
-                </button>
-            </div>
-            <div class="card-info">
-                <div class="card-title">${v.title}</div>
-                <div class="card-meta">
-                    <span><i class="fas fa-user"></i> ${v.author}</span>
-                    <span><i class="fas fa-eye"></i> ${v.views} vues</span>
-                </div>
-                <div class="card-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); downloadById('${v.video_url}', '${v.title.replace(/'/g, "\\'")}')">
-                        <i class="fas fa-download"></i> Télécharger
-                    </button>
-                    <button class="action-btn tip" onclick="event.stopPropagation(); showToast('Tip envoyé à ${v.author} ! 💝')">
-                        <i class="fas fa-heart"></i> Tip
-                    </button>
-                </div>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function toggleFavorite(videoId) {
-    const index = favorites.indexOf(videoId);
-    if (index > -1) { favorites.splice(index, 1); showToast('Retiré des favoris'); } 
-    else { favorites.push(videoId); showToast('❤️ Ajouté aux favoris'); }    localStorage.setItem('aurora_favorites', JSON.stringify(favorites));
-    updateFavBadge();
-    displayVideos(getFilteredVideos());
-}
-
-function updateFavBadge() {
-    const badge = document.getElementById('favBadge');
-    if (favorites.length > 0) { badge.textContent = favorites.length; badge.classList.add('visible'); } 
-    else { badge.classList.remove('visible'); }
-}
-
-function showFavorites() {
-    const favVideos = videos.filter(v => favorites.includes(v.id));
-    document.getElementById('sectionTitle').textContent = '❤️ Mes Favoris';
-    document.getElementById('content').scrollIntoView({behavior:'smooth'});
-    displayVideos(favVideos);
-}
-
-function showAllVideos() {
-    currentFilter = 'all';
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn').classList.add('active');
-    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.menu-category-btn').classList.add('active');
-    document.getElementById('sectionTitle').textContent = '🔥 Tendances';
-    displayVideos(getFilteredVideos());
+function showToast(msg) {
+    var toast = document.getElementById('toast');    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 3000);
 }
 
 function filterVideos(category, btn) {
-    currentFilter = category;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
-    let filtered = getFilteredVideos();
-    const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
-    document.getElementById('sectionTitle').textContent = title;
-    displayVideos(filtered);
-    
-    document.querySelectorAll('.menu-category-btn').forEach(b => {
-        b.classList.remove('active');
-        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent.includes('Tous'))) {
-            b.classList.add('active');
-        }
-    });
+    // TODO: renderVideos filtré
+    console.log('Filter:', category);
 }
 
 function filterFromMenu(category, btn) {
-    currentFilter = category;
-    document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.menu-category-btn').forEach(function(b) { b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
-    document.querySelectorAll('.filter-btn').forEach(b => {        b.classList.remove('active');
-        if (b.textContent.toLowerCase().includes(category.toLowerCase()) || (category === 'all' && b.textContent === 'Tous')) {
-            b.classList.add('active');
-        }
-    });
-    let filtered = getFilteredVideos();
-    const title = category === 'all' ? '🔥 Tendances' : ' ' + category;
-    document.getElementById('sectionTitle').textContent = title;
-    displayVideos(filtered);
-    toggleMenu();
-    document.getElementById('content').scrollIntoView({behavior:'smooth'});
+    filterVideos(category, null);
 }
 
-document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    if (searchTerm === '') { filterVideos(currentFilter, document.querySelector('.filter-btn.active')); return; }
-    const filtered = videos.filter(v => v.title.toLowerCase().includes(searchTerm) || v.author.toLowerCase().includes(searchTerm));
-    document.getElementById('sectionTitle').textContent = '🔍 Résultats';
-    displayVideos(filtered);
+function showAllVideos() { filterVideos('all', null); }
+function showFavorites() { console.log('Show favorites'); }
+function openUploadModal() { showToast('Upload bientôt disponible'); }
+function closeVideoModal() { document.getElementById('videoModal').classList.remove('active'); }
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    console.log('Search:', this.value);
 });
 
-function openVideo(id) {
-    if (currentOpenVideo === id) return;
-    currentOpenVideo = id;
-    
-    currentVideo = videos.find(v => v.id == id);
-    if (!currentVideo) {
-        currentOpenVideo = null;
-        return;
-    }
-    
-    console.log('🎬 Ouverture:', currentVideo.title);
-    console.log('📹 URL:', currentVideo.video_url);
-    
-    incrementViews(id, currentVideo.dbId);
-    
-    const videoElement = document.getElementById('modalVideo');
-    videoElement.src = currentVideo.video_url;
-    videoElement.load();
-    
-    document.getElementById('modalTitle').textContent = currentVideo.title;
-    document.getElementById('modalAuthor').textContent = `Par ${currentVideo.author} • ${currentVideo.views} vues`;
-    document.getElementById('videoModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    setTimeout(() => {
-        videoElement.play().catch(e => console.log('Lecture:', e));
-    }, 100);
-}
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.classList.remove('active');
-    if (modalId === 'videoModal') {
-        const video = document.getElementById('modalVideo');
-        video.pause();
-        setTimeout(() => { video.src = ''; }, 300);
-        currentOpenVideo = null;
-    }
-    document.body.style.overflow = '';
-}
-
-function downloadVideo() { if (!currentVideo) return; downloadById(currentVideo.video_url, currentVideo.title); }
-function downloadById(url, title) {
-    const link = document.createElement('a');
-    link.href = url; link.download = title.replace(/\s+/g, '_') + '.mp4'; link.target = '_blank'; link.click();
-}
-
-function shareVideo() {
-    if (navigator.share) { navigator.share({ title: currentVideo.title, text: `Regarde "${currentVideo.title}" sur AuroraAI.watch`, url: window.location.href }); } 
-    else { navigator.clipboard.writeText(window.location.href); showToast('Lien copié ! 📋'); }
-}
-
-document.getElementById('videoModal').addEventListener('click', function(e) { 
-    if (e.target === this) closeModal('videoModal'); 
-});
-
-async function submitVideo(event) {
-    event.preventDefault();
-    
-    const videoUrl = document.getElementById('uploadVideoUrl').value;
-    const thumbnailUrl = document.getElementById('uploadThumbnail').value;
-    const title = document.getElementById('uploadTitle').value.trim();
-    const author = document.getElementById('uploadAuthor').value.trim();
-    const category = document.getElementById('uploadCategory').value;
-    
-    if (!videoUrl) {
-        showToast(' Sélectionne une vidéo', 'error');
-        return;
-    }
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication...';
-    submitBtn.disabled = true;
-    
-    const newVideo = {
-        title: title,
-        author: author,
-        category: category,        video_url: videoUrl,
-        thumbnail_url: thumbnailUrl || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(title),
-        tip_link: document.getElementById('uploadTipLink').value.trim() || '',
-        description: document.getElementById('uploadDesc').value.trim() || '',
-        views: 0,
-        status: 'approved'
-    };
-    
-    try {
-        const url = `${SUPABASE_URL}/rest/v1/videos`;
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
-            },
-            body: JSON.stringify(newVideo)
-        });
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erreur ${response.status}: ${errorText}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data && data[0]) {
-            const v = data[0];
-            videos.unshift({
-                id: 'supa-' + v.id,
-                title: v.title,
-                author: v.author,
-                views: '0',
-                category: v.category,
-                img: v.thumbnail_url || 'https://via.placeholder.com/400x225/1a1a2e/f97316?text=' + encodeURIComponent(v.title),
-                video_url: v.video_url,
-                tip_link: v.tip_link || '',
-                dbId: v.id,
-                rawViews: 0
-            });
-        }
-        
-        showToast('🎉 Vidéo publiée !');
-        document.getElementById('uploadForm').reset();
-        document.getElementById('videoFileName').textContent = '';
-        document.getElementById('thumbnailFileName').textContent = '';
-        closeModal('uploadModal');        displayVideos(getFilteredVideos());
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        showToast('❌ Erreur : ' + error.message);
-    } finally {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// Initialisation du site
-loadVideosFromSupabase();
-updateFavBadge();
+document.getElementById('videoGrid').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);padding:3rem;">Collez votre JS complet pour afficher les vidéos</p>';
+document.getElementById('videoCount').textContent = '12 vidéos';
 </script>
-
 </body>
-</html>>
+</html>
