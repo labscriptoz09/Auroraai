@@ -258,17 +258,16 @@
 // DONNÉES ET FONCTIONS
 // =============================================
 var videos=[
-    {id:1,title:'Néon Genesis',category:'Sci-Fi',duration:'1h 42min',views:'245K',author:'Studio Synthwave',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00aaff?text=Néon+Genesis',emoji:'🌆'},
-    {id:2,title:'Mémoires Android',category:'Onirique',duration:'S1 • 8 ép.',views:'189K',author:'NeuralFilms',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00ddcc?text=Mémoires',emoji:'🤖'},
-    {id:3,title:'Odyssée Quantique',category:'Sci-Fi',duration:'2h 05min',views:'312K',author:'QuantumVision',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/c83050?text=Odyssée',emoji:'🚀'},
-    {id:4,title:'Rêves Électriques',category:'Dessin animé',duration:'18 min',views:'98K',author:'DreamLab AI',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/e8a840?text=Rêves',emoji:'⚡'},
-    {id:5,title:'Chroniques Futur',category:'Thriller',duration:'S2 • 10 ép.',views:'420K',author:'FutureTales',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/ff4d6a?text=Chroniques',emoji:'📡'},
-    {id:6,title:'Silicon Dreams',category:'Pub',duration:'52 min',views:'156K',author:'DocuAI Studio',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/94a3b8?text=Silicon',emoji:'💾'}
+    {id:1,title:'Néon Genesis',category:'Sci-Fi',duration:'1h 42min',views:'245K',author:'Studio Synthwave',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00aaff?text=Néon+Genesis'},
+    {id:2,title:'Mémoires Android',category:'Onirique',duration:'S1 • 8 ép.',views:'189K',author:'NeuralFilms',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00ddcc?text=Mémoires'},
+    {id:3,title:'Odyssée Quantique',category:'Sci-Fi',duration:'2h 05min',views:'312K',author:'QuantumVision',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/c83050?text=Odyssée'},
+    {id:4,title:'Rêves Électriques',category:'Dessin animé',duration:'18 min',views:'98K',author:'DreamLab AI',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/e8a840?text=Rêves'},
+    {id:5,title:'Chroniques Futur',category:'Thriller',duration:'S2 • 10 ép.',views:'420K',author:'FutureTales',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/ff4d6a?text=Chroniques'},
+    {id:6,title:'Silicon Dreams',category:'Pub',duration:'52 min',views:'156K',author:'DocuAI Studio',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/94a3b8?text=Silicon'}
 ];
 
 var favorites=[],currentFilter='all',currentVideo=null;
 
-// Initialisation
 document.addEventListener('DOMContentLoaded',function(){
     renderVideos(videos);
     updateFavBadge();
@@ -293,8 +292,7 @@ function filterVideos(cat,btn){
     if(btn)btn.classList.add('active');
     if(cat==='all'){renderVideos(videos)}else{renderVideos(videos.filter(function(v){return v.category===cat}))}
 }
-function filterFromMenu(cat,btn){
-    document.querySelectorAll('.menu-category-btn').forEach(function(b){b.classList.remove('active')});
+function filterFromMenu(cat,btn){    document.querySelectorAll('.menu-category-btn').forEach(function(b){b.classList.remove('active')});
     if(btn)btn.classList.add('active');
     filterVideos(cat,null);
     toggleMenu();
@@ -342,64 +340,97 @@ function closeVideoModal(){
     document.getElementById('videoModal').classList.remove('active');
     currentVideo=null;
 }
-// Upload Cloudinary
+
+// =============================================// UPLOAD CLOUDINARY - VERSION CORRIGÉE
+// =============================================
 function openUploadModal(){
-    if(typeof cloudinary==='undefined'){showToast('Erreur: Widget Cloudinary non chargé');return}
-    var myWidget=cloudinary.createUploadWidget({
-        cloudName:'dcnldgsyn',
-        uploadPreset:'auroraai_upload',
-        sources:['local','url','camera'],
-        multiple:true,
-        folder:'auroraai/videos',
-        resourceType:'video',
-        maxFileSize:500000000,
-        clientAllowedFormats:['mp4','webm','mov'],
-        theme:'minimal',
-        styles:{
-            palette:{
-                window:'#000c20',
-                windowBorder:'#1a2744',
-                tabIcon:'#e8a840',
-                menuIcons:'#d4364b',
-                textDark:'#ffffff',
-                textLight:'#ffffff',
-                link:'#e8a840',
-                action:'#d4364b',
-                inactiveTabIcon:'#94a3b8',
-                error:'#ff4d6a',
-                inProgress:'#e8a840',
-                complete:'#00ddcc',
-                sourceBg:'#001230'
-            },
-            fonts:{default:null,"'Plus Jakarta Sans', sans-serif":{url:null,active:true}}
-        }
-    },function(error,result){
-        if(!error&&result&&result.event==='success'){
-            console.log('Upload réussi:',result.info);
-            showToast('Vidéo uploadée avec succès !');
-            addVideoToGrid(result.info);
-        }else if(error){
-            console.error('Erreur upload:',error);
-            showToast('Erreur lors de l\'upload');
-        }
-    });
-    myWidget.open();
+    console.log('🚀 Clic sur Upload');
+    
+    // Vérifier que Cloudinary est chargé
+    if(typeof cloudinary==='undefined'){
+        console.error('❌ Cloudinary non chargé');
+        showToast('Widget Cloudinary non chargé. Rechargez la page.');
+        return;
+    }
+    
+    console.log('✅ Cloudinary chargé, version:', cloudinary.VERSION || 'inconnue');
+    showToast('Ouverture du widget upload...');
+    
+    try {
+        var myWidget = cloudinary.createUploadWidget({
+            cloudName: 'dcnldgsyn',
+            uploadPreset: 'auroraai_upload',
+            sources: ['local', 'url', 'camera'],
+            multiple: false,
+            maxFiles: 1,
+            resourceType: 'video',
+            clientAllowedFormats: ['mp4', 'webm', 'mov', 'avi'],
+            maxFileSize: 500000000,
+            language: 'fr',
+            showPoweredBy: false,
+            cropping: false,
+            showUploadMoreButton: false,
+            singleUploadAutoClose: true,
+            thumbnails: '.5',
+            thumbnailTransformation: 'fit'
+        }, function(error, result) {
+            console.log('📥 Callback Cloudinary déclenché');
+            console.log('Error:', error);
+            console.log('Result:', result);
+            
+            if (error) {
+                console.error('❌ Erreur upload:', error);
+                showToast('Erreur: ' + (error.message || 'Upload échoué'));
+                return;
+            }
+            
+            if (result && result.event === 'success') {
+                console.log('✅ Upload réussi:', result.info);
+                showToast('✅ Vidéo uploadée avec succès !');
+                addVideoToGrid(result.info);
+            } else if (result && result.event === 'close') {
+                console.log('🚪 Widget fermé par utilisateur');
+                showToast('Upload annulé');            } else if (result && result.event === 'queues-start') {
+                console.log('⏳ Upload en cours...');
+                showToast('Upload en cours...');
+            } else if (result && result.event === 'queues-end') {
+                console.log('✅ Upload terminé');
+            }
+        });
+        
+        console.log('✅ Widget créé, ouverture...');
+        myWidget.open();
+        console.log('✅ Widget ouvert');
+        
+    } catch (e) {
+        console.error('❌ Exception:', e);
+        showToast('Erreur: ' + e.message);
+    }
 }
 
 function addVideoToGrid(info){
+    console.log('➕ Ajout vidéo au catalogue:', info);
+    
+    var thumbnail = info.thumbnail_url || info.secure_url.replace('/video/upload/', '/video/upload/so_0.5,c_thumb,w_640,h_360/');
+    
     var newVideo={
-        id:Date.now(),
-        title:info.original_filename||'Nouvelle vidéo',
-        category:'Divers',        duration:'Nouveau',
-        views:'0',
-        author:'Vous',
-        url:info.secure_url,
-        thumbnail:info.thumbnail||'https://via.placeholder.com/640x360/001230/e8a840?text=Nouvelle',
-        emoji:'🎬'
+        id: Date.now(),
+        title: info.original_filename || 'Nouvelle vidéo',
+        category: 'Divers',
+        duration: 'Nouveau',
+        views: '0',
+        author: 'Vous',
+        url: info.secure_url,
+        thumbnail: thumbnail
     };
+    
     videos.unshift(newVideo);
-    if(currentFilter==='all'){renderVideos(videos)}
-    showToast('Vidéo ajoutée au catalogue');
+    
+    if(currentFilter==='all' || currentFilter==='Divers'){
+        renderVideos(videos);
+    }
+    
+    showToast('🎬 Vidéo ajoutée au catalogue !');
 }
 
 // Recherche
@@ -408,8 +439,7 @@ document.getElementById('searchInput').addEventListener('input',function(){
     if(q===''){if(document.getElementById('sectionTitle').textContent.includes('Favoris')){showFavorites()}else{filterVideos(currentFilter,null)};return}
     var results=videos.filter(function(v){return v.title.toLowerCase().includes(q)||v.author.toLowerCase().includes(q)||v.category.toLowerCase().includes(q)});
     renderVideos(results);
-    document.getElementById('sectionTitle').textContent='🔍 Résultats';
-});
+    document.getElementById('sectionTitle').textContent='🔍 Résultats';});
 
 // Menu mobile
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
