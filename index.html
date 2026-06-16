@@ -7,15 +7,128 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;min-height:100vh;font-family:sans-serif;overflow-x:hidden}
+
+/* FOND ANIMÉ */
 #plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-header{position:relative;z-index:10;padding:2rem;text-align:center;background:linear-gradient(180deg,rgba(212,175,55,0.1),transparent)}
-.logo{color:#d4af37;font-size:2rem;font-weight:800}
-.menu-btn{position:fixed;top:1rem;right:1rem;background:rgba(212,175,55,0.2);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:.5rem 1rem;border-radius:8px;cursor:pointer;z-index:100}
+
+/* HEADER FIXE EN HAUT */
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    padding:1rem 1.5rem;
+    background:rgba(0,0,0,0.85);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(212,175,55,0.2);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* LOGO EN HAUT - BLANC ANIMÉ PRO */
+.logo-container{display:flex;align-items:center;gap:0.8rem}
+
+/* Icône play carrée dorée */
+.play-icon{
+    width:38px;
+    height:38px;
+    border:2px solid #d4af37;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    animation:iconPulse 2.5s ease-in-out infinite;
+    box-shadow:0 0 15px rgba(212,175,55,0.5);
+    flex-shrink:0;
+}
+.play-icon::before{
+    content:'';
+    width:0;
+    height:0;    border-top:7px solid transparent;
+    border-bottom:7px solid transparent;
+    border-left:12px solid #d4af37;
+    margin-left:3px;
+    filter:drop-shadow(0 0 4px rgba(212,175,55,0.8));
+}
+@keyframes iconPulse{
+    0%,100%{
+        box-shadow:0 0 10px rgba(212,175,55,0.4);
+        transform:scale(1);
+    }
+    50%{
+        box-shadow:0 0 25px rgba(212,175,55,0.9);
+        transform:scale(1.05);
+    }
+}
+
+/* Texte AuroraAI en blanc avec brillance dorée */
+.logo{
+    font-size:1.8rem;
+    font-weight:800;
+    color:#fff;
+    letter-spacing:1px;
+    position:relative;
+    animation:logoFadeIn 1s ease-out;
+    text-shadow:0 0 10px rgba(255,255,255,0.3);
+}
+.logo::after{
+    content:'AuroraAI';
+    position:absolute;
+    top:0;
+    left:0;
+    background:linear-gradient(90deg,transparent 0%,#d4af37 50%,transparent 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:logoShine 3s ease-in-out infinite;
+    pointer-events:none;
+}
+@keyframes logoShine{
+    0%{background-position:200% 0;opacity:0}
+    50%{opacity:1}
+    100%{background-position:-200% 0;opacity:0}
+}
+@keyframes logoFadeIn{
+    from{opacity:0;transform:translateY(-10px)}
+    to{opacity:1;transform:translateY(0)}
+}
+/* MENU */
+.menu-btn{
+    background:rgba(212,175,55,0.15);
+    border:1px solid rgba(212,175,55,0.4);
+    color:#d4af37;
+    padding:0.6rem 1.2rem;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+    transition:all 0.3s;
+}
+.menu-btn:hover{
+    background:rgba(212,175,55,0.3);
+    box-shadow:0 0 15px rgba(212,175,55,0.4);
+}
 .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.98);z-index:200;display:none;flex-direction:column;justify-content:center;align-items:center;gap:2rem}
 .mobile-menu.active{display:flex}
 .mobile-menu a{color:#d4af37;font-size:1.5rem;text-decoration:none}
 .close-btn{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:.5rem 1rem;border-radius:8px;cursor:pointer}
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 1rem 3rem;position:relative;z-index:10}
+
+/* HERO - AVEC PADDING POUR NE PAS ÊTRE CACHÉ SOUS LE HEADER */
+.hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:8rem 1rem 3rem;
+    position:relative;
+    z-index:10;
+}
 .badge{display:inline-block;padding:.5rem 1.5rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:100px;color:#d4af37;margin-bottom:1.5rem;font-size:.8rem;letter-spacing:2px}
 .hero h1{font-size:clamp(2rem,6vw,3rem);margin-bottom:1rem;background:linear-gradient(180deg,#fff,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{color:rgba(255,255,255,0.7);max-width:500px;margin-bottom:2rem}
@@ -32,26 +145,33 @@ header{position:relative;z-index:10;padding:2rem;text-align:center;background:li
 .form-group label{display:block;color:#d4af37;margin-bottom:.5rem}
 .form-group input,.form-group select{width:100%;padding:.8rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#fff}
 .upload-zone{border:2px dashed rgba(212,175,55,0.4);border-radius:12px;padding:2rem;text-align:center;cursor:pointer}
-</style>
-</head>
+</style></head>
 <body>
 <canvas id="plexusCanvas"></canvas>
+
+<!-- HEADER FIXE EN HAUT -->
 <header>
-<div class="logo">AuroraAI</div>
-<button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+    <div class="logo-container">
+        <div class="play-icon"></div>
+        <div class="logo">AuroraAI</div>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
 </header>
+
 <div class="mobile-menu" id="mobileMenu">
 <button class="close-btn" onclick="toggleMenu()">✕</button>
 <a href="#" onclick="toggleMenu();showHome()">Accueil</a>
 <a href="#" onclick="toggleMenu();showUpload()">🎬 Upload Vidéo</a>
 <a href="#" onclick="toggleMenu();showAllVideos()">Explorer</a>
 </div>
+
 <div id="homePage">
-<section class="hero" id="hero"><div class="badge">PLATEFORME CINÉMA & SÉRIES IA</div>
+<section class="hero" id="hero">
+<div class="badge">PLATEFORME CINÉMA & SÉRIES IA</div>
 <h1>L'IA réinvente le cinéma</h1>
 <p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
 <div>
-<button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">📥 Télécharger</button>
+<button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"> Télécharger</button>
 <button class="btn btn-secondary" onclick="showUpload()">📤 Partager vidéo AI</button>
 </div>
 </section>
@@ -60,6 +180,7 @@ header{position:relative;z-index:10;padding:2rem;text-align:center;background:li
 <div class="video-grid" id="videoGrid"><p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo</p></div>
 </section>
 </div>
+
 <div id="uploadPage" class="upload-section">
 <div style="max-width:600px;margin:0 auto">
 <h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1>
@@ -73,8 +194,7 @@ header{position:relative;z-index:10;padding:2rem;text-align:center;background:li
 <div class="form-group">
 <label>Titre *</label>
 <input type="text" id="videoTitle" required>
-</div>
-<div class="form-group">
+</div><div class="form-group">
 <label>Catégorie *</label>
 <select id="videoCategory" required>
 <option value="">Sélectionnez...</option>
@@ -96,7 +216,10 @@ header{position:relative;z-index:10;padding:2rem;text-align:center;background:li
 </form>
 </div>
 </div>
-<script>(function(){
+
+<script>
+// FOND ANIMÉ PLEXUS (CODE QUI MARCHE - NE PAS TOUCHER)
+(function(){
 const c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');
 function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
 let particles=[];
@@ -116,10 +239,11 @@ ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.strok
 requestAnimationFrame(draw);}
 resize();init();draw();window.addEventListener('resize',function(){resize();init();});
 })();
+
+// NAVIGATION
 function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active');document.getElementById('hero').scrollIntoView({behavior:'smooth'})}
 function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
-function showAllVideos(){showHome();document.getElementById('content').scrollIntoView({behavior:'smooth'})}
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}function showAllVideos(){showHome();document.getElementById('content').scrollIntoView({behavior:'smooth'})}
 </script>
 </body>
 </html>
