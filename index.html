@@ -8,6 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         body{font-family:'Plus Jakarta Sans',sans-serif;background:#000;color:#fff;overflow-x:hidden;position:relative;min-height:100vh;touch-action:manipulation}
@@ -46,8 +47,8 @@
         .btn-primary{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;box-shadow:0 0 25px rgba(212,175,55,0.4)}
         .btn-primary:hover{transform:translateY(-3px);box-shadow:0 5px 30px rgba(212,175,55,0.6)}
         .btn-secondary{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:#d4af37}
-        .btn-secondary:hover{background:rgba(212,175,55,0.2);border-color:#d4af37;box-shadow:0 0 20px rgba(212,175,55,0.3)}
-        .search-container{max-width:1400px;margin:0 auto;padding:0 1rem 1rem;position:relative;z-index:10}        .search-box{position:relative;width:100%}
+        .btn-secondary:hover{background:rgba(212,175,55,0.2);border-color:#d4af37;box-shadow:0 0 20px rgba(212,175,55,0.3)}        .search-container{max-width:1400px;margin:0 auto;padding:0 1rem 1rem;position:relative;z-index:10}
+        .search-box{position:relative;width:100%}
         .search-box input{width:100%;padding:.8rem 1rem .8rem 3rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:50px;color:#fff;font-size:1rem;font-family:inherit;transition:all .3s}
         .search-box input::placeholder{color:rgba(212,175,55,0.4)}
         .search-box input:focus{outline:none;border-color:#d4af37;background:rgba(212,175,55,0.08);box-shadow:0 0 20px rgba(212,175,55,0.15)}
@@ -95,8 +96,8 @@
         .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
         @media(max-width:768px){.form-row{grid-template-columns:1fr}}
         .upload-zone{border:2px dashed rgba(212,175,55,0.3);border-radius:12px;padding:2rem;text-align:center;background:rgba(212,175,55,0.03);cursor:pointer;transition:all .3s}
-        .upload-zone:hover{border-color:#d4af37;background:rgba(212,175,55,0.08)}
-        .upload-zone.has-file{border-color:#f4d03f;background:rgba(244,208,63,0.05)}        .upload-icon{font-size:3rem;color:#d4af37;margin-bottom:1rem}
+        .upload-zone:hover{border-color:#d4af37;background:rgba(212,175,55,0.08)}        .upload-zone.has-file{border-color:#f4d03f;background:rgba(244,208,63,0.05)}
+        .upload-icon{font-size:3rem;color:#d4af37;margin-bottom:1rem}
         .upload-zone.has-file .upload-icon{color:#f4d03f}
         .upload-text{font-weight:700;margin-bottom:.5rem;color:#d4af37}
         .upload-hint{font-size:.8rem;color:rgba(255,255,255,0.5)}
@@ -242,8 +243,8 @@
                 <div class="section-label"><i class="fas fa-image"></i> Image de couverture</div>
                 <div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()">
                     <div class="upload-icon"><i class="fas fa-image"></i></div>
-                    <div class="upload-text">Cliquez pour uploader une image</div>
-                    <div class="upload-hint">JPG, PNG • Recommandé: 1280x720px</div>                    <input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')">
+                    <div class="upload-text">Cliquez pour uploader une image</div>                    <div class="upload-hint">JPG, PNG • Recommandé: 1280x720px</div>
+                    <input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')">
                 </div>
                 <div class="file-preview" id="thumbPreview"></div>
             </div>
@@ -331,7 +332,7 @@
 </footer>
 
 <div class="toast" id="toast"></div>
-<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text">Upload en cours...</div></div>
+<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text">Chargement...</div></div>
 
 <div class="modal" id="videoModal">
     <div class="modal-content">
@@ -340,72 +341,154 @@
         <div class="modal-title" id="modalTitle"></div>
         <div class="modal-author" id="modalAuthor"></div>
         <div class="modal-actions">
-            <button class="modal-btn primary" id="modalDownload" onclick="downloadVideo()"><i class="fas fa-download"></i> Télécharger</button>
-            <button class="modal-btn" id="modalTip" onclick="tipCreator()"><i class="fas fa-heart"></i> Soutenir le créateur</button>        </div>
+            <button class="modal-btn primary" id="modalDownload" onclick="downloadVideo()"><i class="fas fa-download"></i> Télécharger</button>            <button class="modal-btn" id="modalTip" onclick="tipCreator()"><i class="fas fa-heart"></i> Soutenir le créateur</button>
+        </div>
     </div>
 </div>
 
 <script>
-// CANVAS PLEXUS
+// =============================================
+// SUPABASE CONFIGURATION
+// =============================================
+const SUPABASE_URL = 'https://knecqgspkalwepdwwpud.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// VARIABLES GLOBALES
+var videos=[],favorites=[],currentFilter='all',currentVideo=null,uploadedVideo=null,uploadedThumbnail=null;
+
+// =============================================
+// CANVAS PLEXUS - CORRIGÉ
+// =============================================
 (function(){
     const canvas=document.getElementById('plexusCanvas');
     const ctx=canvas.getContext('2d');
     let W,H,particles=[];
     const particleCount=40;
     const connectionDistance=200;
-    function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+    
+    function resize(){
+        W=canvas.width=window.innerWidth;
+        H=canvas.height=window.innerHeight;
+    }
+    
     class Particle{
         constructor(){
-            this.x=Math.random()*W;this.y=Math.random()*H;
-            this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;
-            this.size=Math.random()*2+1;this.opacity=Math.random()*0.3+0.2;
+            this.x=Math.random()*W;
+            this.y=Math.random()*H;
+            this.vx=(Math.random()-0.5)*0.3;
+            this.vy=(Math.random()-0.5)*0.3;
+            this.size=Math.random()*2+1;
+            this.opacity=Math.random()*0.3+0.2;
         }
-        update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;}
-        draw(){ctx.shadowBlur=8;ctx.shadowColor='rgba(212,175,55,0.4)';ctx.fillStyle=`rgba(212,175,55,${this.opacity})`;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+        update(){
+            this.x+=this.vx;
+            this.y+=this.vy;
+            if(this.x<0||this.x>W)this.vx*=-1;
+            if(this.y<0||this.y>H)this.vy*=-1;
+        }
+        draw(){
+            ctx.shadowBlur=8;
+            ctx.shadowColor='rgba(212,175,55,0.4)';
+            ctx.fillStyle=`rgba(212,175,55,${this.opacity})`;            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur=0;
+        }
     }
-    function init(){particles=[];for(let i=0;i<particleCount;i++)particles.push(new Particle());}
-    function drawConnections(){for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x;const dy=particles[i].y-particles[j].y;const distance=Math.sqrt(dx*dx+dy*dy);if(distance<connectionDistance){const opacity=(1-(distance/connectionDistance))*0.2;ctx.strokeStyle=`rgba(212,175,55,${opacity})`;ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}}}}
-    function animate(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw();});drawConnections();requestAnimationFrame(animate);}
-    window.addEventListener('resize',()=>{resize();init();});resize();init();animate();
+    
+    function init(){
+        particles=[];
+        for(let i=0;i<particleCount;i++)particles.push(new Particle());
+    }
+    
+    function drawConnections(){
+        for(let i=0;i<particles.length;i++){
+            for(let j=i+1;j<particles.length;j++){
+                const dx=particles[i].x-particles[j].x;
+                const dy=particles[i].y-particles[j].y;
+                const distance=Math.sqrt(dx*dx+dy*dy);
+                if(distance<connectionDistance){
+                    const opacity=(1-(distance/connectionDistance))*0.2;
+                    ctx.strokeStyle=`rgba(212,175,55,${opacity})`;
+                    ctx.lineWidth=1.7;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x,particles[i].y);
+                    ctx.lineTo(particles[j].x,particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    function animate(){
+        // FOND NOIR - CORRIGÉ
+        ctx.fillStyle='#000';
+        ctx.fillRect(0,0,W,H);
+        
+        particles.forEach(p=>{p.update();p.draw();});
+        drawConnections();
+        requestAnimationFrame(animate);
+    }
+    
+    window.addEventListener('resize',()=>{resize();init();});
+    resize();
+    init();
+    animate();
 })();
 
-// DONNÉES
-var videos=JSON.parse(localStorage.getItem('aurorai_videos')||'[]');
-if(videos.length===0){
-    videos=[
-        {id:1,title:'Néon Genesis',category:'Sci-Fi',duration:'1h 42min',views:'245K',author:'Studio Synthwave',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/d4af37?text=Néon+Genesis',tipEmail:'contact@synthwave.com'},
-        {id:2,title:'Mémoires Android',category:'Onirique',duration:'S1 • 8 ép.',views:'189K',author:'NeuralFilms',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/f4d03f?text=Mémoires',tipEmail:'hello@neuralfilms.ai'},
-        {id:3,title:'Odyssée Quantique',category:'Sci-Fi',duration:'2h 05min',views:'312K',author:'QuantumVision',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/d4af37?text=Odyssée',tipEmail:'info@quantumvision.io'},
-        {id:4,title:'Rêves Électriques',category:'Dessin animé',duration:'18 min',views:'98K',author:'DreamLab AI',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/f4d03f?text=Rêves',tipEmail:'support@dreamlab.ai'},
-        {id:5,title:'Chroniques Futur',category:'Thriller',duration:'S2 • 10 ép.',views:'420K',author:'FutureTales',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/d4af37?text=Chroniques',tipEmail:'contact@futuretales.net'},
-        {id:6,title:'Silicon Dreams',category:'Pub',duration:'52 min',views:'156K',author:'DocuAI Studio',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/000000/f4d03f?text=Silicon',tipEmail:'studio@docuai.com'}
-    ];
-    localStorage.setItem('aurorai_videos',JSON.stringify(videos));
+// =============================================
+// CHARGEMENT DES VIDÉOS DEPUIS SUPABASE
+// =============================================async function loadVideos(){
+    document.getElementById('loading').classList.add('show');
+    try{
+        const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});
+        if(error)throw error;
+        videos=data||[];
+        renderVideos(videos);
+        updateFavBadge();
+    }catch(err){
+        console.error('Erreur chargement:',err);
+        showToast('Erreur de chargement des vidéos','error');
+        videos=[];
+        renderVideos([]);
+    }finally{
+        document.getElementById('loading').classList.remove('show');
+    }
 }
-var favorites=[],currentFilter='all',currentVideo=null,uploadedVideo=null,uploadedThumbnail=null;
 
+// =============================================
+// NAVIGATION
+// =============================================
 function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active');document.getElementById('hero').scrollIntoView({behavior:'smooth'});}
 function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active');}
 
-document.addEventListener('DOMContentLoaded',function(){renderVideos(videos);updateFavBadge();});
+// Initialisation
+document.addEventListener('DOMContentLoaded',function(){loadVideos();});
 
-function renderVideos(vids){    var grid=document.getElementById('videoGrid'),count=document.getElementById('videoCount');
+// =============================================
+// AFFICHAGE DES VIDÉOS
+// =============================================
+function renderVideos(vids){
+    var grid=document.getElementById('videoGrid'),count=document.getElementById('videoCount');
     if(!grid)return;
     grid.innerHTML='';
     count.textContent=vids.length+' vidéo'+(vids.length>1?'s':'');
     if(vids.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);padding:3rem">Aucune vidéo trouvée</p>';return;}
     vids.forEach(function(v){
         var card=document.createElement('div');card.className='video-card';
-        card.innerHTML='<div class="thumbnail"><img src="'+v.thumbnail+'" alt="'+v.title+'"><div class="play-icon"><i class="fas fa-play" style="color:#000"></i></div></div><div class="fav-btn'+(favorites.indexOf(v.id)>-1?' active':'')+'" onclick="toggleFav('+v.id+',event)"><i class="fas fa-heart"></i></div><div class="card-info"><div class="card-title">'+v.title+'</div><div class="card-meta"><span>'+v.author+'</span><span>'+(v.views||'0')+' vues</span></div><div class="card-actions"><button class="action-btn" onclick="playVideo('+v.id+')"><i class="fas fa-play"></i> Lire</button><button class="action-btn tip"><i class="fas fa-heart"></i> Tip</button></div></div>';
+        card.innerHTML='<div class="thumbnail"><img src="'+(v.thumbnail||'https://via.placeholder.com/640x360/000000/d4af37?text=No+Thumbnail')+'" alt="'+v.title+'"><div class="play-icon"><i class="fas fa-play" style="color:#000"></i></div></div><div class="fav-btn'+(favorites.indexOf(v.id)>-1?' active':'')+'" onclick="toggleFav('+v.id+',event)"><i class="fas fa-heart"></i></div><div class="card-info"><div class="card-title">'+v.title+'</div><div class="card-meta"><span>'+v.author+'</span><span>'+(v.views||0)+' vues</span></div><div class="card-actions"><button class="action-btn" onclick="playVideo('+v.id+')"><i class="fas fa-play"></i> Lire</button><button class="action-btn tip"><i class="fas fa-heart"></i> Tip</button></div></div>';
         card.querySelector('.thumbnail').onclick=function(){playVideo(v.id);};
         grid.appendChild(card);
     });
 }
 
+// =============================================
+// FILTRES
+// =============================================
 function filterVideos(cat,btn){
-    currentFilter=cat;
-    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+    currentFilter=cat;    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
     if(btn)btn.classList.add('active');
     if(cat==='all'){renderVideos(videos);}else{renderVideos(videos.filter(function(v){return v.category===cat;}));}
 }
@@ -438,31 +521,29 @@ function updateFavBadge(){
     badge.classList.toggle('visible',favorites.length>0);
 }
 
-function playVideo(id){
-    var v=videos.find(function(x){return x.id===id;});    if(!v)return;
+// =============================================
+// LECTURE VIDÉO
+// =============================================
+async function playVideo(id){
+    var v=videos.find(function(x){return x.id===id;});
+    if(!v)return;
     currentVideo=v;
     
-    // Incrémenter les vues
-    if(!v.views)v.views='0';
-    var viewNum=parseInt(v.views.replace(/[^0-9]/g,''))||0;
-    if(v.views.includes('K')){viewNum=viewNum*1000+1;v.views=(viewNum/1000).toFixed(1)+'K';}
-    else if(v.views.includes('M')){viewNum=viewNum*1000000+1;v.views=(viewNum/1000000).toFixed(1)+'M';}
-    else{v.views=(viewNum+1).toString();}
-    
-    // Sauvegarder
-    var idx=videos.findIndex(x=>x.id===id);
-    if(idx>-1)videos[idx]=v;
-    localStorage.setItem('aurorai_videos',JSON.stringify(videos));
-    
+    // Incrémenter les vues dans Supabase
+    try{
+        const newViews=(v.views||0)+1;
+        await supabase.from('videos').update({views:newViews}).eq('id',id);
+        v.views=newViews;
+        renderVideos(videos);
+    }catch(err){
+        console.error('Erreur update views:',err);
+    }    
     // Afficher modale
     document.getElementById('modalTitle').textContent=v.title;
-    document.getElementById('modalAuthor').textContent=v.author+' • '+v.duration;
+    document.getElementById('modalAuthor').textContent=v.author+' • '+(v.duration||'N/A');
     var vid=document.getElementById('modalVideo');
-    vid.src=v.url;vid.play();
+    vid.src=v.video_url||v.url;vid.play();
     document.getElementById('videoModal').classList.add('active');
-    
-    // Rafraîchir l'affichage
-    renderVideos(videos);
 }
 
 function closeVideoModal(){
@@ -475,7 +556,7 @@ function closeVideoModal(){
 function downloadVideo(){
     if(!currentVideo){showToast('Aucune vidéo sélectionnée','error');return;}
     var link=document.createElement('a');
-    link.href=currentVideo.url;
+    link.href=currentVideo.video_url||currentVideo.url;
     link.download=currentVideo.title+'.mp4';
     link.target='_blank';
     document.body.appendChild(link);
@@ -486,13 +567,16 @@ function downloadVideo(){
 
 function tipCreator(){
     if(!currentVideo){showToast('Aucune vidéo sélectionnée','error');return;}
-    if(currentVideo.tipEmail){
-        window.location.href='mailto:'+currentVideo.tipEmail+'?subject=Soutien pour '+encodeURIComponent(currentVideo.title)+'&body=Bonjour,%0D%0A%0D%0AJ\'aimerais soutenir votre travail sur "'+currentVideo.title+'".%0D%0A%0D%0ACordialement';
-    }else{        showToast('Email de tips non disponible','error');
+    if(currentVideo.tip_email||currentVideo.tipEmail){
+        window.location.href='mailto:'+(currentVideo.tip_email||currentVideo.tipEmail)+'?subject=Soutien pour '+encodeURIComponent(currentVideo.title)+'&body=Bonjour,%0D%0A%0D%0AJ\'aimerais soutenir votre travail sur "'+currentVideo.title+'".%0D%0A%0D%0ACordialement';
+    }else{
+        showToast('Email de tips non disponible','error');
     }
 }
 
+// =============================================
 // UPLOAD
+// =============================================
 function handleFileSelect(input,type){
     var file=input.files[0];if(!file)return;
     var zone=document.getElementById(type+'Zone');
@@ -502,8 +586,7 @@ function handleFileSelect(input,type){
         preview.innerHTML='<video controls><source src="'+URL.createObjectURL(file)+'" type="'+file.type+'"></video>';
         preview.classList.add('show');
         var vid=document.createElement('video');vid.preload='metadata';
-        vid.onloadedmetadata=function(){
-            var mins=Math.floor(vid.duration/60);var secs=Math.floor(vid.duration%60);
+        vid.onloadedmetadata=function(){            var mins=Math.floor(vid.duration/60);var secs=Math.floor(vid.duration%60);
             document.getElementById('videoDuration').value=mins+'min '+secs+'s';
         };
         vid.src=URL.createObjectURL(file);
@@ -522,12 +605,16 @@ document.getElementById('uploadForm').addEventListener('submit',async function(e
     var category=document.getElementById('videoCategory').value;
     var author=document.getElementById('authorName').value.trim();
     var tipEmail=document.getElementById('tipEmail').value.trim();
+    var duration=document.getElementById('videoDuration').value.trim();
+    var description=document.getElementById('videoDesc').value.trim();
     if(!title||!category||!author){showToast('❌ Veuillez remplir tous les champs obligatoires','error');return;}
     
     document.getElementById('loading').classList.add('show');
+    document.getElementById('loading').querySelector('.loading-text').textContent='Upload vidéo vers Cloudinary...';
     document.getElementById('submitBtn').disabled=true;
     
     try{
+        // Upload vidéo vers Cloudinary
         var formData=new FormData();
         formData.append('file',uploadedVideo);
         formData.append('upload_preset','auroraai_upload');
@@ -535,9 +622,12 @@ document.getElementById('uploadForm').addEventListener('submit',async function(e
         var videoResult=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{method:'POST',body:formData}).then(r=>r.json());
         if(videoResult.error)throw new Error(videoResult.error.message);
         
+        // Upload thumbnail si présent
         var thumbUrl='';
         if(uploadedThumbnail){
-            var thumbData=new FormData();            thumbData.append('file',uploadedThumbnail);
+            document.getElementById('loading').querySelector('.loading-text').textContent='Upload thumbnail...';
+            var thumbData=new FormData();
+            thumbData.append('file',uploadedThumbnail);
             thumbData.append('upload_preset','auroraai_upload');
             var thumbResult=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:thumbData}).then(r=>r.json());
             if(thumbResult.error)throw new Error(thumbResult.error.message);
@@ -545,23 +635,28 @@ document.getElementById('uploadForm').addEventListener('submit',async function(e
         }else{
             thumbUrl=videoResult.secure_url.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/');
         }
+                // Sauvegarder dans Supabase
+        document.getElementById('loading').querySelector('.loading-text').textContent='Sauvegarde dans la base...';
+        const {data,error}=await supabase.from('videos').insert([{
+            title:title,
+            category:category,
+            author:author,
+            tip_email:tipEmail,
+            video_url:videoResult.secure_url,
+            thumbnail:thumbUrl,
+            duration:duration,
+            description:description,
+            views:0,
+            created_at:new Date().toISOString()
+        }]).select();
         
-        var videoData={
-            id:Date.now(),title:title,category:category,
-            duration:document.getElementById('videoDuration').value||'N/A',
-            description:document.getElementById('videoDesc').value,
-            author:author,tipEmail:tipEmail,
-            url:videoResult.secure_url,thumbnail:thumbUrl,
-            publicId:videoResult.public_id,views:'0',
-            createdAt:new Date().toISOString()
-        };
+        if(error)throw error;
         
-        videos.unshift(videoData);
-        localStorage.setItem('aurorai_videos',JSON.stringify(videos));
         showToast('✅ Vidéo publiée avec succès !','success');
         
         setTimeout(function(){
-            showHome();renderVideos(videos);
+            showHome();
+            loadVideos();
             document.getElementById('uploadForm').reset();
             uploadedVideo=null;uploadedThumbnail=null;
             document.getElementById('videoZone').classList.remove('has-file');
@@ -575,19 +670,24 @@ document.getElementById('uploadForm').addEventListener('submit',async function(e
         document.getElementById('submitBtn').disabled=false;
     }finally{
         document.getElementById('loading').classList.remove('show');
+        document.getElementById('loading').querySelector('.loading-text').textContent='Chargement...';
     }
 });
 
+// =============================================
 // RECHERCHE
+// =============================================
 document.getElementById('searchInput').addEventListener('input',function(){
     var q=this.value.toLowerCase().trim();
     if(q===''){if(document.getElementById('sectionTitle').textContent.includes('Favoris')){showFavorites();}else{filterVideos(currentFilter,null);}return;}
-    var results=videos.filter(function(v){return v.title.toLowerCase().includes(q)||v.author.toLowerCase().includes(q)||v.category.toLowerCase().includes(q);});
+    var results=videos.filter(function(v){return (v.title||'').toLowerCase().includes(q)||(v.author||'').toLowerCase().includes(q)||(v.category||'').toLowerCase().includes(q);});
     renderVideos(results);
     document.getElementById('sectionTitle').textContent='🔍 Résultats';
     showHome();document.getElementById('content').scrollIntoView({behavior:'smooth'});
 });
+// =============================================
 // TOAST
+// =============================================
 function showToast(msg,type='info'){
     var t=document.getElementById('toast');
     t.textContent=msg;t.className='toast show '+type;
