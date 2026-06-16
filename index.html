@@ -104,6 +104,34 @@
         .modal-btn.primary{background:linear-gradient(135deg,#e8a840,#c07828);border:none;color:#000}
         .modal-btn.primary:hover{box-shadow:0 0 20px rgba(220,140,40,0.3)}
 
+        /* UPLOAD MODAL */
+        .upload-section{display:none;padding:1rem}
+        .upload-section.active{display:block}
+        .upload-form{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem}
+        .form-section{margin-bottom:2rem}
+        .section-label{font-size:1.1rem;font-weight:700;color:#d4364b;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+        .section-label i{color:#e8a840}
+        .form-group{margin-bottom:1.5rem}
+        .form-group label{display:block;font-size:.85rem;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:.5rem}
+        .form-group label .req{color:#ff4d6a}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:.8rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:.95rem;font-family:inherit;transition:all .3s}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#d4364b;background:rgba(255,255,255,0.08)}
+        .form-group textarea{min-height:100px;resize:vertical}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        @media(max-width:768px){.form-row{grid-template-columns:1fr}}
+        .upload-zone{border:2px dashed rgba(212,54,75,0.3);border-radius:12px;padding:2rem;text-align:center;background:rgba(168,32,64,0.05);cursor:pointer;transition:all .3s}
+        .upload-zone:hover{border-color:#d4364b;background:rgba(168,32,64,0.1)}
+        .upload-zone.has-file{border-color:#00ddcc;background:rgba(0,221,204,0.05)}
+        .upload-icon{font-size:3rem;color:#d4364b;margin-bottom:1rem}
+        .upload-zone.has-file .upload-icon{color:#00ddcc}
+        .upload-text{font-weight:600;margin-bottom:.5rem}
+        .upload-hint{font-size:.8rem;color:rgba(255,255,255,0.4)}
+        .file-preview{margin-top:1rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:8px;display:none}
+        .file-preview.show{display:block}
+        .file-preview video,.file-preview img{max-width:100%;max-height:200px;border-radius:8px}
+        .btn-group{display:flex;gap:1rem;justify-content:flex-end;margin-top:2rem}
+        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
         .footer{background:rgba(0,6,16,0.9);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);padding:3rem 1rem 2rem;margin-top:4rem;position:relative;z-index:1}
         .footer-content{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:2rem}
         .footer-section h3{font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:#e8a840}
@@ -117,8 +145,15 @@
         .footer-social a:hover{background:#e8a840;border-color:#e8a840;color:#000;transform:translateY(-2px)}
         .footer-bottom{max-width:1400px;margin:2rem auto 0;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);text-align:center;color:rgba(255,255,255,0.25);font-size:.85rem}
 
-        .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,12,30,0.95);border:1px solid rgba(255,255,255,0.1);border-left:3px solid #d4364b;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;backdrop-filter:blur(20px);transition:transform .3s;max-width:90%;text-align:center}
-        .toast.show{transform:translateX(-50%) translateY(0)}
+        .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,12,30,0.95);border:1px solid rgba(255,255,255,0.1);border-left:3px solid #d4364b;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;backdrop-filter:blur(20px);transition:transform .3s;max-width:90%;text-align:center}        .toast.show{transform:translateX(-50%) translateY(0)}
+        .toast.success{border-left-color:#00ddcc}
+        .toast.error{border-left-color:#ff4d6a}
+
+        .loading{display:none;position:fixed;inset:0;background:rgba(0,4,10,0.9);z-index:2000;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+        .loading.show{display:flex}
+        .spinner{width:50px;height:50px;border:3px solid rgba(220,140,40,0.2);border-top-color:#e8a840;border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-text{color:#fff;font-weight:600}
 
         @media(min-width:768px){.video-grid{grid-template-columns:repeat(2,1fr)}.footer-content{grid-template-columns:repeat(3,1fr)}.menu-category-grid{grid-template-columns:repeat(3,1fr)}}
         @media(min-width:1024px){.video-grid{grid-template-columns:repeat(3,1fr)}}
@@ -130,7 +165,7 @@
 
 <header>
     <div class="header-container">
-        <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <div class="logo" onclick="showHome()">
             <div class="aurora-logo-svg"><div class="arc-1"></div><div class="arc-2"></div><div class="arc-3"></div><div class="core-dot"></div></div>
             <span class="logo-text">AuroraAI</span>
         </div>
@@ -143,9 +178,10 @@
 
 <div class="mobile-menu" id="mobileMenu">
     <button class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
-    <a href="#hero" onclick="toggleMenu()">Accueil</a>
-    <a href="#content" onclick="toggleMenu();showAllVideos()">Explorer</a>
-    <a href="#content" onclick="toggleMenu();showFavorites()">❤️ Mes Favoris</a>    <a href="#" onclick="toggleMenu();openUploadModal()">Upload Vidéo</a>
+    <a href="#" onclick="toggleMenu();showHome()">Accueil</a>
+    <a href="#" onclick="toggleMenu();showUpload()">🎬 Upload Vidéo</a>
+    <a href="#" onclick="toggleMenu();showAllVideos()">Explorer</a>
+    <a href="#" onclick="toggleMenu();showFavorites()">❤️ Mes Favoris</a>
     <div class="menu-categories">
         <div class="menu-categories-title">📂 Catégories</div>
         <div class="menu-category-grid">
@@ -158,43 +194,130 @@
             <button class="menu-category-btn" onclick="filterFromMenu('Dessin animé',this)">🎨 Dessin animé</button>
             <button class="menu-category-btn" onclick="filterFromMenu('Divers',this)">✨ Divers</button>
         </div>
+    </div></div>
+
+<!-- PAGE ACCUEIL -->
+<div id="homePage">
+    <section class="hero" id="hero">
+        <div class="badge">Plateforme Cinéma & Séries IA</div>
+        <h1>L'IA réinvente<br>le cinéma</h1>
+        <p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
+        <div>
+            <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"><i class="fas fa-download"></i> Télécharger</button>
+            <button class="btn btn-secondary" onclick="showUpload()"><i class="fas fa-upload"></i> Partager vidéo AI</button>
+        </div>
+    </section>
+
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Rechercher une vidéo, un créateur...">
+        </div>
     </div>
+
+    <div class="filters" id="filtersBar">
+        <button class="filter-btn active" onclick="filterVideos('all',this)">Tous</button>
+        <button class="filter-btn" onclick="filterVideos('Sci-Fi',this)">Sci-Fi</button>
+        <button class="filter-btn" onclick="filterVideos('Onirique',this)">Onirique</button>
+        <button class="filter-btn" onclick="filterVideos('Thriller',this)">Thriller</button>
+        <button class="filter-btn" onclick="filterVideos('Romance',this)">Romance</button>
+        <button class="filter-btn" onclick="filterVideos('Pub',this)">Pub</button>
+        <button class="filter-btn" onclick="filterVideos('Dessin animé',this)">Dessin animé</button>
+        <button class="filter-btn" onclick="filterVideos('Divers',this)">Divers</button>
+    </div>
+
+    <section class="content" id="content">
+        <div class="section-header">
+            <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
+            <span class="video-count" id="videoCount">0 vidéo</span>
+        </div>
+        <div class="video-grid" id="videoGrid"></div>
+    </section>
 </div>
 
-<section class="hero" id="hero">
-    <div class="badge">Plateforme Cinéma & Séries IA</div>
-    <h1>L'IA réinvente<br>le cinéma</h1>
-    <p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
-    <div>
-        <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})"><i class="fas fa-download"></i> Télécharger</button>
-        <button class="btn btn-secondary" onclick="openUploadModal()"><i class="fas fa-upload"></i> Partager vidéo AI</button>
-    </div>
-</section>
+<!-- PAGE UPLOAD -->
+<div id="uploadPage" class="upload-section">
+    <div class="main-container" style="max-width:900px;margin:0 auto;padding:8rem 2rem 3rem">
+        <h1 class="page-title" style="font-size:2rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(180deg,#e8a840 0%,#c07828 50%,#985818 100%);-webkit-background-clip:text;background-clip:text;color:transparent">🎬 Publier une vidéo</h1>
+        <p class="page-subtitle" style="color:rgba(255,255,255,0.5);margin-bottom:2rem">Partagez votre création IA avec la communauté AuroraAI</p>
 
-<div class="search-container">
-    <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Rechercher une vidéo, un créateur...">
+        <form class="upload-form" id="uploadForm">
+            <div class="form-section">
+                <div class="section-label"><i class="fas fa-video"></i> Vidéo principale</div>                <div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <div class="upload-text">Cliquez pour uploader votre vidéo</div>
+                    <div class="upload-hint">MP4, WebM, MOV • Max 500MB</div>
+                    <input type="file" id="videoInput" accept="video/mp4,video/webm,video/mov,video/avi" style="display:none" required onchange="handleFileSelect(this,'video')">
+                </div>
+                <div class="file-preview" id="videoPreview"></div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-label"><i class="fas fa-image"></i> Image de couverture</div>
+                <div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()">
+                    <div class="upload-icon"><i class="fas fa-image"></i></div>
+                    <div class="upload-text">Cliquez pour uploader une image</div>
+                    <div class="upload-hint">JPG, PNG • Recommandé: 1280x720px</div>
+                    <input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')">
+                </div>
+                <div class="file-preview" id="thumbPreview"></div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-label"><i class="fas fa-info-circle"></i> Informations</div>
+                <div class="form-group">
+                    <label>Titre de la vidéo <span class="req">*</span></label>
+                    <input type="text" id="videoTitle" placeholder="Ex: Néon Genesis - Un voyage cyberpunk" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Catégorie <span class="req">*</span></label>
+                        <select id="videoCategory" required>
+                            <option value="">Sélectionnez...</option>
+                            <option value="Sci-Fi">🚀 Sci-Fi</option>
+                            <option value="Onirique">🌙 Onirique</option>
+                            <option value="Thriller">🔪 Thriller</option>
+                            <option value="Romance">💜 Romance</option>
+                            <option value="Pub">📢 Publicité</option>
+                            <option value="Dessin animé">🎨 Dessin animé</option>
+                            <option value="Divers">✨ Divers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Durée estimée</label>
+                        <input type="text" id="videoDuration" placeholder="Ex: 1h 42min ou S1 • 8 ép.">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="videoDesc" placeholder="Décrivez votre création IA..."></textarea>
+                </div>
+            </div>
+            <div class="form-section">
+                <div class="section-label"><i class="fas fa-user"></i> Informations créateur</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom d'auteur <span class="req">*</span></label>
+                        <input type="text" id="authorName" placeholder="Votre nom ou pseudo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email pour les tips 💰</label>
+                        <input type="email" id="tipEmail" placeholder="votre@email.com">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="showHome()">
+                    <i class="fas fa-arrow-left"></i> Retour à l'accueil
+                </button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-upload"></i> Publier la vidéo
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-
-<div class="filters" id="filtersBar">
-    <button class="filter-btn active" onclick="filterVideos('all',this)">Tous</button>
-    <button class="filter-btn" onclick="filterVideos('Sci-Fi',this)">Sci-Fi</button>
-    <button class="filter-btn" onclick="filterVideos('Onirique',this)">Onirique</button>
-    <button class="filter-btn" onclick="filterVideos('Thriller',this)">Thriller</button>
-    <button class="filter-btn" onclick="filterVideos('Romance',this)">Romance</button>
-    <button class="filter-btn" onclick="filterVideos('Pub',this)">Pub</button>
-    <button class="filter-btn" onclick="filterVideos('Dessin animé',this)">Dessin animé</button>
-    <button class="filter-btn" onclick="filterVideos('Divers',this)">Divers</button>
-</div>
-
-<section class="content" id="content">
-    <div class="section-header">
-        <h2 class="section-title" id="sectionTitle">🔥 Tendances</h2>
-        <span class="video-count" id="videoCount">0 vidéo</span>
-    </div>
-    <div class="video-grid" id="videoGrid"></div></section>
 
 <footer class="footer">
     <div class="footer-content">
@@ -205,9 +328,9 @@
         <div class="footer-section">
             <h3>Navigation</h3>
             <ul class="footer-links">
-                <li><a href="#hero">Accueil</a></li>
-                <li><a href="#content">Explorer</a></li>
-                <li><a href="#" onclick="openUploadModal()">Upload Vidéo</a></li>
+                <li><a href="#" onclick="showHome()">Accueil</a></li>
+                <li><a href="#" onclick="showUpload()">Upload Vidéo</a></li>
+                <li><a href="#" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">Explorer</a></li>
             </ul>
         </div>
         <div class="footer-section">
@@ -218,11 +341,15 @@
                 <a href="#"><i class="fab fa-discord"></i></a>
             </div>
         </div>
-    </div>
-    <div class="footer-bottom">© 2026 AuroraAI.watch — Tous droits réservés</div>
+    </div>    <div class="footer-bottom">© 2026 AuroraAI.watch — Tous droits réservés</div>
 </footer>
 
 <div class="toast" id="toast"></div>
+
+<div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Upload en cours...</div>
+</div>
 
 <div class="modal" id="videoModal">
     <div class="modal-content">
@@ -238,12 +365,11 @@
 </div>
 
 <script>
-// =============================================
-// FOND ANIMÉ BLEU FONCÉ
-// =============================================
+// FOND ANIMÉ
 (function(){
     var c=document.getElementById('bgCanvas'),ctx=c.getContext('2d'),W,H,t=0,fl=[];
-    function resize(){W=c.width=innerWidth;H=c.height=innerHeight;initFL()}    function drawBG(){var g=ctx.createRadialGradient(W*.5,H*.4,0,W*.5,H*.4,Math.max(W,H)*.9);g.addColorStop(0,'#001230');g.addColorStop(.4,'#000c20');g.addColorStop(.8,'#000610');g.addColorStop(1,'#00040a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+    function resize(){W=c.width=innerWidth;H=c.height=innerHeight;initFL()}
+    function drawBG(){var g=ctx.createRadialGradient(W*.5,H*.4,0,W*.5,H*.4,Math.max(W,H)*.9);g.addColorStop(0,'#001230');g.addColorStop(.4,'#000c20');g.addColorStop(.8,'#000610');g.addColorStop(1,'#00040a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
     var halos=[{x:.2,y:.3,r:400,c:'0,180,255',sx:.06,sy:.04,p:0},{x:.8,y:.6,r:350,c:'180,0,255',sx:-.05,sy:.03,p:2},{x:.5,y:.45,r:450,c:'0,240,220',sx:.04,sy:-.05,p:4},{x:.12,y:.7,r:320,c:'255,20,130',sx:.07,sy:.02,p:1},{x:.88,y:.25,r:300,c:'0,140,255',sx:-.04,sy:-.06,p:3},{x:.35,y:.82,r:360,c:'255,140,0',sx:.05,sy:-.03,p:5},{x:.68,y:.18,r:330,c:'0,255,160',sx:-.06,sy:.05,p:6},{x:.28,y:.55,r:370,c:'230,0,230',sx:.03,sy:.04,p:7},{x:.72,y:.78,r:310,c:'255,50,50',sx:-.04,sy:-.03,p:8},{x:.08,y:.42,r:340,c:'60,190,255',sx:.05,sy:.03,p:9},{x:.55,y:.15,r:290,c:'255,210,0',sx:-.03,sy:.04,p:10},{x:.42,y:.68,r:350,c:'0,255,100',sx:.04,sy:-.04,p:11},{x:.9,y:.5,r:280,c:'255,100,200',sx:-.05,sy:.02,p:12},{x:.15,y:.2,r:320,c:'100,0,255',sx:.03,sy:-.05,p:13}];
     function drawH(){ctx.globalCompositeOperation='screen';for(var i=0;i<halos.length;i++){var h=halos[i],hx=(h.x+Math.sin(t*h.sx+h.p)*.14)*W,hy=(h.y+Math.cos(t*h.sy+h.p)*.1)*H,pu=1+Math.sin(t*.4+h.p)*.15,g=ctx.createRadialGradient(hx,hy,0,hx,hy,h.r*pu);g.addColorStop(0,'rgba('+h.c+',0.14)');g.addColorStop(.4,'rgba('+h.c+',0.07)');g.addColorStop(1,'rgba('+h.c+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(hx,hy,h.r*pu,0,Math.PI*2);ctx.fill()}ctx.globalCompositeOperation='source-over'}
     var wv=[{a:120,f:.002,s:.8,y:.24,r:0,g:100,b:230,o:.2},{a:100,f:.003,s:1.1,y:.38,r:0,g:160,b:255,o:.17},{a:140,f:.0015,s:.55,y:.54,r:0,g:80,b:190,o:.15},{a:85,f:.0025,s:.95,y:.68,r:0,g:120,b:240,o:.16},{a:75,f:.0035,s:1.2,y:.8,r:0,g:140,b:255,o:.14},{a:80,f:.004,s:1.4,y:.29,r:0,g:240,b:255,o:.14},{a:70,f:.0035,s:1.2,y:.48,r:0,g:220,b:200,o:.13},{a:60,f:.0045,s:1.5,y:.62,r:0,g:255,b:230,o:.11},{a:95,f:.002,s:.85,y:.34,r:150,g:0,b:255,o:.13},{a:85,f:.0028,s:.65,y:.59,r:210,g:0,b:230,o:.12},{a:70,f:.0038,s:1,y:.74,r:120,g:20,b:200,o:.1},{a:75,f:.003,s:1.3,y:.44,r:255,g:30,b:140,o:.12},{a:65,f:.0045,s:1.5,y:.64,r:250,g:0,b:180,o:.11},{a:55,f:.005,s:1.6,y:.76,r:255,g:80,b:200,o:.09},{a:70,f:.0032,s:1.05,y:.32,r:0,g:255,b:170,o:.11},{a:60,f:.004,s:1.3,y:.52,r:0,g:240,b:130,o:.1},{a:50,f:.0048,s:1.4,y:.72,r:50,g:255,b:100,o:.08},{a:60,f:.0038,s:1.15,y:.42,r:255,g:150,b:0,o:.1},{a:50,f:.005,s:1.4,y:.66,r:255,g:90,b:30,o:.09},{a:55,f:.0042,s:1.25,y:.36,r:255,g:40,b:60,o:.09},{a:45,f:.0055,s:1.5,y:.58,r:255,g:20,b:80,o:.08},{a:50,f:.0048,s:1.35,y:.46,r:255,g:210,b:0,o:.08},{a:40,f:.006,s:1.6,y:.7,r:255,g:180,b:50,o:.07},{a:105,f:.0018,s:.6,y:.84,r:70,g:50,b:255,o:.15}];
@@ -254,20 +380,35 @@
     addEventListener('resize',resize);resize();animate()
 })();
 
-// =============================================
-// DONNÉES ET FONCTIONS
-// =============================================
-var videos=[
-    {id:1,title:'Néon Genesis',category:'Sci-Fi',duration:'1h 42min',views:'245K',author:'Studio Synthwave',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00aaff?text=Néon+Genesis'},
-    {id:2,title:'Mémoires Android',category:'Onirique',duration:'S1 • 8 ép.',views:'189K',author:'NeuralFilms',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00ddcc?text=Mémoires'},
-    {id:3,title:'Odyssée Quantique',category:'Sci-Fi',duration:'2h 05min',views:'312K',author:'QuantumVision',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/c83050?text=Odyssée'},
-    {id:4,title:'Rêves Électriques',category:'Dessin animé',duration:'18 min',views:'98K',author:'DreamLab AI',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/e8a840?text=Rêves'},
-    {id:5,title:'Chroniques Futur',category:'Thriller',duration:'S2 • 10 ép.',views:'420K',author:'FutureTales',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/ff4d6a?text=Chroniques'},
-    {id:6,title:'Silicon Dreams',category:'Pub',duration:'52 min',views:'156K',author:'DocuAI Studio',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/94a3b8?text=Silicon'}
-];
+// NAVIGATION
+var videos=JSON.parse(localStorage.getItem('aurorai_videos')||'[]');
+if(videos.length===0){
+    videos=[
+        {id:1,title:'Néon Genesis',category:'Sci-Fi',duration:'1h 42min',views:'245K',author:'Studio Synthwave',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00aaff?text=Néon+Genesis'},
+        {id:2,title:'Mémoires Android',category:'Onirique',duration:'S1 • 8 ép.',views:'189K',author:'NeuralFilms',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/00ddcc?text=Mémoires'},
+        {id:3,title:'Odyssée Quantique',category:'Sci-Fi',duration:'2h 05min',views:'312K',author:'QuantumVision',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/c83050?text=Odyssée'},
+        {id:4,title:'Rêves Électriques',category:'Dessin animé',duration:'18 min',views:'98K',author:'DreamLab AI',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/e8a840?text=Rêves'},
+        {id:5,title:'Chroniques Futur',category:'Thriller',duration:'S2 • 10 ép.',views:'420K',author:'FutureTales',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/ff4d6a?text=Chroniques'},
+        {id:6,title:'Silicon Dreams',category:'Pub',duration:'52 min',views:'156K',author:'DocuAI Studio',url:'https://res.cloudinary.com/dcnldgsyn/video/upload/v1734883200/sample.mp4',thumbnail:'https://via.placeholder.com/640x360/001230/94a3b8?text=Silicon'}
+    ];    localStorage.setItem('aurorai_videos',JSON.stringify(videos));
+}
+var favorites=[],currentFilter='all',currentVideo=null,uploadedVideo=null,uploadedThumbnail=null;
 
-var favorites=[],currentFilter='all',currentVideo=null;
+function showHome(){
+    document.getElementById('homePage').style.display='block';
+    document.getElementById('uploadPage').classList.remove('active');
+    document.getElementById('hero').scrollIntoView({behavior:'smooth'});
+}
 
+function showUpload(){
+    document.getElementById('homePage').style.display='none';
+    document.getElementById('uploadPage').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
+
+// CATALOGUE
 document.addEventListener('DOMContentLoaded',function(){
     renderVideos(videos);
     updateFavBadge();
@@ -275,12 +416,13 @@ document.addEventListener('DOMContentLoaded',function(){
 
 function renderVideos(vids){
     var grid=document.getElementById('videoGrid'),count=document.getElementById('videoCount');
+    if(!grid)return;
     grid.innerHTML='';
     count.textContent=vids.length+' vidéo'+(vids.length>1?'s':'');
     if(vids.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);padding:3rem">Aucune vidéo trouvée</p>';return}
     vids.forEach(function(v){
         var card=document.createElement('div');card.className='video-card';
-        card.innerHTML='<div class="thumbnail"><img src="'+v.thumbnail+'" alt="'+v.title+'"><div class="play-icon"><i class="fas fa-play" style="color:#000"></i></div></div><div class="fav-btn'+(favorites.indexOf(v.id)>-1?' active':'')+'" onclick="toggleFav('+v.id+',event)"><i class="fas fa-heart"></i></div><div class="card-info"><div class="card-title">'+v.title+'</div><div class="card-meta"><span>'+v.author+'</span><span>'+v.views+' vues</span></div><div class="card-actions"><button class="action-btn" onclick="playVideo('+v.id+')"><i class="fas fa-play"></i> Lire</button><button class="action-btn tip"><i class="fas fa-heart"></i> Tip</button></div></div>';
+        card.innerHTML='<div class="thumbnail"><img src="'+v.thumbnail+'" alt="'+v.title+'"><div class="play-icon"><i class="fas fa-play" style="color:#000"></i></div></div><div class="fav-btn'+(favorites.indexOf(v.id)>-1?' active':'')+'" onclick="toggleFav('+v.id+',event)"><i class="fas fa-heart"></i></div><div class="card-info"><div class="card-title">'+v.title+'</div><div class="card-meta"><span>'+v.author+'</span><span>'+v.views+' vues</span></div><div class="card-actions"><button class="action-btn" onclick="playVideo('+v.id+')"><i class="fas fa-play"></i> Lire</button><button class="action-btn tip" onclick="showToast(\'💰 Fonctionnalité bientôt disponible\')"><i class="fas fa-heart"></i> Tip</button></div></div>';
         card.querySelector('.thumbnail').onclick=function(){playVideo(v.id)};
         grid.appendChild(card);
     });
@@ -292,18 +434,19 @@ function filterVideos(cat,btn){
     if(btn)btn.classList.add('active');
     if(cat==='all'){renderVideos(videos)}else{renderVideos(videos.filter(function(v){return v.category===cat}))}
 }
-function filterFromMenu(cat,btn){    document.querySelectorAll('.menu-category-btn').forEach(function(b){b.classList.remove('active')});
+function filterFromMenu(cat,btn){
+    document.querySelectorAll('.menu-category-btn').forEach(function(b){b.classList.remove('active')});
     if(btn)btn.classList.add('active');
     filterVideos(cat,null);
     toggleMenu();
-    document.getElementById('content').scrollIntoView({behavior:'smooth'});
-}
+    showHome();}
 
 function showAllVideos(){filterVideos('all',document.querySelector('.filter-btn.active'))}
 function showFavorites(){
     var favs=videos.filter(function(v){return favorites.indexOf(v.id)>-1});
     renderVideos(favs);
     document.getElementById('sectionTitle').textContent='❤️ Mes Favoris';
+    showHome();
     document.getElementById('content').scrollIntoView({behavior:'smooth'});
 }
 
@@ -317,6 +460,7 @@ function toggleFav(id,e){
 
 function updateFavBadge(){
     var badge=document.getElementById('favBadge');
+    if(!badge)return;
     badge.textContent=favorites.length;
     badge.classList.toggle('visible',favorites.length>0);
 }
@@ -341,114 +485,110 @@ function closeVideoModal(){
     currentVideo=null;
 }
 
-// =============================================// UPLOAD CLOUDINARY - VERSION CORRIGÉE
-// =============================================
-function openUploadModal(){
-    console.log('🚀 Clic sur Upload');
-    
-    // Vérifier que Cloudinary est chargé
-    if(typeof cloudinary==='undefined'){
-        console.error('❌ Cloudinary non chargé');
-        showToast('Widget Cloudinary non chargé. Rechargez la page.');
-        return;
+// UPLOAD
+function handleFileSelect(input,type){
+    var file=input.files[0];
+    if(!file)return;    var zone=document.getElementById(type+'Zone');
+    var preview=document.getElementById(type+'Preview');
+    if(type==='video'){
+        uploadedVideo=file;
+        zone.classList.add('has-file');
+        preview.innerHTML='<video controls><source src="'+URL.createObjectURL(file)+'" type="'+file.type+'"></video>';
+        preview.classList.add('show');
+        var vid=document.createElement('video');
+        vid.preload='metadata';
+        vid.onloadedmetadata=function(){
+            var mins=Math.floor(vid.duration/60);
+            var secs=Math.floor(vid.duration%60);
+            document.getElementById('videoDuration').value=mins+'min '+secs+'s';
+        };
+        vid.src=URL.createObjectURL(file);
+    }else{
+        uploadedThumbnail=file;
+        zone.classList.add('has-file');
+        preview.innerHTML='<img src="'+URL.createObjectURL(file)+'" alt="Thumbnail">';
+        preview.classList.add('show');
     }
-    
-    console.log('✅ Cloudinary chargé, version:', cloudinary.VERSION || 'inconnue');
-    showToast('Ouverture du widget upload...');
-    
-    try {
-        var myWidget = cloudinary.createUploadWidget({
-            cloudName: 'dcnldgsyn',
-            uploadPreset: 'auroraai_upload',
-            sources: ['local', 'url', 'camera'],
-            multiple: false,
-            maxFiles: 1,
-            resourceType: 'video',
-            clientAllowedFormats: ['mp4', 'webm', 'mov', 'avi'],
-            maxFileSize: 500000000,
-            language: 'fr',
-            showPoweredBy: false,
-            cropping: false,
-            showUploadMoreButton: false,
-            singleUploadAutoClose: true,
-            thumbnails: '.5',
-            thumbnailTransformation: 'fit'
-        }, function(error, result) {
-            console.log('📥 Callback Cloudinary déclenché');
-            console.log('Error:', error);
-            console.log('Result:', result);
-            
-            if (error) {
-                console.error('❌ Erreur upload:', error);
-                showToast('Erreur: ' + (error.message || 'Upload échoué'));
-                return;
-            }
-            
-            if (result && result.event === 'success') {
-                console.log('✅ Upload réussi:', result.info);
-                showToast('✅ Vidéo uploadée avec succès !');
-                addVideoToGrid(result.info);
-            } else if (result && result.event === 'close') {
-                console.log('🚪 Widget fermé par utilisateur');
-                showToast('Upload annulé');            } else if (result && result.event === 'queues-start') {
-                console.log('⏳ Upload en cours...');
-                showToast('Upload en cours...');
-            } else if (result && result.event === 'queues-end') {
-                console.log('✅ Upload terminé');
-            }
-        });
-        
-        console.log('✅ Widget créé, ouverture...');
-        myWidget.open();
-        console.log('✅ Widget ouvert');
-        
-    } catch (e) {
-        console.error('❌ Exception:', e);
-        showToast('Erreur: ' + e.message);
-    }
+    showToast('✅ '+file.name+' sélectionné','success');
 }
 
-function addVideoToGrid(info){
-    console.log('➕ Ajout vidéo au catalogue:', info);
-    
-    var thumbnail = info.thumbnail_url || info.secure_url.replace('/video/upload/', '/video/upload/so_0.5,c_thumb,w_640,h_360/');
-    
-    var newVideo={
-        id: Date.now(),
-        title: info.original_filename || 'Nouvelle vidéo',
-        category: 'Divers',
-        duration: 'Nouveau',
-        views: '0',
-        author: 'Vous',
-        url: info.secure_url,
-        thumbnail: thumbnail
-    };
-    
-    videos.unshift(newVideo);
-    
-    if(currentFilter==='all' || currentFilter==='Divers'){
-        renderVideos(videos);
+document.getElementById('uploadForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    if(!uploadedVideo){showToast('❌ Veuillez sélectionner une vidéo','error');return}
+    var title=document.getElementById('videoTitle').value.trim();
+    var category=document.getElementById('videoCategory').value;
+    var author=document.getElementById('authorName').value.trim();
+    if(!title||!category||!author){showToast('❌ Veuillez remplir tous les champs obligatoires','error');return}
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('submitBtn').disabled=true;
+    try{
+        var formData=new FormData();
+        formData.append('file',uploadedVideo);
+        formData.append('upload_preset','auroraai_upload');
+        formData.append('resource_type','video');
+        var videoResult=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{method:'POST',body:formData}).then(r=>r.json());
+        if(videoResult.error)throw new Error(videoResult.error.message);
+        var thumbUrl='';
+        if(uploadedThumbnail){
+            var thumbData=new FormData();
+            thumbData.append('file',uploadedThumbnail);
+            thumbData.append('upload_preset','auroraai_upload');
+            var thumbResult=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:thumbData}).then(r=>r.json());
+            if(thumbResult.error)throw new Error(thumbResult.error.message);
+            thumbUrl=thumbResult.secure_url;
+        }else{
+            thumbUrl=videoResult.secure_url.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/');        }
+        var videoData={
+            id:Date.now(),
+            title:title,
+            category:category,
+            duration:document.getElementById('videoDuration').value||'N/A',
+            description:document.getElementById('videoDesc').value,
+            author:author,
+            tipEmail:document.getElementById('tipEmail').value,
+            url:videoResult.secure_url,
+            thumbnail:thumbUrl,
+            publicId:videoResult.public_id,
+            views:'0',
+            createdAt:new Date().toISOString()
+        };
+        videos.unshift(videoData);
+        localStorage.setItem('aurorai_videos',JSON.stringify(videos));
+        showToast('✅ Vidéo publiée avec succès !','success');
+        setTimeout(function(){
+            showHome();
+            renderVideos(videos);
+            document.getElementById('uploadForm').reset();
+            uploadedVideo=null;uploadedThumbnail=null;
+            document.getElementById('videoZone').classList.remove('has-file');
+            document.getElementById('thumbZone').classList.remove('has-file');
+            document.getElementById('videoPreview').classList.remove('show');
+            document.getElementById('thumbPreview').classList.remove('show');
+        },1500);
+    }catch(err){
+        console.error('Upload error:',err);
+        showToast('❌ Erreur: '+err.message,'error');
+        document.getElementById('submitBtn').disabled=false;
+    }finally{
+        document.getElementById('loading').classList.remove('show');
     }
-    
-    showToast('🎬 Vidéo ajoutée au catalogue !');
-}
+});
 
-// Recherche
+// RECHERCHE
 document.getElementById('searchInput').addEventListener('input',function(){
     var q=this.value.toLowerCase().trim();
     if(q===''){if(document.getElementById('sectionTitle').textContent.includes('Favoris')){showFavorites()}else{filterVideos(currentFilter,null)};return}
     var results=videos.filter(function(v){return v.title.toLowerCase().includes(q)||v.author.toLowerCase().includes(q)||v.category.toLowerCase().includes(q)});
     renderVideos(results);
-    document.getElementById('sectionTitle').textContent='🔍 Résultats';});
+    document.getElementById('sectionTitle').textContent='🔍 Résultats';
+    showHome();
+    document.getElementById('content').scrollIntoView({behavior:'smooth'});
+});
 
-// Menu mobile
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
-
-// Toast
-function showToast(msg){
-    var t=document.getElementById('toast');
+// TOAST
+function showToast(msg,type='info'){    var t=document.getElementById('toast');
     t.textContent=msg;
-    t.classList.add('show');
+    t.className='toast show '+type;
     setTimeout(function(){t.classList.remove('show')},3000);
 }
 
