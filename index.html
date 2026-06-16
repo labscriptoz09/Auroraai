@@ -1,255 +1,58 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuroraAI.watch — Cinéma IA Next-Gen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Plus Jakarta Sans',sans-serif;background:#000;color:#fff;overflow-x:hidden;min-height:100vh}
-        #plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-        header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem;background:rgba(0,0,0,0.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,0.15)}
-        .header-container{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-        .logo{font-size:1.3rem;font-weight:800;color:#d4af37;text-decoration:none;cursor:pointer}
-        .menu-btn{width:44px;height:44px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;color:#d4af37;font-size:1.2rem;cursor:pointer}
-        .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.97);backdrop-filter:blur(30px);z-index:200;display:none;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;padding:2rem}
-        .mobile-menu.active{display:flex}
-        .mobile-menu a{color:#d4af37;text-decoration:none;font-size:1.3rem;font-weight:700}
-        .close-btn{position:absolute;top:1rem;right:1rem;width:44px;height:44px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;color:#d4af37;font-size:1.3rem;cursor:pointer}
-        .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 1rem 3rem;position:relative;z-index:10}
-        .badge{display:inline-block;padding:.4rem 1rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:100px;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:#d4af37;margin-bottom:1.5rem}
-        .hero h1{font-size:clamp(2rem,8vw,3.5rem);font-weight:800;margin-bottom:1rem;background:linear-gradient(180deg,#fff 0%,#d4af37 50%,#b8941f 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-        .hero p{font-size:1rem;color:rgba(255,255,255,0.7);max-width:500px;margin-bottom:2rem}
-        .btn{padding:1rem 2rem;border:none;border-radius:50px;font-weight:700;cursor:pointer;width:100%;max-width:300px;margin:.5rem;font-family:inherit}
-        .btn-primary{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000}
-        .btn-secondary{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:#d4af37}
-        .content{max-width:1400px;margin:0 auto;padding:1rem;position:relative;z-index:10}
-        .section-title{font-size:1.5rem;font-weight:700;color:#d4af37;margin-bottom:1.5rem}
-        .video-grid{display:grid;grid-template-columns:1fr;gap:1rem}
-        @media(min-width:768px){.video-grid{grid-template-columns:repeat(2,1fr)}}
-        @media(min-width:1024px){.video-grid{grid-template-columns:repeat(3,1fr)}}
-        .upload-section{min-height:100vh;padding:8rem 2rem 3rem;position:relative;z-index:10}
-        .upload-form{background:rgba(0,0,0,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:20px;padding:2rem;max-width:600px;margin:0 auto}
-        .form-group{margin-bottom:1.5rem}
-        .form-group label{display:block;color:#d4af37;margin-bottom:.5rem;font-weight:600}
-        .form-group input,.form-group select,.form-group textarea{width:100%;padding:.8rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:10px;color:#fff;font-family:inherit}
-        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#d4af37}
-        .upload-zone{border:2px dashed rgba(212,175,55,0.3);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;margin-bottom:1rem}
-        .upload-zone:hover{border-color:#d4af37;background:rgba(212,175,55,0.05)}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuroraAI.watch</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#000;color:#fff;overflow-x:hidden;min-height:100vh}
+#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem;background:rgba(0,0,0,0.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,0.15)}
+.header-container{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.3rem;font-weight:800;color:#d4af37;text-decoration:none}
+.menu-btn{width:44px;height:44px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;color:#d4af37;font-size:1.2rem;cursor:pointer}
+.mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.97);backdrop-filter:blur(30px);z-index:200;display:none;flex-direction:column;justify-content:center;align-items:center;gap:1.5rem;padding:2rem}
+.mobile-menu.active{display:flex}
+.mobile-menu a{color:#d4af37;text-decoration:none;font-size:1.3rem;font-weight:700}
+.close-btn{position:absolute;top:1rem;right:1rem;width:44px;height:44px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;color:#d4af37;font-size:1.3rem;cursor:pointer}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 1rem 3rem;position:relative;z-index:10}
+.badge{display:inline-block;padding:.4rem 1rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:100px;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:#d4af37;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2rem,8vw,3.5rem);font-weight:800;margin-bottom:1rem;background:linear-gradient(180deg,#fff 0%,#d4af37 50%,#b8941f 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:1rem;color:rgba(255,255,255,0.7);max-width:500px;margin-bottom:2rem}
+.btn{padding:1rem 2rem;border:none;border-radius:50px;font-weight:700;cursor:pointer;width:100%;max-width:300px;margin:.5rem;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000}
+.btn-secondary{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:#d4af37}
+.content{max-width:1400px;margin:0 auto;padding:1rem;position:relative;z-index:10}
+.section-title{font-size:1.5rem;font-weight:700;color:#d4af37;margin-bottom:1.5rem}
+.video-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:768px){.video-grid{grid-template-columns:repeat(2,1fr)}}
+.upload-section{min-height:100vh;padding:8rem 2rem 3rem;position:relative;z-index:10;display:none}
+.upload-section.active{display:block}
+.upload-form{background:rgba(0,0,0,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:20px;padding:2rem;max-width:600px;margin:0 auto}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;color:#d4af37;margin-bottom:.5rem;font-weight:600}
+.form-group input,.form-group select{width:100%;padding:.8rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:10px;color:#fff}
+.upload-zone{border:2px dashed rgba(212,175,55,0.3);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;margin-bottom:1rem}
+</style>
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
-
-<header>
-    <div class="header-container">
-        <div class="logo" onclick="showHome()">AuroraAI</div>
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-    </div></header>
-
-<div class="mobile-menu" id="mobileMenu">
-    <button class="close-btn" onclick="toggleMenu()">✕</button>
-    <a href="#" onclick="toggleMenu();showHome()">Accueil</a>
-    <a href="#" onclick="toggleMenu();showUpload()">🎬 Upload Vidéo</a>
-    <a href="#" onclick="toggleMenu();showAllVideos()">Explorer</a>
-</div>
-
-<div id="homePage">
-    <section class="hero" id="hero">
-        <div class="badge">Plateforme Cinéma & Séries IA</div>
-        <h1>L'IA réinvente<br>le cinéma</h1>
-        <p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
-        <div>
-            <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">📥 Télécharger</button>
-            <button class="btn btn-secondary" onclick="showUpload()">📤 Partager vidéo AI</button>
-        </div>
-    </section>
-
-    <section class="content" id="content">
-        <h2 class="section-title">🔥 Tendances</h2>
-        <div class="video-grid" id="videoGrid">
-            <p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Chargement...</p>
-        </div>
-    </section>
-</div>
-
-<div id="uploadPage" class="upload-section" style="display:none">
-    <div style="max-width:600px;margin:0 auto">
-        <h1 style="font-size:2rem;margin-bottom:1rem;background:linear-gradient(180deg,#fff,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent">🎬 Upload Vidéo</h1>
-        <p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p>
-        
-        <form class="upload-form" id="uploadForm">
-            <div class="form-group">
-                <label>Vidéo *</label>
-                <div class="upload-zone" onclick="document.getElementById('videoInput').click()">
-                    <div style="font-size:2rem;margin-bottom:.5rem">📹</div>
-                    <div>Cliquez pour uploader votre vidéo</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,0.5);margin-top:.5rem">MP4, WebM, MOV • Max 500MB</div>
-                </div>
-                <input type="file" id="videoInput" accept="video/mp4,video/webm,video/mov" style="display:none" required>
-            </div>
-
-            <div class="form-group">
-                <label>Titre *</label>
-                <input type="text" id="videoTitle" required placeholder="Titre de la vidéo">
-            </div>
-
-            <div class="form-group">                <label>Catégorie *</label>
-                <select id="videoCategory" required>
-                    <option value="">Sélectionnez...</option>
-                    <option value="Sci-Fi">🚀 Sci-Fi</option>
-                    <option value="Onirique">🌙 Onirique</option>
-                    <option value="Thriller">🔪 Thriller</option>
-                    <option value="Romance">💜 Romance</option>
-                    <option value="Pub"> Pub</option>
-                    <option value="Dessin animé">🎨 Dessin animé</option>
-                    <option value="Divers">✨ Divers</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Auteur *</label>
-                <input type="text" id="authorName" required placeholder="Votre nom">
-            </div>
-
-            <div class="form-group">
-                <label>Email pour tips</label>
-                <input type="email" id="tipEmail" placeholder="votre@email.com">
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%">Publier la vidéo</button>
-            <button type="button" class="btn btn-secondary" style="width:100%;margin-top:.5rem" onclick="showHome()">Retour à l'accueil</button>
-        </form>
-    </div>
-</div>
-
+<header><div class="header-container"><div class="logo" onclick="showHome()">AuroraAI</div><button class="menu-btn" onclick="toggleMenu()">☰</button></div></header>
+<div class="mobile-menu" id="mobileMenu"><button class="close-btn" onclick="toggleMenu()">✕</button><a href="#" onclick="toggleMenu();showHome()">Accueil</a><a href="#" onclick="toggleMenu();showUpload()">🎬 Upload</a><a href="#" onclick="toggleMenu();showAllVideos()">Explorer</a></div>
+<div id="homePage"><section class="hero" id="hero"><div class="badge">Plateforme Cinéma & Séries IA</div><h1>L'IA réinvente<br>le cinéma</h1><p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par IA.</p><div><button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">📥 Télécharger</button><button class="btn btn-secondary" onclick="showUpload()">📤 Partager vidéo AI</button></div></section><section class="content" id="content"><h2 class="section-title">🔥 Tendances</h2><div class="video-grid" id="videoGrid"></div></section></div>
+<div id="uploadPage" class="upload-section"><div style="max-width:600px;margin:0 auto"><h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Upload Vidéo</h1><p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p><form class="upload-form" id="uploadForm"><div class="form-group"><label>Vidéo *</label><div class="upload-zone" onclick="document.getElementById('videoInput').click()">📹 Cliquez pour uploader</div><input type="file" id="videoInput" accept="video/*" style="display:none" required></div><div class="form-group"><label>Titre *</label><input type="text" id="videoTitle" required></div><div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">Sci-Fi</option><option value="Onirique">Onirique</option><option value="Thriller">Thriller</option><option value="Romance">Romance</option><option value="Pub">Pub</option><option value="Dessin animé">Dessin animé</option><option value="Divers">Divers</option></select></div><div class="form-group"><label>Auteur *</label><input type="text" id="authorName" required></div><button type="submit" class="btn btn-primary" style="width:100%">Publier</button><button type="button" class="btn btn-secondary" style="width:100%;margin-top:.5rem" onclick="showHome()">Retour</button></form></div></div>
 <script>
-// FOND ANIMÉ
-(function(){
-    const canvas=document.getElementById('plexusCanvas');
-    const ctx=canvas.getContext('2d');
-    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
-    class Particle{
-        constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;this.size=Math.random()*2+1}
-        update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>canvas.width)this.vx*=-1;if(this.y<0||this.y>canvas.height)this.vy*=-1}
-        draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill()}
-    }
-    let particles=[];
-    function init(){particles=[];for(let i=0;i<40;i++)particles.push(new Particle())}
-    function drawConnections(){
-        for(let i=0;i<particles.length;i++){
-            for(let j=i+1;j<particles.length;j++){
-                const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
-                if(d<200){
-                    const o=(1-d/200)*0.2;
-                    ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
-                    ctx.strokeStyle=`rgba(212,175,55,${o})`;ctx.lineWidth=1.7;ctx.stroke();                }
-            }
-        }
-    }
-    function animate(){ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw()});drawConnections();requestAnimationFrame(animate)}
-    resize();init();animate();
-    window.addEventListener('resize',()=>{resize();init()});
-})();
-
-// SUPABASE
-const SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
+(function(){const c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight}class P{constructor(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*2+1}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>c.width)this.vx*=-1;if(this.y<0||this.y>c.height)this.vy*=-1}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill()}}let particles=[];function init(){particles=[];for(let i=0;i<40;i++)particles.push(new P())}function drawConn(){for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){const o=(1-d/200)*0.2;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(212,175,55,${o})`;ctx.lineWidth=1.7;ctx.stroke()}}}function animate(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);particles.forEach(p=>{p.update();p.draw()});drawConn();requestAnimationFrame(animate)}resize();init();animate();window.addEventListener('resize',()=>{resize();init()});})();
+const supabase=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
 let videos=[];
-
-// NAVIGATION
-function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').style.display='none';document.getElementById('hero').scrollIntoView({behavior:'smooth'})}
-function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active');document.getElementById('hero').scrollIntoView({behavior:'smooth'})}
+function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
 function showAllVideos(){showHome();document.getElementById('content').scrollIntoView({behavior:'smooth'})}
-
-// CHARGEMENT VIDÉOS
-async function loadVideos(){
-    try{
-        const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});
-        if(error)throw error;
-        videos=data||[];
-        renderVideos();
-    }catch(err){
-        console.error('Erreur:',err);
-        document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Erreur de chargement</p>';
-    }
-}
-
-function renderVideos(){
-    const grid=document.getElementById('videoGrid');
-    if(videos.length===0){
-        grid.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo - Commence par uploader !</p>';
-        return;
-    }
-    grid.innerHTML=videos.map(v=>`
-        <div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:1rem">
-            <h3 style="color:#d4af37;margin-bottom:.5rem">${v.title}</h3>
-            <p style="color:rgba(255,255,255,0.7);font-size:.9rem">${v.author} • ${v.views||0} vues</p>
-            <p style="color:rgba(255,255,255,0.5);font-size:.8rem;margin-top:.5rem">${v.category}</p>
-        </div>
-    `).join('');
-}
-// UPLOAD
-document.getElementById('uploadForm').addEventListener('submit',async function(e){
-    e.preventDefault();
-    const videoFile=document.getElementById('videoInput').files[0];
-    const title=document.getElementById('videoTitle').value.trim();
-    const category=document.getElementById('videoCategory').value;
-    const author=document.getElementById('authorName').value.trim();
-    const tipEmail=document.getElementById('tipEmail').value.trim();
-    
-    if(!videoFile||!title||!category||!author){
-        alert('Veuillez remplir tous les champs obligatoires');
-        return;
-    }
-    
-    alert('Upload en cours vers Cloudinary...');
-    
-    try{
-        // Upload vers Cloudinary
-        const formData=new FormData();
-        formData.append('file',videoFile);
-        formData.append('upload_preset','auroraai_upload');
-        formData.append('resource_type','video');
-        
-        const cloudinaryResult=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{
-            method:'POST',
-            body:formData
-        }).then(r=>r.json());
-        
-        if(cloudinaryResult.error)throw new Error(cloudinaryResult.error.message);
-        
-        // Sauvegarder dans Supabase
-        const {data,error}=await supabase.from('videos').insert([{
-            title:title,
-            category:category,
-            author:author,
-            tip_email:tipEmail,
-            video_url:cloudinaryResult.secure_url,
-            thumbnail:cloudinaryResult.secure_url.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/'),
-            duration:'N/A',
-            description:'',
-            views:0,
-            created_at:new Date().toISOString()
-        }]).select();
-        
-        if(error)throw error;
-        
-        alert('✅ Vidéo publiée avec succès !');
-        document.getElementById('uploadForm').reset();
-        showHome();
-        loadVideos();    }catch(err){
-        console.error('Erreur upload:',err);
-        alert(' Erreur: '+err.message);
-    }
-});
-
-// INIT
+async function loadVideos(){try{const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});if(error)throw error;videos=data||[];renderVideos()}catch(err){console.error(err);document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Erreur</p>'}}
+function renderVideos(){const grid=document.getElementById('videoGrid');if(videos.length===0){grid.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo</p>';return}grid.innerHTML=videos.map(v=>`<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:1rem"><h3 style="color:#d4af37;margin-bottom:.5rem">${v.title}</h3><p style="color:rgba(255,255,255,0.7);font-size:.9rem">${v.author} • ${v.views||0} vues</p></div>`).join('')}
+document.getElementById('uploadForm').addEventListener('submit',async function(e){e.preventDefault();const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value;if(!file||!title||!category||!author){alert('Remplissez tous les champs');return}try{const formData=new FormData();formData.append('file',file);formData.append('upload_preset','auroraai_upload');formData.append('resource_type','video');const cr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{method:'POST',body:formData}).then(r=>r.json());if(cr.error)throw cr.error;await supabase.from('videos').insert([{title,category,author,video_url:cr.secure_url,thumbnail:cr.secure_url.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/'),views:0,created_at:new Date().toISOString()}]);alert('✅ Publié!');this.reset();showHome();loadVideos()}catch(err){alert('❌ '+err.message)}});
 loadVideos();
 </script>
 </body>
