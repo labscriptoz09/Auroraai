@@ -98,6 +98,16 @@
 </div>
 </div><div class="toast" id="toast"></div>
 <script>
+// ===== GÉNÉRER ID UNIQUE UTILISATEUR =====
+function getViewerId(){
+let viewerId=localStorage.getItem('aurora_viewer_id');
+if(!viewerId){
+viewerId='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
+localStorage.setItem('aurora_viewer_id',viewerId);
+}
+return viewerId;
+}
+
 // ===== FORMATAGE DES NOMBRES =====
 function formatNumber(num){
 if(!num&&num!==0)return'0';
@@ -135,16 +145,16 @@ window.addEventListener('resize',()=>{resize();init()});
 
 // ===== NAVIGATION =====
 function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active')}
-function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active')}
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
+function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active')}function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
 function showAllVideos(){showHome();document.getElementById('sectionTitle').textContent='🔍 Explorer';loadVideos()}
 function showFavorites(){showHome();document.getElementById('sectionTitle').textContent='❤️ Favoris';const f=videos.filter(v=>favorites.includes(v.id));renderVideosList(f)}
 
 // ===== VARIABLES GLOBALES =====
-let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local',currentVideoId=null;
+let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local',currentVideoId=null,viewerId=getViewerId();
 
 // ===== TOAST =====
 function showToast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.classList.remove('show'),3000)}
+
 // ===== INITIALISATION BACKEND =====
 async function initBackend(){
 try{
@@ -184,7 +194,6 @@ if(type==='video'){uploadedVideo=file;zone.classList.add('has-file');zone.queryS
 else{uploadedThumbnail=file;zone.classList.add('has-file');zone.querySelector('.text').textContent='✅ '+file.name;preview.innerHTML='<img src="'+URL.createObjectURL(file)+'">';preview.classList.add('show')}
 showToast('✅ Sélectionné','success');
 }
-
 // ===== LIKE DIRECT SUR CARTE VIDÉO =====
 async function quickLike(event, videoId){
 event.stopPropagation();
@@ -194,7 +203,8 @@ const likedKey='liked_'+videoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
 const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
 
-if(backendMode==='cloud'&&supabase){const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
+if(backendMode==='cloud'&&supabase){
+const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
 if(error){showToast('❌ Erreur like','error');return}
 }
 video.likes=newLikes;
@@ -206,7 +216,7 @@ updateLikeButton(newLikes);
 }
 }
 
-// ===== LECTEUR VIDÉO =====
+// ===== LECTEUR VIDÉO AVEC COMPTEUR RÉEL =====
 async function playVideo(video){
 const modal=document.getElementById('videoModal');
 const videoEl=document.getElementById('modalVideo');
@@ -221,13 +231,27 @@ videoEl.src=video.video_url;
 currentVideoId=video.id;
 updateLikeButton(video.likes||0);
 
-// Compteur vues (une seule fois par session)
+// ===== COMPTEUR DE VUES RÉEL (une fois par utilisateur) =====
 const viewedKey='viewed_'+video.id;
-const alreadyViewed=sessionStorage.getItem(viewedKey);
-if(!alreadyViewed){
+const lastViewed=localStorage.getItem(viewedKey);
+const now=Date.now();
+const TWENTY_FOUR_HOURS=24*60*60*1000;
+
+if(!lastViewed||(now-lastViewed)>TWENTY_FOUR_HOURS){
+// Utilisateur n'a pas vu cette vidéo depuis 24h
 if(backendMode==='cloud'&&supabase){
+// Incrémenter le compteur
 const newViews=(video.views||0)+1;
 await supabase.from('videos').update({views:newViews}).eq('id',video.id);
+// Enregistrer la vue dans la table video_views
+try{
+await supabase.from('video_views').insert([
+{video_id:video.id,viewer_id:viewerId}
+]);
+}catch(e){
+console.log('Vue déjà enregistrée ou table non créée');
+}
+
 video.views=newViews;
 document.getElementById('modalViews').textContent='👁️ '+formatNumber(newViews)+' vues';
 }else{
@@ -238,12 +262,13 @@ const v=videos.find(x=>x.id===video.id);
 if(v)v.views=newViews;
 localStorage.setItem('auroraai_videos',JSON.stringify(videos));
 }
-sessionStorage.setItem(viewedKey,'true');
+localStorage.setItem(viewedKey,now.toString());
 }
 modal.classList.add('active');
 }
 
-function closeVideoModal(){const modal=document.getElementById('videoModal');
+function closeVideoModal(){
+const modal=document.getElementById('videoModal');
 const video=document.getElementById('modalVideo');
 video.pause();video.src='';
 modal.classList.remove('active');
@@ -268,7 +293,6 @@ if(!video)return;
 const likedKey='liked_'+currentVideoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
 const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
-
 if(backendMode==='cloud'&&supabase){
 const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
 if(error){showToast('❌ Erreur like','error');return}
@@ -293,6 +317,7 @@ navigator.clipboard.writeText(window.location.href);
 showToast('📋 Lien copié dans le presse-papier','success');
 }
 }
+
 // ===== TÉLÉCHARGEMENT =====
 function downloadVideo(){
 if(!currentVideoId)return;
@@ -316,8 +341,7 @@ showToast('❌ Cet auteur n\'a pas fourni d\'email pour les tips','error');
 }
 }
 
-// ===== FORMULAIRE UPLOAD =====
-document.getElementById('uploadForm').addEventListener('submit',async function(e){
+// ===== FORMULAIRE UPLOAD =====document.getElementById('uploadForm').addEventListener('submit',async function(e){
 e.preventDefault();
 const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value,description=document.getElementById('videoDesc').value,tipEmail=document.getElementById('tipEmail').value;
 if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}
@@ -341,7 +365,8 @@ thumbUrl='https://via.placeholder.com/640x360/000000/d4af37?text=AuroraAI';
 const {error}=await supabase.from('videos').insert([{id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,likes:0,created_at:new Date().toISOString()}]);
 if(error)throw error;
 showToast('✅ Publié sur le cloud (visible par tous)','success');
-}catch(err){showToast('⚠️ Cloud échoué: '+err.message,'error');videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):''}}else{
+}catch(err){showToast('⚠️ Cloud échoué: '+err.message,'error');videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):''}
+}else{
 videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):'';
 showToast('⚠️ Mode local (visible seulement par toi)','error');
 }
@@ -365,8 +390,7 @@ function renderVideos(){const filtered=currentCategory==='all'?videos:videos.fil
 function renderVideosList(list){
 const grid=document.getElementById('videoGrid');
 if(list.length===0){grid.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo</p>';return}
-grid.innerHTML=list.map(v=>{
-const likedKey='liked_'+v.id;
+grid.innerHTML=list.map(v=>{const likedKey='liked_'+v.id;
 const isLiked=localStorage.getItem(likedKey)==='true';
 const likeClass=isLiked?'liked':'';
 const likeLabel=isLiked?'❤️ Aimé':'🤍 J\'aime';
