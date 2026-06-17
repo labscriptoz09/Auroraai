@@ -194,30 +194,56 @@ if(type==='video'){uploadedVideo=file;zone.classList.add('has-file');zone.queryS
 else{uploadedThumbnail=file;zone.classList.add('has-file');zone.querySelector('.text').textContent='✅ '+file.name;preview.innerHTML='<img src="'+URL.createObjectURL(file)+'">';preview.classList.add('show')}
 showToast('✅ Sélectionné','success');
 }
-// ===== LIKE DIRECT SUR CARTE VIDÉO =====
+// ===== LIKE DIRECT SUR CARTE VIDÉO (AVEC BASE DE DONNÉES) =====
 async function quickLike(event, videoId){
 event.stopPropagation();
 const video=videos.find(v=>v.id===videoId);
 if(!video)return;
+
 const likedKey='liked_'+videoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
-const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
 
 if(backendMode==='cloud'&&supabase){
-const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
-if(error){showToast('❌ Erreur like','error');return}
+try{
+if(isLiked){
+// Unlike - supprimer de la base
+await supabase.from('video_likes').delete().eq('video_id',videoId).eq('viewer_id',viewerId);
+const newLikes=Math.max((video.likes||0)-1,0);
+await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
+video.likes=newLikes;
+}else{
+// Like - insérer dans la base (ignore si existe déjà)
+const {error:insertError}=await supabase.from('video_likes').insert([
+{video_id:videoId,viewer_id:viewerId}
+]);
+if(insertError&&insertError.code!=='23505'){
+// 23505 = violation unique constraint (déjà liké)
+throw insertError;
 }
+const newLikes=(video.likes||0)+1;
+await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
+video.likes=newLikes;
+}
+localStorage.setItem(likedKey,isLiked?'false':'true');
+showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
+}catch(err){
+console.error('Erreur like:',err);
+showToast('❌ Erreur lors du like','error');
+}
+}else{
+// Mode local
+const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
 video.likes=newLikes;
 localStorage.setItem(likedKey,isLiked?'false':'true');
 showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
+}
 renderVideos();
 if(currentVideoId===videoId){
-updateLikeButton(newLikes);
+updateLikeButton(video.likes||0);
 }
 }
 
-// ===== LECTEUR VIDÉO AVEC COMPTEUR RÉEL =====
-async function playVideo(video){
+// ===== LECTEUR VIDÉO AVEC COMPTEUR RÉEL =====async function playVideo(video){
 const modal=document.getElementById('videoModal');
 const videoEl=document.getElementById('modalVideo');
 document.getElementById('modalTitle').textContent=video.title;
@@ -238,20 +264,14 @@ const now=Date.now();
 const TWENTY_FOUR_HOURS=24*60*60*1000;
 
 if(!lastViewed||(now-lastViewed)>TWENTY_FOUR_HOURS){
-// Utilisateur n'a pas vu cette vidéo depuis 24h
 if(backendMode==='cloud'&&supabase){
-// Incrémenter le compteur
 const newViews=(video.views||0)+1;
 await supabase.from('videos').update({views:newViews}).eq('id',video.id);
-// Enregistrer la vue dans la table video_views
 try{
-await supabase.from('video_views').insert([
-{video_id:video.id,viewer_id:viewerId}
-]);
+await supabase.from('video_views').insert([{video_id:video.id,viewer_id:viewerId}]);
 }catch(e){
-console.log('Vue déjà enregistrée ou table non créée');
+console.log('Vue déjà enregistrée');
 }
-
 video.views=newViews;
 document.getElementById('modalViews').textContent='👁️ '+formatNumber(newViews)+' vues';
 }else{
@@ -272,10 +292,9 @@ const modal=document.getElementById('videoModal');
 const video=document.getElementById('modalVideo');
 video.pause();video.src='';
 modal.classList.remove('active');
-currentVideoId=null;
-}
+currentVideoId=null;}
 
-// ===== LIKE DANS MODAL =====
+// ===== LIKE DANS MODAL (AVEC BASE DE DONNÉES) =====
 function updateLikeButton(likesCount){
 const likeBtn=document.getElementById('likeBtn');
 const likeText=document.getElementById('likeText');
@@ -290,17 +309,43 @@ async function toggleLike(){
 if(!currentVideoId)return;
 const video=videos.find(v=>v.id===currentVideoId);
 if(!video)return;
+
 const likedKey='liked_'+currentVideoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
-const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
+
 if(backendMode==='cloud'&&supabase){
-const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
-if(error){showToast('❌ Erreur like','error');return}
-}
+try{
+if(isLiked){
+// Unlike
+await supabase.from('video_likes').delete().eq('video_id',currentVideoId).eq('viewer_id',viewerId);
+const newLikes=Math.max((video.likes||0)-1,0);
+await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
 video.likes=newLikes;
+}else{
+// Like
+const {error:insertError}=await supabase.from('video_likes').insert([
+{video_id:currentVideoId,viewer_id:viewerId}
+]);
+if(insertError&&insertError.code!=='23505'){
+throw insertError;
+}
+const newLikes=(video.likes||0)+1;
+await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
+video.likes=newLikes;
+}
 localStorage.setItem(likedKey,isLiked?'false':'true');
-updateLikeButton(newLikes);
 showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
+}catch(err){
+console.error('Erreur like:',err);
+showToast('❌ Erreur lors du like','error');
+}
+}else{
+// Mode local
+const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;video.likes=newLikes;
+localStorage.setItem(likedKey,isLiked?'false':'true');
+showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
+}
+updateLikeButton(video.likes||0);
 renderVideos();
 }
 
@@ -341,11 +386,11 @@ showToast('❌ Cet auteur n\'a pas fourni d\'email pour les tips','error');
 }
 }
 
-// ===== FORMULAIRE UPLOAD =====document.getElementById('uploadForm').addEventListener('submit',async function(e){
+// ===== FORMULAIRE UPLOAD =====
+document.getElementById('uploadForm').addEventListener('submit',async function(e){
 e.preventDefault();
 const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value,description=document.getElementById('videoDesc').value,tipEmail=document.getElementById('tipEmail').value;
-if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}
-let videoUrl='',thumbUrl='';
+if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}let videoUrl='',thumbUrl='';
 if(backendMode==='cloud'&&supabase){
 try{
 const formData=new FormData();
@@ -390,11 +435,11 @@ function renderVideos(){const filtered=currentCategory==='all'?videos:videos.fil
 function renderVideosList(list){
 const grid=document.getElementById('videoGrid');
 if(list.length===0){grid.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo</p>';return}
-grid.innerHTML=list.map(v=>{const likedKey='liked_'+v.id;
+grid.innerHTML=list.map(v=>{
+const likedKey='liked_'+v.id;
 const isLiked=localStorage.getItem(likedKey)==='true';
 const likeClass=isLiked?'liked':'';
-const likeLabel=isLiked?'❤️ Aimé':'🤍 J\'aime';
-const videoSafe=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');
+const likeLabel=isLiked?'❤️ Aimé':'🤍 J\'aime';const videoSafe=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');
 return `<div class="video-card" onclick='playVideo(${videoSafe})'>${v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+v.title+'">':''}<h3>${v.title}</h3><p>${v.author} • 👁️ ${formatNumber(v.views)} vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">${v.category}</p><div class="video-card-stats"><span class="stat">👁️ ${formatNumber(v.views)} vues</span><button class="like-btn-card ${likeClass}" onclick="quickLike(event,${v.id})">${likeLabel} (${formatNumber(v.likes)})</button></div></div>`;
 }).join('');
 }
