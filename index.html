@@ -54,13 +54,13 @@
 </div>
 <div id="uploadPage" class="upload-section">
 <div style="max-width:600px;margin:0 auto">
-<h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1>
+<h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37"> Publier une vidéo</h1>
 <p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p>
 <form class="upload-form" id="uploadForm">
 <div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon">📹</div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
-<div class="form-group"><label>Image de couverture</label><div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()"><div class="icon">🖼️</div><div class="text">Cliquez pour uploader</div><div class="hint">JPG, PNG</div></div><input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')"><div class="preview-container" id="thumbPreview"></div></div>
+<div class="form-group"><label>Image de couverture</label><div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()"><div class="icon">️</div><div class="text">Cliquez pour uploader</div><div class="hint">JPG, PNG</div></div><input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')"><div class="preview-container" id="thumbPreview"></div></div>
 <div class="form-group"><label>Titre *</label><input type="text" id="videoTitle" required></div>
-<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">🚀 Sci-Fi</option><option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
+<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi"> Sci-Fi</option><option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
 <div class="form-group"><label>Description</label><textarea id="videoDesc"></textarea></div>
 <div class="form-group"><label>Auteur *</label><input type="text" id="authorName" required></div>
 <div class="form-group"><label>Email tips 💰</label><input type="email" id="tipEmail"></div>
@@ -98,16 +98,6 @@
 </div>
 </div><div class="toast" id="toast"></div>
 <script>
-// ===== GÉNÉRER ID UNIQUE UTILISATEUR =====
-function getViewerId(){
-let viewerId=localStorage.getItem('aurora_viewer_id');
-if(!viewerId){
-viewerId='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
-localStorage.setItem('aurora_viewer_id',viewerId);
-}
-return viewerId;
-}
-
 // ===== FORMATAGE DES NOMBRES =====
 function formatNumber(num){
 if(!num&&num!==0)return'0';
@@ -145,16 +135,16 @@ window.addEventListener('resize',()=>{resize();init()});
 
 // ===== NAVIGATION =====
 function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active')}
-function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active')}function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
+function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active')}
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
 function showAllVideos(){showHome();document.getElementById('sectionTitle').textContent='🔍 Explorer';loadVideos()}
 function showFavorites(){showHome();document.getElementById('sectionTitle').textContent='❤️ Favoris';const f=videos.filter(v=>favorites.includes(v.id));renderVideosList(f)}
 
 // ===== VARIABLES GLOBALES =====
-let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local',currentVideoId=null,viewerId=getViewerId();
+let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local',currentVideoId=null;
 
 // ===== TOAST =====
 function showToast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.classList.remove('show'),3000)}
-
 // ===== INITIALISATION BACKEND =====
 async function initBackend(){
 try{
@@ -194,56 +184,30 @@ if(type==='video'){uploadedVideo=file;zone.classList.add('has-file');zone.queryS
 else{uploadedThumbnail=file;zone.classList.add('has-file');zone.querySelector('.text').textContent='✅ '+file.name;preview.innerHTML='<img src="'+URL.createObjectURL(file)+'">';preview.classList.add('show')}
 showToast('✅ Sélectionné','success');
 }
-// ===== LIKE DIRECT SUR CARTE VIDÉO (AVEC BASE DE DONNÉES) =====
+
+// ===== LIKE DIRECT SUR CARTE VIDÉO =====
 async function quickLike(event, videoId){
 event.stopPropagation();
 const video=videos.find(v=>v.id===videoId);
 if(!video)return;
-
 const likedKey='liked_'+videoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
-
-if(backendMode==='cloud'&&supabase){
-try{
-if(isLiked){
-// Unlike - supprimer de la base
-await supabase.from('video_likes').delete().eq('video_id',videoId).eq('viewer_id',viewerId);
-const newLikes=Math.max((video.likes||0)-1,0);
-await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
-video.likes=newLikes;
-}else{
-// Like - insérer dans la base (ignore si existe déjà)
-const {error:insertError}=await supabase.from('video_likes').insert([
-{video_id:videoId,viewer_id:viewerId}
-]);
-if(insertError&&insertError.code!=='23505'){
-// 23505 = violation unique constraint (déjà liké)
-throw insertError;
-}
-const newLikes=(video.likes||0)+1;
-await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
-video.likes=newLikes;
-}
-localStorage.setItem(likedKey,isLiked?'false':'true');
-showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
-}catch(err){
-console.error('Erreur like:',err);
-showToast('❌ Erreur lors du like','error');
-}
-}else{
-// Mode local
 const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
+
+if(backendMode==='cloud'&&supabase){const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',videoId);
+if(error){showToast('❌ Erreur like','error');return}
+}
 video.likes=newLikes;
 localStorage.setItem(likedKey,isLiked?'false':'true');
 showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
-}
 renderVideos();
 if(currentVideoId===videoId){
-updateLikeButton(video.likes||0);
+updateLikeButton(newLikes);
 }
 }
 
-// ===== LECTEUR VIDÉO AVEC COMPTEUR RÉEL =====async function playVideo(video){
+// ===== LECTEUR VIDÉO =====
+async function playVideo(video){
 const modal=document.getElementById('videoModal');
 const videoEl=document.getElementById('modalVideo');
 document.getElementById('modalTitle').textContent=video.title;
@@ -257,21 +221,13 @@ videoEl.src=video.video_url;
 currentVideoId=video.id;
 updateLikeButton(video.likes||0);
 
-// ===== COMPTEUR DE VUES RÉEL (une fois par utilisateur) =====
+// Compteur vues (une seule fois par session)
 const viewedKey='viewed_'+video.id;
-const lastViewed=localStorage.getItem(viewedKey);
-const now=Date.now();
-const TWENTY_FOUR_HOURS=24*60*60*1000;
-
-if(!lastViewed||(now-lastViewed)>TWENTY_FOUR_HOURS){
+const alreadyViewed=sessionStorage.getItem(viewedKey);
+if(!alreadyViewed){
 if(backendMode==='cloud'&&supabase){
 const newViews=(video.views||0)+1;
 await supabase.from('videos').update({views:newViews}).eq('id',video.id);
-try{
-await supabase.from('video_views').insert([{video_id:video.id,viewer_id:viewerId}]);
-}catch(e){
-console.log('Vue déjà enregistrée');
-}
 video.views=newViews;
 document.getElementById('modalViews').textContent='👁️ '+formatNumber(newViews)+' vues';
 }else{
@@ -282,19 +238,19 @@ const v=videos.find(x=>x.id===video.id);
 if(v)v.views=newViews;
 localStorage.setItem('auroraai_videos',JSON.stringify(videos));
 }
-localStorage.setItem(viewedKey,now.toString());
+sessionStorage.setItem(viewedKey,'true');
 }
 modal.classList.add('active');
 }
 
-function closeVideoModal(){
-const modal=document.getElementById('videoModal');
+function closeVideoModal(){const modal=document.getElementById('videoModal');
 const video=document.getElementById('modalVideo');
 video.pause();video.src='';
 modal.classList.remove('active');
-currentVideoId=null;}
+currentVideoId=null;
+}
 
-// ===== LIKE DANS MODAL (AVEC BASE DE DONNÉES) =====
+// ===== LIKE DANS MODAL =====
 function updateLikeButton(likesCount){
 const likeBtn=document.getElementById('likeBtn');
 const likeText=document.getElementById('likeText');
@@ -309,43 +265,18 @@ async function toggleLike(){
 if(!currentVideoId)return;
 const video=videos.find(v=>v.id===currentVideoId);
 if(!video)return;
-
 const likedKey='liked_'+currentVideoId;
 const isLiked=localStorage.getItem(likedKey)==='true';
+const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;
 
 if(backendMode==='cloud'&&supabase){
-try{
-if(isLiked){
-// Unlike
-await supabase.from('video_likes').delete().eq('video_id',currentVideoId).eq('viewer_id',viewerId);
-const newLikes=Math.max((video.likes||0)-1,0);
-await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
+const {error}=await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
+if(error){showToast('❌ Erreur like','error');return}
+}
 video.likes=newLikes;
-}else{
-// Like
-const {error:insertError}=await supabase.from('video_likes').insert([
-{video_id:currentVideoId,viewer_id:viewerId}
-]);
-if(insertError&&insertError.code!=='23505'){
-throw insertError;
-}
-const newLikes=(video.likes||0)+1;
-await supabase.from('videos').update({likes:newLikes}).eq('id',currentVideoId);
-video.likes=newLikes;
-}
 localStorage.setItem(likedKey,isLiked?'false':'true');
+updateLikeButton(newLikes);
 showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
-}catch(err){
-console.error('Erreur like:',err);
-showToast('❌ Erreur lors du like','error');
-}
-}else{
-// Mode local
-const newLikes=isLiked?Math.max((video.likes||0)-1,0):(video.likes||0)+1;video.likes=newLikes;
-localStorage.setItem(likedKey,isLiked?'false':'true');
-showToast(isLiked?'Like retiré':'❤️ Vidéo aimée','success');
-}
-updateLikeButton(video.likes||0);
 renderVideos();
 }
 
@@ -362,7 +293,6 @@ navigator.clipboard.writeText(window.location.href);
 showToast('📋 Lien copié dans le presse-papier','success');
 }
 }
-
 // ===== TÉLÉCHARGEMENT =====
 function downloadVideo(){
 if(!currentVideoId)return;
@@ -379,7 +309,7 @@ const email=document.getElementById('tipEmailInput').value;
 if(!email){showToast('❌ Entre ton email','error');return}
 const video=videos.find(v=>v.id===currentVideoId);
 if(video.tip_email){
-showToast('💰 Tip envoyé à '+video.tip_email,'success');
+showToast(' Tip envoyé à '+video.tip_email,'success');
 document.getElementById('tipEmailInput').value='';
 }else{
 showToast('❌ Cet auteur n\'a pas fourni d\'email pour les tips','error');
@@ -390,7 +320,8 @@ showToast('❌ Cet auteur n\'a pas fourni d\'email pour les tips','error');
 document.getElementById('uploadForm').addEventListener('submit',async function(e){
 e.preventDefault();
 const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value,description=document.getElementById('videoDesc').value,tipEmail=document.getElementById('tipEmail').value;
-if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}let videoUrl='',thumbUrl='';
+if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}
+let videoUrl='',thumbUrl='';
 if(backendMode==='cloud'&&supabase){
 try{
 const formData=new FormData();
@@ -410,8 +341,7 @@ thumbUrl='https://via.placeholder.com/640x360/000000/d4af37?text=AuroraAI';
 const {error}=await supabase.from('videos').insert([{id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,likes:0,created_at:new Date().toISOString()}]);
 if(error)throw error;
 showToast('✅ Publié sur le cloud (visible par tous)','success');
-}catch(err){showToast('⚠️ Cloud échoué: '+err.message,'error');videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):''}
-}else{
+}catch(err){showToast('⚠️ Cloud échoué: '+err.message,'error');videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):''}}else{
 videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):'';
 showToast('⚠️ Mode local (visible seulement par toi)','error');
 }
@@ -439,7 +369,8 @@ grid.innerHTML=list.map(v=>{
 const likedKey='liked_'+v.id;
 const isLiked=localStorage.getItem(likedKey)==='true';
 const likeClass=isLiked?'liked':'';
-const likeLabel=isLiked?'❤️ Aimé':'🤍 J\'aime';const videoSafe=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');
+const likeLabel=isLiked?'❤️ Aimé':'🤍 J\'aime';
+const videoSafe=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');
 return `<div class="video-card" onclick='playVideo(${videoSafe})'>${v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+v.title+'">':''}<h3>${v.title}</h3><p>${v.author} • 👁️ ${formatNumber(v.views)} vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">${v.category}</p><div class="video-card-stats"><span class="stat">👁️ ${formatNumber(v.views)} vues</span><button class="like-btn-card ${likeClass}" onclick="quickLike(event,${v.id})">${likeLabel} (${formatNumber(v.likes)})</button></div></div>`;
 }).join('');
 }
