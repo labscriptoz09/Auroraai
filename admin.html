@@ -79,9 +79,10 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <canvas id="plexusCanvas"></canvas>
 <div class="login-screen" id="loginScreen">
 <h1>🔐 AuroraAI Admin</h1>
-<input type="password" id="adminPassword" placeholder="Mot de passe administrateur" onkeypress="if(event.key==='Enter')doLogin()">
+<input type="text" id="adminUser" placeholder="Identifiant" style="margin-bottom:0.5rem">
+<input type="password" id="adminPassword" placeholder="Mot de passe" onkeypress="if(event.key==='Enter')doLogin()">
 <button onclick="doLogin()">Se connecter</button>
-<p class="login-error" id="loginError">❌ Mot de passe incorrect</p>
+<p class="login-error" id="loginError">❌ Identifiants incorrects</p>
 </div>
 <div class="notif-bar" id="notifBar"></div>
 <div class="dashboard" id="dashboard">
@@ -95,8 +96,8 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="tab" onclick="switchTab('comments',this)">💬 Commentaires</div>
 <div class="tab" onclick="switchTab('settings',this)">⚙️ Paramètres</div>
 </div>
-<div id="tab-overview">
-<div class="stats-grid"><div class="stat-card"><div class="number" id="statVideos">0</div><div class="label">Vidéos</div></div>
+<div id="tab-overview"><div class="stats-grid">
+<div class="stat-card"><div class="number" id="statVideos">0</div><div class="label">Vidéos</div></div>
 <div class="stat-card"><div class="number" id="statViews">0</div><div class="label">Vues totales</div></div>
 <div class="stat-card"><div class="number" id="statLikes">0</div><div class="label">Likes totaux</div></div>
 <div class="stat-card"><div class="number" id="statComments">0</div><div class="label">Commentaires</div></div>
@@ -125,27 +126,27 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div id="tab-settings" style="display:none">
 <div class="settings-group">
 <h3>🌐 Informations du site</h3>
-<div class="setting-row"><label>Nom du site</label><input type="text" id="setSiteName" value="AuroraAI.watch"></div>
-<div class="setting-row"><label>Description SEO</label><textarea id="setSiteDesc">Découvrez les meilleurs films et séries générés par intelligence artificielle.</textarea></div>
-<div class="setting-row"><label>URL du site</label><input type="text" id="setSiteUrl" value="https://auroraai-one.vercel.app/"></div>
+<div class="setting-row"><label>Nom du site</label><input type="text" id="setSiteName"></div>
+<div class="setting-row"><label>Description SEO</label><textarea id="setSiteDesc"></textarea></div>
+<div class="setting-row"><label>URL du site</label><input type="text" id="setSiteUrl"></div>
 </div>
 <div class="settings-group">
 <h3>🎨 Apparence</h3>
-<div class="setting-row"><label>Couleur principale</label><input type="color" id="setColor" value="#d4af37" style="height:40px"></div>
-<div class="setting-row"><label>Texte du badge Hero</label><input type="text" id="setBadgeText" value="PLATEFORME CINÉMA & SÉRIES IA"></div>
-<div class="setting-row"><label>Titre Hero</label><input type="text" id="setHeroTitle" value="L'IA réinvente le cinéma"></div>
+<div class="setting-row"><label>Couleur principale</label><input type="color" id="setColor" style="height:40px"></div>
+<div class="setting-row"><label>Texte du badge Hero</label><input type="text" id="setBadgeText"></div>
+<div class="setting-row"><label>Titre Hero</label><input type="text" id="setHeroTitle"></div>
 </div>
 <div class="settings-group">
 <h3>🔐 Sécurité</h3>
-<div class="setting-row"><label>Changer le mot de passe admin</label><input type="password" id="setNewPassword" placeholder="Nouveau mot de passe"></div>
-<div class="setting-row"><label>Confirmer</label><input type="password" id="setConfirmPassword" placeholder="Confirmer le mot de passe"></div>
+<div class="setting-row"><label>Nouveau mot de passe</label><input type="password" id="setNewPassword" placeholder="Nouveau mot de passe"></div>
+<div class="setting-row"><label>Confirmer</label><input type="password" id="setConfirmPassword" placeholder="Confirmer"></div>
 <button class="save-btn" onclick="changePassword()">Changer le mot de passe</button>
 </div>
 <div class="settings-group">
 <h3>🗄️ Base de données</h3>
-<div class="setting-row"><label>Exporter les vidéos (JSON)</label><button class="save-btn" onclick="exportData('videos')">📥 Exporter vidéos</button></div>
-<div class="setting-row"><label>Exporter les commentaires (JSON)</label><button class="save-btn" onclick="exportData('comments')">📥 Exporter commentaires</button></div>
-</div><button class="save-btn" onclick="saveSettings()" style="width:100%;padding:0.8rem;font-size:1rem">💾 Sauvegarder les paramètres</button>
+<div class="setting-row"><button class="save-btn" onclick="exportData('videos')">📥 Exporter vidéos JSON</button></div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('comments')">📥 Exporter commentaires JSON</button></div></div>
+<button class="save-btn" onclick="saveSettings()" style="width:100%;padding:0.8rem;font-size:1rem">💾 Sauvegarder les paramètres</button>
 </div>
 </div>
 <div class="edit-modal" id="editModal">
@@ -161,12 +162,11 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="toast" id="toast"></div>
 <script>
 var sb=null;
-var ADMIN_KEY='aurora_admin_auth';
-var SETTINGS_KEY='aurora_site_settings';
 var editingId=null;
 var editingType=null;
 var notifCount=0;
 var realtimeChannel=null;
+var SESSION_KEY='aurora_admin_session';
 
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',function(){resize();init();});})();
 
@@ -174,37 +174,49 @@ function showToast(m,isError){var e=document.getElementById('toast');e.textConte
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){if(!t)return'';var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
-function doLogin(){
-try{
-var pwd=document.getElementById('adminPassword').value;
-var stored=localStorage.getItem('aurora_admin_pwd');
-if(!stored||stored==='')stored='admin123';
-if(pwd===stored){
-localStorage.setItem(ADMIN_KEY,'true');
-document.getElementById('loginScreen').style.display='none';
-document.getElementById('dashboard').classList.add('active');
-initDashboard();
-}else{
-document.getElementById('loginError').style.display='block';
-document.getElementById('loginError').textContent='❌ Mot de passe incorrect';
-}
-}catch(e){alert('ERREUR: '+e.message);}
-}
-
-function doLogout(){localStorage.removeItem(ADMIN_KEY);location.reload();}
-
-function checkAuth(){
-try{if(localStorage.getItem(ADMIN_KEY)==='true'){
-document.getElementById('loginScreen').style.display='none';
-document.getElementById('dashboard').classList.add('active');
-initDashboard();
-}
-}catch(e){console.log('Auth error:',e);}
+async function sha256(text){
+var encoder=new TextEncoder();
+var data=encoder.encode(text);
+var hash=await crypto.subtle.digest('SHA-256',data);
+var arr=Array.from(new Uint8Array(hash));
+return arr.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
 }
 
 function initSB(){
 if(sb)return;
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
+}
+
+async function doLogin(){
+try{
+var user=document.getElementById('adminUser').value.trim();
+var pwd=document.getElementById('adminPassword').value;
+if(!user||!pwd){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Remplissez les deux champs';return;}
+initSB();
+var hash=await sha256(pwd);
+var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();if(r.error||!r.data){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Identifiants incorrects';return;}
+await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);
+sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));
+document.getElementById('loginScreen').style.display='none';
+document.getElementById('dashboard').classList.add('active');
+initDashboard();
+}catch(e){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Erreur: '+e.message;}
+}
+
+function doLogout(){sessionStorage.removeItem(SESSION_KEY);location.reload();}
+
+function checkAuth(){
+try{
+var s=sessionStorage.getItem(SESSION_KEY);
+if(s){
+var session=JSON.parse(s);
+if(session&&session.id){
+document.getElementById('loginScreen').style.display='none';
+document.getElementById('dashboard').classList.add('active');
+initDashboard();
+}
+}
+}catch(e){console.log('Auth error:',e);}
 }
 
 function switchTab(name,el){
@@ -231,18 +243,18 @@ el.innerHTML='<div class="notif-content"><div class="notif-title">'+esc(title)+'
 bar.appendChild(el);
 setTimeout(function(){if(el.parentElement){el.style.animation='notifFade 0.3s ease-out forwards';setTimeout(function(){if(el.parentElement)el.remove();},300);}},8000);
 while(bar.children.length>5){bar.removeChild(bar.firstChild);}
-try{if(window.navigator.vibrate)window.navigator.vibrate(100);}catch(e){}
-}
+try{if(window.navigator.vibrate)window.navigator.vibrate(100);}catch(e){}}
 
 function startRealtime(){
 if(!sb||realtimeChannel)return;
 realtimeChannel=sb.channel('admin-notifs')
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},function(p){addNotification('new-comment','💬 Nouveau commentaire',p.new.author_name+' a commenté sur vidéo ID '+p.new.video_id);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'videos'},function(p){addNotification('new-video','🎬 Nouvelle vidéo','Titre: '+p.new.title+' par '+p.new.author);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_likes'},function(p){addNotification('new-like','❤️ Nouveau like','Like sur vidéo ID '+p.new.video_id);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(p){addNotification('new-view','👁️ Nouvelle vue','Vue sur vidéo ID '+p.new.video_id);})
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},function(p){addNotification('new-comment','💬 Nouveau commentaire',p.new.author_name+' sur vidéo ID '+p.new.video_id);})
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'videos'},function(p){addNotification('new-video','🎬 Nouvelle vidéo',p.new.title+' par '+p.new.author);})
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_likes'},function(p){addNotification('new-like','❤️ Nouveau like','Vidéo ID '+p.new.video_id);})
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(p){addNotification('new-view','👁️ Nouvelle vue','Vidéo ID '+p.new.video_id);})
 .subscribe();
 }
+
 async function initDashboard(){initSB();loadOverview();startRealtime();}
 
 async function loadOverview(){
@@ -281,7 +293,6 @@ document.getElementById('commentCount').textContent=comments.length;
 document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+(c.author_email?'📧 '+esc(c.author_email):'📧 non renseigné')+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
 }catch(e){showToast('Erreur commentaires',true);}
 }
-
 function openVideo(id){window.open('/player.html?id='+id,'_blank');}
 
 async function deleteVideo(id){
@@ -292,7 +303,8 @@ await sb.from('video_likes').delete().eq('video_id',id);
 await sb.from('video_views').delete().eq('video_id',id);
 await sb.from('videos').delete().eq('id',id);
 showToast('✅ Vidéo supprimée');
-loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}
+loadAllVideos();loadOverview();
+}catch(e){showToast('❌ Erreur: '+e.message,true);}
 }
 
 async function deleteComment(id){
@@ -330,38 +342,57 @@ closeEditModal();loadAllVideos();loadOverview();
 }catch(e){showToast('❌ Erreur: '+e.message,true);}
 }
 }
-
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');editingId=null;editingType=null;}
 
-function loadSettings(){
-var s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
-if(s.siteName)document.getElementById('setSiteName').value=s.siteName;
-if(s.siteDesc)document.getElementById('setSiteDesc').value=s.siteDesc;
-if(s.siteUrl)document.getElementById('setSiteUrl').value=s.siteUrl;
-if(s.color)document.getElementById('setColor').value=s.color;
-if(s.badgeText)document.getElementById('setBadgeText').value=s.badgeText;
-if(s.heroTitle)document.getElementById('setHeroTitle').value=s.heroTitle;
-}
-function saveSettings(){
-var s={siteName:document.getElementById('setSiteName').value,siteDesc:document.getElementById('setSiteDesc').value,siteUrl:document.getElementById('setSiteUrl').value,color:document.getElementById('setColor').value,badgeText:document.getElementById('setBadgeText').value,heroTitle:document.getElementById('setHeroTitle').value};
-localStorage.setItem(SETTINGS_KEY,JSON.stringify(s));
-showToast('✅ Paramètres sauvegardés');
+async function loadSettings(){
+try{
+initSB();
+var r=await sb.from('site_settings').select('*').eq('id',1).single();
+if(r.error||!r.data)return;
+var s=r.data;
+document.getElementById('setSiteName').value=s.site_name||'';
+document.getElementById('setSiteDesc').value=s.site_desc||'';
+document.getElementById('setSiteUrl').value=s.site_url||'';
+document.getElementById('setColor').value=s.color||'#d4af37';
+document.getElementById('setBadgeText').value=s.badge_text||'';
+document.getElementById('setHeroTitle').value=s.hero_title||'';
+}catch(e){showToast('Erreur chargement paramètres',true);}
 }
 
-function changePassword(){
+async function saveSettings(){
+try{
+initSB();
+await sb.from('site_settings').update({
+site_name:document.getElementById('setSiteName').value,
+site_desc:document.getElementById('setSiteDesc').value,
+site_url:document.getElementById('setSiteUrl').value,
+color:document.getElementById('setColor').value,
+badge_text:document.getElementById('setBadgeText').value,
+hero_title:document.getElementById('setHeroTitle').value,
+updated_at:new Date().toISOString()
+}).eq('id',1);
+showToast('✅ Paramètres sauvegardés dans Supabase');
+}catch(e){showToast('❌ Erreur: '+e.message,true);}
+}
+
+async function changePassword(){
 var np=document.getElementById('setNewPassword').value;
 var cp=document.getElementById('setConfirmPassword').value;
 if(!np){showToast('❌ Entrez un mot de passe',true);return;}
 if(np!==cp){showToast('❌ Mots de passe différents',true);return;}
 if(np.length<4){showToast('❌ Minimum 4 caractères',true);return;}
-localStorage.setItem('aurora_admin_pwd',np);
+try{
+var session=JSON.parse(sessionStorage.getItem(SESSION_KEY));
+var hash=await sha256(np);
+await sb.from('admin_users').update({password_hash:hash}).eq('id',session.id);
 document.getElementById('setNewPassword').value='';
 document.getElementById('setConfirmPassword').value='';
-showToast('✅ Mot de passe changé');
+showToast('✅ Mot de passe changé dans Supabase');
+}catch(e){showToast('❌ Erreur: '+e.message,true);}
 }
-
 async function exportData(table){
 try{
+initSB();
 var r=await sb.from(table).select('*');
 if(r.error)throw r.error;
 var blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});
