@@ -61,6 +61,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{border-left-color:#f4d03f}
+.toast.error{border-left-color:#ff4d4d}
+#diagnostic{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-radius:12px;padding:1rem;max-width:90%;width:400px;z-index:400;font-size:0.85rem;display:none}
+#diagnostic.show{display:block}
+#diagnostic h3{color:#d4af37;margin-bottom:0.5rem;font-size:1rem}
+.diag-item{padding:0.3rem 0;display:flex;align-items:center;gap:0.5rem}
+.diag-ok{color:#4ade80}
+.diag-err{color:#ff4d4d}
+.diag-warn{color:#fbbf24}
+.close-diag{position:absolute;top:0.5rem;right:0.5rem;background:transparent;border:none;color:#d4af37;cursor:pointer;font-size:1.2rem}
 </style>
 </head>
 <body>
@@ -77,18 +86,17 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <a href="#" class="menu-link" onclick="toggleMenu();showHome()">🏠 Accueil</a>
 <a href="#" class="menu-link" onclick="toggleMenu();showUpload()">🎬 Upload Vidéo</a>
 <a href="#" class="menu-link" onclick="toggleMenu();showFavorites()">❤️ Mes Favoris</a>
-<a href="#" class="menu-link" onclick="toggleMenu();showAllVideos()"> Explorer</a>
+<a href="#" class="menu-link" onclick="toggleMenu();showAllVideos()">🔍 Explorer</a>
 <div class="categories-section">
 <div class="categories-title">🎭 Catégories</div>
 <div class="categories-grid">
 <button class="cat-btn active" onclick="filterCategory('all',this)">🌟 Tous</button>
 <button class="cat-btn" onclick="filterCategory('Sci-Fi',this)">🚀 Sci-Fi</button>
-<button class="cat-btn" onclick="filterCategory('Onirique',this)">🌙 Onirique</button>
+<button class="cat-btn" onclick="filterCategory('Onirique',this)"> Onirique</button>
 <button class="cat-btn" onclick="filterCategory('Thriller',this)">🔪 Thriller</button>
 <button class="cat-btn" onclick="filterCategory('Romance',this)">💜 Romance</button>
 <button class="cat-btn" onclick="filterCategory('Pub',this)">📢 Pub</button>
-<button class="cat-btn" onclick="filterCategory('Dessin animé',this)">🎨 Dessin animé</button>
-<button class="cat-btn" onclick="filterCategory('Divers',this)">✨ Divers</button>
+<button class="cat-btn" onclick="filterCategory('Dessin animé',this)">🎨 Dessin animé</button><button class="cat-btn" onclick="filterCategory('Divers',this)">✨ Divers</button>
 </div>
 </div>
 </div>
@@ -96,9 +104,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <section class="hero" id="hero">
 <div class="badge">PLATEFORME CINÉMA & SÉRIES IA</div>
 <h1>L'IA réinvente le cinéma</h1>
-<p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p><div>
+<p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p>
+<div>
 <button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">📥 Télécharger</button>
-<button class="btn btn-secondary" onclick="showUpload()"> Partager vidéo AI</button>
+<button class="btn btn-secondary" onclick="showUpload()">📤 Partager vidéo AI</button>
 </div>
 </section>
 <section class="content" id="content">
@@ -111,10 +120,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1>
 <p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p>
 <form class="upload-form" id="uploadForm">
-<div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon"></div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
+<div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon">📹</div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
 <div class="form-group"><label>Image de couverture</label><div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()"><div class="icon">🖼️</div><div class="text">Cliquez pour uploader</div><div class="hint">JPG, PNG</div></div><input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')"><div class="preview-container" id="thumbPreview"></div></div>
 <div class="form-group"><label>Titre *</label><input type="text" id="videoTitle" required></div>
-<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">🚀 Sci-Fi</option><option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
+<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">🚀 Sci-Fi</option><option value="Onirique"> Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
 <div class="form-group"><label>Description</label><textarea id="videoDesc"></textarea></div>
 <div class="form-group"><label>Auteur *</label><input type="text" id="authorName" required></div>
 <div class="form-group"><label>Email tips 💰</label><input type="email" id="tipEmail"></div>
@@ -124,169 +133,27 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 </div>
 </div>
 <div class="toast" id="toast"></div>
+<div id="diagnostic"><button class="close-diag" onclick="document.getElementById('diagnostic').classList.remove('show')">✕</button><h3> Diagnostic Backend</h3><div id="diagContent"></div></div>
 <script>
-// 1. FOND ANIMÉ - INDÉPENDANT, MARCHE TOUJOURS
-(function(){
-const c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');
-function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
-let p=[];
-function init(){p=[];for(let i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1})}
-function draw(){
-ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
-for(let i=0;i<p.length;i++){
-p[i].x+=p[i].vx;p[i].y+=p[i].vy;
-if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;
-if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;
-ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);
-ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();
-for(let j=i+1;j<p.length;j++){
-const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);
-if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);
-ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}
-requestAnimationFrame(draw);}
-resize();init();draw();window.addEventListener('resize',()=>{resize();init();});
-})();
-// 2. NAVIGATION - MARCHE TOUJOURS
+(function(){const c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight}let p=[];function init(){p=[];for(let i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1})}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(let i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',()=>{resize();init();});})();
 function showHome(){document.getElementById('homePage').style.display='block';document.getElementById('uploadPage').classList.remove('active')}
 function showUpload(){document.getElementById('homePage').style.display='none';document.getElementById('uploadPage').classList.add('active')}
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('active')}
 function showAllVideos(){showHome();document.getElementById('sectionTitle').textContent='🔍 Explorer';loadVideos()}
 function showFavorites(){showHome();document.getElementById('sectionTitle').textContent='❤️ Favoris';const f=videos.filter(v=>favorites.includes(v.id));renderVideosList(f)}
-
-// 3. VARIABLES
-let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null;
-
-// 4. BACKEND - CHARGEMENT SÉCURISÉ (NE CASSE RIEN)
-function initBackend(){
-try{
-// On attend que la page soit totalement chargée
-window.addEventListener('load', ()=>{
-setTimeout(()=>{
-try{
-if(typeof window.supabase !== 'undefined'){
-supabase = window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-console.log('✅ Supabase prêt');
-loadVideos();
-}else{
-console.log('⚠️ Supabase non chargé, mode local');
-loadLocalVideos();
-}
-}catch(e){
-console.log('⚠️ Erreur Supabase, mode local');
-loadLocalVideos();
-}
-}, 500);
-});
-}catch(e){
-loadLocalVideos();
-}
-}
-
-// 5. CHARGEMENT VIDÉOS - CLOUD D'ABORD, LOCAL SINON
-async function loadVideos(){
-try{
-if(supabase){
-const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});
-if(!error && data && data.length>0){
-videos=data;
-renderVideos();
-console.log('📥 '+data.length+' vidéos depuis le Cloud');
-return;
-}
-}
-loadLocalVideos();}catch(err){
-console.log('️ Erreur chargement cloud, fallback local');
-loadLocalVideos();
-}
-}
-
-function loadLocalVideos(){
-videos=JSON.parse(localStorage.getItem('auroraai_videos')||'[]');
-renderVideos();
-}
-
-// 6. FILTRES & FAVORIS
-function filterCategory(cat,btn){currentCategory=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');toggleMenu();showHome();document.getElementById('sectionTitle').textContent=cat==='all'?'🔥 Tendances':'🎭 '+cat;renderVideos()}
+let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local';
+function addDiag(msg,status){const div=document.getElementById('diagnostic'),content=document.getElementById('diagContent'),cls=status==='ok'?'diag-ok':status==='err'?'diag-err':'diag-warn',icon=status==='ok'?'✅':status==='err'?'❌':'⚠️';content.innerHTML+=`<div class="diag-item ${cls}">${icon} ${msg}</div>`;div.classList.add('show')}
+async function initBackend(){addDiag('Test Supabase...','warn');try{await new Promise(resolve=>setTimeout(resolve,1000));if(typeof window.supabase==='undefined'){addDiag('Supabase SDK non chargé','err');backendMode='local';loadLocalVideos();return}supabase=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');addDiag('Supabase connecté','ok');const {data,error}=await supabase.from('videos').select('*').limit(1);if(error){addDiag('Table videos: '+error.message,'err');backendMode='local';loadLocalVideos();return}addDiag('Table videos accessible','ok');addDiag('Test Cloudinary...','warn');try{const testCr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:new FormData()}).then(r=>r.json());if(testCr.error&&testCr.error.message.includes('Upload preset')){addDiag('Cloudinary: preset manquant','err')}else{addDiag('Cloudinary OK','ok')}}catch(e){addDiag('Cloudinary: '+e.message,'err')}backendMode='cloud';await loadVideos()}catch(e){addDiag('Erreur: '+e.message,'err');backendMode='local';loadLocalVideos()}}
+async function loadVideos(){try{if(backendMode==='cloud'&&supabase){const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});if(!error&&data){videos=data;renderVideos();addDiag(data.length+' vidéos chargées du cloud','ok');return}}loadLocalVideos()}catch(err){loadLocalVideos()}}
+function loadLocalVideos(){videos=JSON.parse(localStorage.getItem('auroraai_videos')||'[]');renderVideos()}function filterCategory(cat,btn){currentCategory=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');toggleMenu();showHome();document.getElementById('sectionTitle').textContent=cat==='all'?'🔥 Tendances':'🎭 '+cat;renderVideos()}
 function updateFavBadge(){const b=document.getElementById('favBadge');if(favorites.length>0){b.textContent=favorites.length;b.classList.add('visible')}else{b.classList.remove('visible')}}
 function toggleFav(id){const i=favorites.indexOf(id);if(i>-1){favorites.splice(i,1);showToast('Retiré')}else{favorites.push(id);showToast('❤️ Ajouté','success')}localStorage.setItem('aurorafavs',JSON.stringify(favorites));updateFavBadge();renderVideos()}
-
-// 7. UPLOAD FICHIERS
 function handleFileSelect(input,type){const file=input.files[0];if(!file)return;const zone=document.getElementById(type+'Zone'),preview=document.getElementById(type+'Preview');if(type==='video'){uploadedVideo=file;zone.classList.add('has-file');zone.querySelector('.text').textContent='✅ '+file.name;preview.innerHTML='<video controls><source src="'+URL.createObjectURL(file)+'"></video>';preview.classList.add('show')}else{uploadedThumbnail=file;zone.classList.add('has-file');zone.querySelector('.text').textContent='✅ '+file.name;preview.innerHTML='<img src="'+URL.createObjectURL(file)+'">';preview.classList.add('show')}showToast('✅ Sélectionné','success')}
 function showToast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.classList.remove('show'),3000)}
-
-// 8. UPLOAD FORM - CLOUD D'ABORD, LOCAL SINON (JAMAIS DE PLANTAGE)
-document.getElementById('uploadForm').addEventListener('submit',async function(e){
-e.preventDefault();
-const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value,description=document.getElementById('videoDesc').value,tipEmail=document.getElementById('tipEmail').value;
-
-if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}
-
-let videoUrl='',thumbUrl='',mode='local';
-
-// ESSAYER LE CLOUD
-if(supabase){
-try{
-const formData=new FormData();
-formData.append('file',file);
-formData.append('upload_preset','auroraai_upload');
-formData.append('resource_type','video');
-const cr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{method:'POST',body:formData}).then(r=>r.json());
-if(cr.error)throw cr.error;
-videoUrl=cr.secure_url;
-
-if(uploadedThumbnail){
-const thumbData=new FormData();
-thumbData.append('file',uploadedThumbnail);
-thumbData.append('upload_preset','auroraai_upload');
-const tr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:thumbData}).then(r=>r.json());
-if(tr.error)throw tr.error;
-thumbUrl=tr.secure_url;
-}else{
-thumbUrl=videoUrl.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/');
-}
-const {error}=await supabase.from('videos').insert([{id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,created_at:new Date().toISOString()}]);
-if(error)throw error;
-mode='cloud';
-showToast('✅ Publié sur le cloud!','success');
-}catch(err){
-console.log('⚠️ Cloud échoué, mode local');
-videoUrl=URL.createObjectURL(file);
-thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):'';
-}
-}
-
-// FALLBACK LOCAL
-if(mode==='local'){
-videoUrl=URL.createObjectURL(file);
-thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):'';
-showToast('✅ Publié (local - visible seulement par toi)','success');
-}
-
-const newVideo={id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,created_at:new Date().toISOString()};
-const localVideos=JSON.parse(localStorage.getItem('auroraai_videos')||'[]');
-localVideos.unshift(newVideo);
-localStorage.setItem('auroraai_videos',JSON.stringify(localVideos));
-
-this.reset();
-uploadedVideo=null;uploadedThumbnail=null;
-document.getElementById('videoZone').classList.remove('has-file');
-document.getElementById('thumbZone').classList.remove('has-file');
-document.getElementById('videoZone').querySelector('.text').textContent='Cliquez pour uploader';
-document.getElementById('thumbZone').querySelector('.text').textContent='Cliquez pour uploader';
-document.getElementById('videoPreview').classList.remove('show');
-document.getElementById('thumbPreview').classList.remove('show');
-
-await loadVideos();
-setTimeout(()=>showHome(),1500);
-});
-
-// 9. RENDU
+document.getElementById('uploadForm').addEventListener('submit',async function(e){e.preventDefault();const file=document.getElementById('videoInput').files[0],title=document.getElementById('videoTitle').value,category=document.getElementById('videoCategory').value,author=document.getElementById('authorName').value,description=document.getElementById('videoDesc').value,tipEmail=document.getElementById('tipEmail').value;if(!file||!title||!category||!author){showToast('❌ Champs obligatoires');return}let videoUrl='',thumbUrl='';if(backendMode==='cloud'&&supabase){try{const formData=new FormData();formData.append('file',file);formData.append('upload_preset','auroraai_upload');formData.append('resource_type','video');const cr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/video/upload',{method:'POST',body:formData}).then(r=>r.json());if(cr.error)throw cr.error;videoUrl=cr.secure_url;if(uploadedThumbnail){const thumbData=new FormData();thumbData.append('file',uploadedThumbnail);thumbData.append('upload_preset','auroraai_upload');const tr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:thumbData}).then(r=>r.json());if(tr.error)throw tr.error;thumbUrl=tr.secure_url}else{thumbUrl=videoUrl.replace('/video/upload/','/video/upload/so_0.5,c_thumb,w_640,h_360/')}const {error}=await supabase.from('videos').insert([{id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,created_at:new Date().toISOString()}]);if(error)throw error;showToast('✅ Publié sur le cloud (visible par tous)','success')}catch(err){showToast('⚠️ Cloud échoué: '+err.message,'error');videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):''}}else{videoUrl=URL.createObjectURL(file);thumbUrl=uploadedThumbnail?URL.createObjectURL(uploadedThumbnail):'';showToast('️ Mode local (visible seulement par toi)','error')}const newVideo={id:Date.now(),title:title,category:category,author:author,description:description,tip_email:tipEmail,video_url:videoUrl,thumbnail:thumbUrl,views:0,created_at:new Date().toISOString()};const localVideos=JSON.parse(localStorage.getItem('auroraai_videos')||'[]');localVideos.unshift(newVideo);localStorage.setItem('auroraai_videos',JSON.stringify(localVideos));this.reset();uploadedVideo=null;uploadedThumbnail=null;document.getElementById('videoZone').classList.remove('has-file');document.getElementById('thumbZone').classList.remove('has-file');document.getElementById('videoZone').querySelector('.text').textContent='Cliquez pour uploader';document.getElementById('thumbZone').querySelector('.text').textContent='Cliquez pour uploader';document.getElementById('videoPreview').classList.remove('show');document.getElementById('thumbPreview').classList.remove('show');await loadVideos();setTimeout(()=>showHome(),1500)});
 function renderVideos(){const filtered=currentCategory==='all'?videos:videos.filter(v=>v.category===currentCategory);renderVideosList(filtered)}
 function renderVideosList(list){const grid=document.getElementById('videoGrid');if(list.length===0){grid.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Aucune vidéo</p>';return}grid.innerHTML=list.map(v=>`<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:1.5rem;cursor:pointer">${v.thumbnail?'<img src="'+v.thumbnail+'" style="width:100%;border-radius:10px;margin-bottom:1rem;max-height:150px;object-fit:cover">':''}<h3 style="color:#d4af37;margin-bottom:.5rem">${v.title}</h3><p style="color:rgba(255,255,255,0.7);font-size:.9rem">${v.author} • 👁️ ${v.views||0} vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">${v.category}</p></div>`).join('')}
-
-// INIT
-updateFavBadge();
-initBackend();
+updateFavBadge();initBackend();
 </script>
 </body>
 </html>
