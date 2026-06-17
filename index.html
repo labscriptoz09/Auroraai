@@ -83,12 +83,12 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 </header>
 <div class="mobile-menu" id="mobileMenu">
 <button class="close-btn" onclick="toggleMenu()">✕</button>
-<a href="#" class="menu-link" onclick="toggleMenu();showHome()">🏠 Accueil</a>
-<a href="#" class="menu-link" onclick="toggleMenu();showUpload()">🎬 Upload Vidéo</a>
+<a href="#" class="menu-link" onclick="toggleMenu();showHome()"> Accueil</a>
+<a href="#" class="menu-link" onclick="toggleMenu();showUpload()"> Upload Vidéo</a>
 <a href="#" class="menu-link" onclick="toggleMenu();showFavorites()">❤️ Mes Favoris</a>
 <a href="#" class="menu-link" onclick="toggleMenu();showAllVideos()">🔍 Explorer</a>
 <div class="categories-section">
-<div class="categories-title">🎭 Catégories</div>
+<div class="categories-title"> Catégories</div>
 <div class="categories-grid">
 <button class="cat-btn active" onclick="filterCategory('all',this)">🌟 Tous</button>
 <button class="cat-btn" onclick="filterCategory('Sci-Fi',this)">🚀 Sci-Fi</button>
@@ -96,7 +96,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <button class="cat-btn" onclick="filterCategory('Thriller',this)">🔪 Thriller</button>
 <button class="cat-btn" onclick="filterCategory('Romance',this)">💜 Romance</button>
 <button class="cat-btn" onclick="filterCategory('Pub',this)">📢 Pub</button>
-<button class="cat-btn" onclick="filterCategory('Dessin animé',this)">🎨 Dessin animé</button><button class="cat-btn" onclick="filterCategory('Divers',this)">✨ Divers</button>
+<button class="cat-btn" onclick="filterCategory('Dessin animé',this)"> Dessin animé</button><button class="cat-btn" onclick="filterCategory('Divers',this)">✨ Divers</button>
 </div>
 </div>
 </div>
@@ -120,10 +120,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1>
 <p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p>
 <form class="upload-form" id="uploadForm">
-<div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon">📹</div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
+<div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon"></div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
 <div class="form-group"><label>Image de couverture</label><div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()"><div class="icon">🖼️</div><div class="text">Cliquez pour uploader</div><div class="hint">JPG, PNG</div></div><input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')"><div class="preview-container" id="thumbPreview"></div></div>
 <div class="form-group"><label>Titre *</label><input type="text" id="videoTitle" required></div>
-<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">🚀 Sci-Fi</option><option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
+<div class="form-group"><label>Catégorie *</label><select id="videoCategory" required><option value="">Sélectionnez...</option><option value="Sci-Fi">🚀 Sci-Fi</option><option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option><option value="Romance"> Romance</option><option value="Pub"> Pub</option><option value="Dessin animé">🎨 Dessin animé</option><option value="Divers">✨ Divers</option></select></div>
 <div class="form-group"><label>Description</label><textarea id="videoDesc"></textarea></div>
 <div class="form-group"><label>Auteur *</label><input type="text" id="authorName" required></div>
 <div class="form-group"><label>Email tips 💰</label><input type="email" id="tipEmail"></div>
@@ -142,7 +142,7 @@ function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('ac
 function showAllVideos(){showHome();document.getElementById('sectionTitle').textContent='🔍 Explorer';loadVideos()}
 function showFavorites(){showHome();document.getElementById('sectionTitle').textContent='❤️ Favoris';const f=videos.filter(v=>favorites.includes(v.id));renderVideosList(f)}
 let videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',uploadedVideo=null,uploadedThumbnail=null,supabase=null,backendMode='local';
-function addDiag(msg,status){const div=document.getElementById('diagnostic'),content=document.getElementById('diagContent'),cls=status==='ok'?'diag-ok':status==='err'?'diag-err':'diag-warn',icon=status==='ok'?'✅':status==='err'?'❌':'⚠️';content.innerHTML+=`<div class="diag-item ${cls}">${icon} ${msg}</div>`;div.classList.add('show')}
+function addDiag(msg,status){const div=document.getElementById('diagnostic'),content=document.getElementById('diagContent'),cls=status==='ok'?'diag-ok':status==='err'?'diag-err':'diag-warn',icon=status==='ok'?'✅':status==='err'?'❌':'️';content.innerHTML+=`<div class="diag-item ${cls}">${icon} ${msg}</div>`;div.classList.add('show')}
 async function initBackend(){addDiag('Test Supabase...','warn');try{await new Promise(resolve=>setTimeout(resolve,1000));if(typeof window.supabase==='undefined'){addDiag('Supabase SDK non chargé','err');backendMode='local';loadLocalVideos();return}supabase=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');addDiag('Supabase connecté','ok');const {data,error}=await supabase.from('videos').select('*').limit(1);if(error){addDiag('Table videos: '+error.message,'err');backendMode='local';loadLocalVideos();return}addDiag('Table videos accessible','ok');addDiag('Test Cloudinary...','warn');try{const testCr=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/image/upload',{method:'POST',body:new FormData()}).then(r=>r.json());if(testCr.error&&testCr.error.message.includes('Upload preset')){addDiag('Cloudinary: preset manquant','err')}else{addDiag('Cloudinary OK','ok')}}catch(e){addDiag('Cloudinary: '+e.message,'err')}backendMode='cloud';await loadVideos()}catch(e){addDiag('Erreur: '+e.message,'err');backendMode='local';loadLocalVideos()}}
 async function loadVideos(){try{if(backendMode==='cloud'&&supabase){const {data,error}=await supabase.from('videos').select('*').order('created_at',{ascending:false});if(!error&&data){videos=data;renderVideos();addDiag(data.length+' vidéos chargées du cloud','ok');return}}loadLocalVideos()}catch(err){loadLocalVideos()}}
 function loadLocalVideos(){videos=JSON.parse(localStorage.getItem('auroraai_videos')||'[]');renderVideos()}function filterCategory(cat,btn){currentCategory=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');toggleMenu();showHome();document.getElementById('sectionTitle').textContent=cat==='all'?'🔥 Tendances':'🎭 '+cat;renderVideos()}
