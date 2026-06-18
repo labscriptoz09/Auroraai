@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuroraAI.watch</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh}
+header{padding:1rem;background:rgba(0,0,0,0.9);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;align-items:center;gap:1rem;position:fixed;top:0;left:0;right:0;z-index:100}
+.logo{color:#d4af37;font-size:1.5rem;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;padding:5rem 1rem 2rem;max-width:1200px;margin:0 auto}
+.card{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(212,175,55,0.2)}
+.card img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.card-body{padding:1rem}
+.card h3{color:#d4af37;margin-bottom:0.3rem;font-size:1rem}
+.card p{color:rgba(255,255,255,0.6);font-size:0.85rem}
+.loading{text-align:center;padding:8rem 1rem;color:rgba(255,255,255,0.4)}
+.error{text-align:center;padding:8rem 1rem;color:#f44336}
+.hero{padding:6rem 1rem 2rem;text-align:center}
+.hero h1{color:#d4af37;font-size:2rem;margin-bottom:0.5rem}
+.hero p{color:rgba(255,255,255,0.5)}
+footer{text-align:center;padding:2rem;border-top:1px solid rgba(212,175,55,0.1);color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:2rem}
+a{color:#d4af37;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">▶ AuroraAI</div>
+</header>
+
+<div class="hero">
+<h1>🎬 Films & Séries IA</h1>
+<p>Découvrez les meilleures créations générées par intelligence artificielle</p>
+</div>
+
+<div id="content" class="loading">⏳ Chargement des vidéos...</div>
+
+<footer>
+<p>© 2026 AuroraAI.watch — v9.0 CLEAN</p>
+<p style="margin-top:0.5rem">
+<a href="/upload.html">Upload</a> • 
+<a href="/faq.html">FAQ</a> • 
+<a href="/contact.html">Contact</a> • 
+<a href="/vercel-test.html">Diagnostic</a>
+</p>
+</footer>
+<script>
+(async function(){
+var el=document.getElementById('content');
+
+// 1. Vérifier SDK
+if(typeof window.supabase==='undefined'){
+el.innerHTML='<div class="error">❌ SDK Supabase non chargé</div>';
+return;
+}
+
+// 2. Connexion
+try{
+var sb=window.supabase.createClient(
+'https://knecqgspkalwepdwwpud.supabase.co',
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww'
+);
+
+// 3. Charger vidéos
+var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
+
+if(r.error){
+el.innerHTML='<div class="error">❌ Erreur SQL: '+r.error.message+'</div>';
+return;
+}
+
+var videos=r.data||[];
+
+if(videos.length===0){
+el.innerHTML='<div class="loading">Aucune vidéo pour le moment</div>';
+return;
+}
+
+// 4. Afficher les cartes
+var html='<div class="grid">';
+for(var i=0;i<videos.length;i++){
+var v=videos[i];
+var thumb=v.thumbnail||'';
+var img=thumb?'<img src="'+thumb+'" alt="'+v.title+'" loading="lazy">':'<div style="width:100%;aspect-ratio:16/9;background:#111;display:flex;align-items:center;justify-content:center;color:#333">Pas d\'image</div>';
+html+='<div class="card" onclick="window.location.href=\'/player.html?id='+v.id+'">'+img+'<div class="card-body"><h3>'+v.title+'</h3><p>'+v.author+' • '+v.category+'</p><p>👁️ '+(v.views||0)+' vues • ❤️ '+(v.likes||0)+' likes</p></div></div>';
+}
+html+='</div>';
+el.innerHTML=html;
+
+}catch(e){
+el.innerHTML='<div class="error">❌ Exception: '+e.message+'</div>';
+}
+})();
+</script>
+</body></html>
