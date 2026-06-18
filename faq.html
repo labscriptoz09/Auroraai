@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ - AuroraAI.watch</title>
+<meta name="description" content="Questions fréquentes sur AuroraAI : système de points, publication, notation, parrainage et confidentialité.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh;overflow-x:hidden}
+#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
+.logo-container{display:flex;align-items:center;gap:0.8rem;text-decoration:none}
+.play-icon{width:38px;height:38px;border:2px solid #d4af37;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(212,175,55,0.5);flex-shrink:0}
+.play-icon::before{content:'';width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #d4af37;margin-left:3px}
+.logo{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:1px}
+.back-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.6rem 1.2rem;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.4rem}
+.back-btn:hover{background:rgba(212,175,55,0.3)}
+.main{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:6rem 1.5rem 3rem}
+.page-title{color:#d4af37;font-size:2rem;font-weight:800;margin-bottom:0.5rem;text-align:center}
+.page-subtitle{color:rgba(255,255,255,0.5);font-size:0.95rem;text-align:center;margin-bottom:3rem}
+.faq-item{margin-bottom:1rem;border:1px solid rgba(212,175,55,0.15);border-radius:12px;overflow:hidden;background:rgba(212,175,55,0.03);transition:all 0.3s}
+.faq-item:hover{border-color:rgba(212,175,55,0.3)}
+.faq-question{padding:1.2rem 1.5rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;font-weight:700;font-size:1rem;color:#fff;transition:all 0.3s;user-select:none}
+.faq-question:hover{color:#d4af37}
+.faq-question .icon{color:#d4af37;font-size:1.2rem;transition:transform 0.3s;flex-shrink:0}
+.faq-item.open .faq-question .icon{transform:rotate(45deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease;padding:0 1.5rem}
+.faq-item.open .faq-answer{max-height:500px;padding:0 1.5rem 1.2rem}
+.faq-answer p{color:rgba(255,255,255,0.7);font-size:0.9rem;line-height:1.6}
+.faq-answer strong{color:#d4af37}
+.faq-category{color:#d4af37;font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:0.8rem;margin-top:2rem;padding-left:0.5rem;border-left:3px solid #d4af37}
+.faq-category:first-of-type{margin-top:0}
+.points-table{width:100%;border-collapse:collapse;margin-top:0.8rem;font-size:0.85rem}
+.points-table td{padding:0.4rem 0.6rem;border-bottom:1px solid rgba(212,175,55,0.1)}
+.points-table td:first-child{color:rgba(255,255,255,0.7)}
+.points-table td:last-child{color:#d4af37;font-weight:700;text-align:right;white-space:nowrap}
+footer{position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)}
+footer p{color:rgba(255,255,255,0.3);font-size:0.75rem}
+@media(max-width:768px){.main{padding:5rem 1rem 2rem}.page-title{font-size:1.5rem}.faq-question{font-size:0.9rem;padding:1rem}}
+</style>
+</head>
+<body>
+<canvas id="plexusCanvas"></canvas>
+<header>
+<a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
+<a href="/" class="back-btn">← Retour</a>
+</header>
+<div class="main">
+<h1 class="page-title">❓ Questions Fréquentes</h1><p class="page-subtitle">Tout ce que vous devez savoir sur AuroraAI</p>
 
+<div class="faq-category">⭐ Vision</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Pourquoi AuroraAI est différent des autres plateformes ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>AuroraAI fonctionne sur un modèle <strong>Win-Win-Win</strong> : les spectateurs gagnent des points en regardant des films, les créateurs gagnent des points quand les utilisateurs interagissent avec <strong>leurs</strong> films, et la plateforme grandit grâce à cette boucle vertueuse. Tout le monde y gagne, gratuitement. Aucune autre plateforme IA ne récompense à la fois les créateurs ET les spectateurs.</p></div>
+</div>
+
+<div class="faq-category">🎬 À propos</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Qu'est-ce qu'AuroraAI et c'est gratuit ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>AuroraAI est la première plateforme dédiée aux <strong>films et séries générés par intelligence artificielle</strong>. Regardez, notez et soutenez les créateurs IA. C'est <strong>100% gratuit</strong> : pas d'abonnement, pas de publicité, pas d'inscription obligatoire pour regarder. Créez un compte gratuit pour accumuler des points et débloquer des récompenses.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Qui est derrière AuroraAI ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>AuroraAI est fondé et développé par un passionné de cinéma et d'intelligence artificielle. Le projet est <strong>indépendant</strong>, gratuit et open dans sa philosophie : donner une vraie salle de cinéma aux créateurs IA du monde entier.</p></div>
+</div>
+
+<div class="faq-category">📹 Publication</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Comment publier mon film IA ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>Cliquez sur <strong>« 🎬 Publier votre film IA »</strong> sous l'affiche principale. Remplissez le formulaire (vidéo, titre, catégorie, auteur), ajoutez vos liens sociaux séparés par des virgules, et publiez. Votre film apparaît immédiatement dans la grille et peut être noté par la communauté. Vous gagnez <strong>+50 ⭐</strong> à chaque publication.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Quels formats et outils IA acceptés ?<span class="icon">+</span></div>
+<div class="faq-answer"><p><strong>Formats :</strong> MP4, WebM, MOV. Taille max : 100 Mo. Durée recommandée : 1 à 5 minutes.<br><br><strong>Outils IA :</strong> Tous sont bienvenus ! Sora, Runway, Pika, Kling, Vidu, Luma, Hailuo, Wan... Seule condition : le contenu doit être original et respecter nos CGU.</p></div>
+</div>
+
+<div class="faq-category">⭐ Créateur</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Comment un créateur gagne-t-il des points ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>Chaque fois qu'un utilisateur interagit avec <strong>votre</strong> film, VOUS gagnez des points :</p>
+<table class="points-table">
+<tr><td>Quelqu'un regarde votre film</td><td>+5 ⭐</td></tr>
+<tr><td>Quelqu'un note votre film</td><td>+3 ⭐</td></tr>
+<tr><td>Quelqu'un like votre film</td><td>+1 ⭐</td></tr>
+<tr><td>Quelqu'un commente votre film</td><td>+2 ⭐</td></tr>
+<tr><td>Publier un film</td><td>+50 ⭐</td></tr>
+</table>
+<p style="margin-top:0.6rem">Plus votre film est apprécié, plus vous montez en niveau et débloquez des badges exclusifs (Créateur Émergent, Créateur Vedette, Légende AuroraAI). <strong>Pas de limite</strong> sur les points reçus.</p></div>
+</div>
+
+<div class="faq-category">💬 Communauté</div>
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Comment fonctionne la notation, les likes et les commentaires ?<span class="icon">+</span></div>
+<div class="faq-answer"><p><strong>Notation ⭐ :</strong> Notez de 1 à 5 étoiles. La moyenne est calculée automatiquement et affichée dans « 🏆 Mieux notés ». Une seule note par film.<br><br><strong>Likes ❤️ :</strong> Cliquez pour aimer. Toggle on/off, mais les points ne sont attribués qu'une fois.<br><br><strong>Commentaires 💬 :</strong> Exprimez-vous librement. Nom requis, email optionnel. Modération sous 24h en cas de signalement.</p></div>
+</div>
+
+<div class="faq-category">🏆 Gamification</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Comment fonctionne le système de points ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>9 actions vous rapportent des points :</p>
+<table class="points-table">
+<tr><td>👁️ Regarder un film</td><td>+10 ⭐ (5/jour max)</td></tr>
+<tr><td>⭐ Noter un film</td><td>+5 ⭐ (3/jour max)</td></tr>
+<tr><td>❤️ Liker un film</td><td>+3 ⭐ (5/jour max)</td></tr>
+<tr><td>💬 Commenter</td><td>+5 ⭐ (3/jour max)</td></tr>
+<tr><td>📤 Partager le site</td><td>+5 ⭐ (2/jour max)</td></tr>
+<tr><td>🔗 Inviter un ami</td><td>+20 ⭐ (illimité)</td></tr>
+<tr><td>💰 Envoyer un tip</td><td>+50 ⭐ (illimité)</td></tr>
+<tr><td>📝 Compléter son profil</td><td>+15 ⭐ (1x total)</td></tr>
+<tr><td>📅 Connexion quotidienne</td><td>+5 ⭐ (1/jour)</td></tr>
+</table>
+<p style="margin-top:0.6rem">Des quotas journaliers garantissent un système équitable. Les invitations et tips sont <strong>illimités</strong>.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">À quoi servent les points et faut-il un compte ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>Les points débloquent des <strong>badges exclusifs</strong> (Fondateur, Créateur Émergent, Critique, Légende), un accès anticipé aux nouveaux films, et une mise en avant de vos publications dans « 🔥 Tendances ».<br><br>En tant qu'anonyme vous pouvez regarder librement. Pour accumuler des points et débloquer des récompenses, créez votre <strong>compte gratuit</strong> en quelques secondes. Vos points et badges sont acquis <strong>à vie</strong>.</p></div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Comment gagner des points en invitant des amis ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>Partagez votre <strong>lien de parrainage unique</strong> depuis votre profil. Quand un ami s'inscrit via votre lien :<br><br>• <strong>Vous</strong> gagnez +20 ⭐<br>• <strong>Votre ami</strong> reçoit +20 ⭐ de bienvenue<br><br>Pas de limite d'invitations. Plus vous invitez, plus vous montez en niveau rapidement. C'est le moyen le plus rapide de progresser avec les tips (+50 ⭐ chacun).</p></div>
+</div>
+
+<div class="faq-category">🔒 Confidentialité</div>
+
+<div class="faq-item">
+<div class="faq-question" onclick="toggleFaq(this)">Mes données sont-elles protégées ?<span class="icon">+</span></div>
+<div class="faq-answer"><p>Oui. Nous ne collectons que le strict nécessaire : nom pour les commentaires, email optionnel. <strong>Aucune revente de données</strong>. Votre lien de parrainage ne contient aucune information personnelle. Consultez notre <a href="/confidentialite.html" style="color:#d4af37">Politique de Confidentialité</a> pour tous les détails. Conformité RGPD complète.</p></div>
+</div>
+
+</div>
+
+<footer>
+<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
+<a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a>
+<a href="/cgu.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">CGU</a>
+<a href="/confidentialite.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Confidentialité</a>
+<a href="/contact.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Contact</a>
+<a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a></div>
+<p>© 2026 AuroraAI.watch — La plateforme cinéma & séries IA</p>
+</footer>
+
+<script>
+function toggleFaq(el){var item=el.parentElement;item.classList.toggle('open');}
+// Plexus
+(function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',function(){resize();init();});})();
+</script>
+</body>
+  </html>
