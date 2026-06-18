@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentions Légales - AuroraAI.watch</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh;line-height:1.7}#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}.container{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:3rem 1.5rem}h1{color:#d4af37;font-size:2rem;margin-bottom:2rem;text-align:center}h2{color:#d4af37;font-size:1.2rem;margin-top:2rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(212,175,55,0.2)}p,.info{color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:0.8rem}.info strong{color:#d4af37}.back-link{display:inline-block;margin-top:2rem;color:#d4af37;text-decoration:none;font-weight:600;font-size:0.9rem;padding:0.6rem 1.5rem;border:1px solid rgba(212,175,55,0.3);border-radius:10px;transition:all 0.3s}.back-link:hover{background:rgba(212,175,55,0.1)}.last-update{text-align:center;color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:3rem}
+</style>
+</head>
+<body>
+<canvas id="plexusCanvas"></canvas>
+<div class="container">
+<h1>📋 Mentions Légales</h1>
+
+<h2>1. Éditeur du site</h2>
+<p class="info"><strong>Nom du site :</strong> AuroraAI.watch</p>
+<p class="info"><strong>URL :</strong> https://auroraai-one.vercel.app</p>
+<p class="info"><strong>Type :</strong> Plateforme de diffusion de films et séries générés par intelligence artificielle</p>
+<p class="info"><strong>Contact :</strong> contact@auroraai.watch</p>
+
+<h2>2. Hébergement</h2>
+<p class="info"><strong>Hébergeur :</strong> Vercel Inc.</p>
+<p class="info"><strong>Adresse :</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, USA</p>
+<p class="info"><strong>Site web :</strong> https://vercel.com</p>
+
+<h2>3. Base de données et stockage</h2>
+<p class="info"><strong>Base de données :</strong> Supabase (PostgreSQL)</p>
+<p class="info"><strong>Stockage vidéo/image :</strong> Cloudinary</p>
+<p class="info">Les données sont hébergées sur des serveurs sécurisés conformes aux standards internationaux de protection des données.</p>
+
+<h2>4. Propriété intellectuelle</h2>
+<p>L'ensemble du contenu présent sur AuroraAI.watch (vidéos, images, textes, logos, design, code source) est protégé par le droit d'auteur et la propriété intellectuelle.</p>
+<p>Les vidéos publiées par les créateurs restent leur propriété exclusive. AuroraAI agit uniquement en tant que plateforme de diffusion et n'acquiert aucun droit de propriété sur le contenu uploadé.</p>
+<p>Toute reproduction, distribution ou utilisation non autorisée du contenu est strictement interdite sans accord écrit préalable.</p>
+
+<h2>5. Contenu généré par IA</h2>
+<p>AuroraAI.watch est une plateforme dédiée exclusivement aux contenus audiovisuels générés par intelligence artificielle. Chaque vidéo publiée doit être clairement identifiée comme création IA.</p>
+<p>La plateforme ne revendique aucune paternité artistique sur les œuvres diffusées. Le mérite créatif revient intégralement aux auteurs respectifs.</p>
+
+<h2>6. Limitation de responsabilité</h2>
+<p>AuroraAI.watch s'efforce de maintenir le site accessible et fonctionnel, mais ne peut garantir une disponibilité permanente ni l'absence d'erreurs techniques.</p>
+<p>La plateforme n'est pas responsable des contenus externes accessibles via des liens tiers présents sur le site.</p>
+
+<h2>7. Contact</h2>
+<p>Pour toute question relative aux mentions légales, contactez-nous à : <strong>contact@auroraai.watch</strong></p>
+
+<a href="/" class="back-link">← Retour à l'accueil</a>
+<p class="last-update">Dernière mise à jour : Juin 2026</p>
+</div>
+<script>
+(function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',function(){resize();init();});})();
+</script>
+</body>
+  </html>
