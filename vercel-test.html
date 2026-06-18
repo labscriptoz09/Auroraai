@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vercel Diagnostic - AuroraAI</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:monospace;padding:1.5rem;font-size:13px;line-height:1.6}
+h1{color:#d4af37;font-size:1.3rem;margin-bottom:0.3rem}
+.version{color:#4caf50;font-size:1rem;margin-bottom:2rem;font-weight:700}
+.card{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem}
+.card h2{color:#d4af37;font-size:0.9rem;margin-bottom:0.5rem}
+.ok{color:#4caf50}
+.err{color:#f44336}
+.warn{color:#ff9800}
+.info{color:rgba(255,255,255,0.6)}
+.raw{background:rgba(212,175,55,0.05);padding:0.8rem;border-radius:8px;word-break:break-all;max-height:200px;overflow-y:auto;margin-top:0.5rem;white-space:pre-wrap;font-size:11px}
+.btn{display:inline-block;margin-top:1rem;padding:0.6rem 1.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:0.9rem;cursor:pointer;text-decoration:none}
+.back{display:inline-block;margin-top:1.5rem;color:rgba(212,175,55,0.5);text-decoration:none;font-size:0.85rem}
+.back:hover{color:#d4af37}
+</style>
+</head>
+<body>
+<h1>🔧 Vercel Diagnostic</h1>
+<div class="version">VERSION: v8.0 FINAL — <?php echo date('Y-m-d H:i:s'); ?></div>
+<p class="info" id="timestamp">Horodatage JS: chargement...</p>
+
+<div class="card">
+<h2>1. Fichier servi par Vercel</h2>
+<div id="test1">⏳ Test...</div>
+</div>
+
+<div class="card">
+<h2>2. Headers HTTP (cache)</h2>
+<div id="test2">⏳ Test...</div>
+<div class="raw" id="headersRaw" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>3. SDK Supabase chargé</h2>
+<div id="test3">⏳ Test...</div>
+</div>
+
+<div class="card">
+<h2>4. Connexion Supabase + SELECT videos</h2>
+<div id="test4">⏳ Test...</div><div class="raw" id="videosRaw" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>5. Rendu HTML d'une carte vidéo</h2>
+<div id="test5">⏳ Test...</div>
+<div id="renderTest" style="margin-top:0.8rem"></div>
+</div>
+
+<div class="card">
+<h2>6. Image Cloudinary accessible</h2>
+<div id="test6">⏳ Test...</div>
+<div id="imgTest" style="margin-top:0.8rem"></div>
+</div>
+
+<div class="card">
+<h2>7. Vidéo Cloudinary accessible</h2>
+<div id="test7">⏳ Test...</div>
+<div id="vidTest" style="margin-top:0.8rem"></div>
+</div>
+
+<a href="#" class="btn" onclick="location.reload(true);return false;">🔄 Recharger (force refresh)</a>
+<br>
+<a href="/" class="back">← Retour au site</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>
+document.getElementById('timestamp').textContent='Horodatage JS: '+new Date().toISOString();
+
+function set(id,html){document.getElementById(id).innerHTML=html;}
+
+async function run(){
+
+// TEST 1: Fichier servi
+var url=window.location.href;
+set('test1','<span class="ok">✅ Page chargée depuis : '+url+'</span><br><span class="info">Si tu vois cette page, Vercel sert bien les fichiers HTML.</span>');
+
+// TEST 2: Headers HTTP
+try{
+var resp=await fetch(window.location.href,{method:'HEAD',cache:'no-store'});
+var headers={};
+resp.headers.forEach(function(v,k){headers[k]=v;});
+var cc=headers['cache-control']||headers['Cache-Control']||'NON DÉFINI';
+var isNoCache=cc.indexOf('no-cache')!==-1||cc.indexOf('no-store')!==-1;
+set('test2',(isNoCache?'<span class="ok">✅ Cache désactivé</span>':'<span class="warn">⚠️ Cache ACTIF : '+cc+'</span>')+'<br><span class="info">Cache-Control: '+cc+'</span>');
+document.getElementById('headersRaw').style.display='block';
+document.getElementById('headersRaw').textContent=JSON.stringify(headers,null,2);
+}catch(e){
+set('test2','<span class="err">❌ Impossible de lire les headers : '+e.message+'</span>');
+}
+// TEST 3: SDK Supabase
+if(typeof window.supabase==='undefined'){
+set('test3','<span class="err">❌ SDK Supabase NON chargé</span><br><span class="info">Le script CDN est peut-être bloqué par le réseau mobile.</span>');
+set('test4','<span class="err">⛔ Ignoré (SDK manquant)</span>');
+set('test5','<span class="err">⛔ Ignoré</span>');
+set('test6','<span class="err">⛔ Ignoré</span>');
+set('test7','<span class="err">⛔ Ignoré</span>');
+return;
+}
+set('test3','<span class="ok">✅ SDK Supabase chargé</span>');
+
+// TEST 4: Connexion + SELECT
+try{
+var sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
+var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
+if(r.error){
+set('test4','<span class="err">❌ Erreur SQL : '+JSON.stringify(r.error)+'</span>');
+set('test5','<span class="err">⛔ Ignoré</span>');
+set('test6','<span class="err">⛔ Ignoré</span>');
+set('test7','<span class="err">⛔ Ignoré</span>');
+return;
+}
+var data=r.data||[];
+set('test4','<span class="ok">✅ '+data.length+' vidéo(s) trouvée(s)</span>');
+document.getElementById('videosRaw').style.display='block';
+document.getElementById('videosRaw').textContent=JSON.stringify(data,null,2);
+
+if(data.length===0){
+set('test5','<span class="warn">⚠️ Aucune vidéo à rendre</span>');
+set('test6','<span class="warn">⚠️ Aucune vidéo</span>');
+set('test7','<span class="warn">⚠️ Aucune vidéo</span>');
+return;
+}
+
+// TEST 5: Rendu carte
+var v=data[0];
+var img=v.thumbnail?'<img src="'+v.thumbnail+'" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-bottom:0.5rem">':'';
+document.getElementById('renderTest').innerHTML='<div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:1rem">'+img+'<div style="color:#d4af37;font-weight:700">'+v.title+'</div><div style="color:rgba(255,255,255,0.6);font-size:0.8rem">'+v.author+' • '+v.category+'</div></div>';
+set('test5','<span class="ok">✅ Carte rendue ci-dessous</span>');
+
+// TEST 6: Image Cloudinary
+if(v.thumbnail){
+var imgEl=document.getElementById('imgTest');
+imgEl.innerHTML='<img src="'+v.thumbnail+'" style="max-width:100%;max-height:100px;border-radius:8px;border:1px solid rgba(212,175,55,0.3)" onerror="this.parentElement.innerHTML=\'<span class=err>❌ Image bloquée (CORS ou URL invalide)</span>\'" onload="document.getElementById(\'test6\').innerHTML=\'<span class=ok>✅ Image Cloudinary chargée</span>\'">';
+set('test6','⏳ Chargement image...');
+}else{
+set('test6','<span class="warn">⚠️ Pas de thumbnail</span>');
+}
+// TEST 7: Vidéo Cloudinary
+if(v.video_url&&!v.video_url.startsWith('blob:')){
+var vidEl=document.getElementById('vidTest');
+vidEl.innerHTML='<video controls playsinline preload="metadata" style="width:100%;max-height:150px;border-radius:8px;border:1px solid rgba(212,175,55,0.3)" onerror="this.parentElement.innerHTML=\'<span class=err>❌ Vidéo bloquée</span>\'" onloadedmetadata="document.getElementById(\'test7\').innerHTML=\'<span class=ok>✅ Vidéo Cloudinary chargée ('+Math.round(this.duration||0)+'s)</span>\'"><source src="'+v.video_url+'"></video>';
+set('test7','⏳ Chargement vidéo...');
+}else if(v.video_url&&v.video_url.startsWith('blob:')){
+set('test7','<span class="err">❌ URL blob locale ! Réuploadez via /upload.html</span>');
+}else{
+set('test7','<span class="warn">⚠️ Pas d\'URL vidéo</span>');
+}
+
+}catch(e){
+set('test4','<span class="err">❌ Exception : '+e.message+'</span>');
+}
+}
+
+run();
+</script>
+</body>
+</html>
