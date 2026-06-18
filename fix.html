@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix AuroraAI</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:monospace;padding:2rem 1rem;font-size:14px;line-height:1.8;text-align:center}
+h1{color:#d4af37;font-size:1.5rem;margin-bottom:1rem}
+.step{padding:1.5rem;border:1px solid rgba(212,175,55,0.2);border-radius:12px;margin-bottom:1rem;background:rgba(212,175,55,0.03)}
+.step h2{color:#d4af37;font-size:1rem;margin-bottom:0.5rem}
+.ok{color:#4caf50;font-weight:700}
+.err{color:#f44336;font-weight:700}
+.btn{display:inline-block;padding:1rem 2rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:12px;color:#000;font-weight:800;font-size:1.1rem;cursor:pointer;margin:0.5rem;text-decoration:none;transition:all 0.3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}
+.btn-red{background:linear-gradient(135deg,#f44336,#d32f2f);color:#fff}
+.info{color:rgba(255,255,255,0.5);font-size:0.8rem;margin-top:0.5rem}
+#status{margin-top:2rem;padding:1.5rem;border-radius:12px;font-weight:700;font-size:1.1rem;display:none}
+</style>
+</head>
+<body>
+<h1>🔧 Fix AuroraAI</h1>
+
+<div class="step">
+<h2>Étape 1 : Vider tout le cache</h2>
+<p id="cacheStatus">⏳ Prêt à vider...</p>
+<button class="btn btn-red" onclick="clearAllCache()">🗑️ VIDER TOUT LE CACHE</button>
+<p class="info">Supprime localStorage, sessionStorage, caches API, cookies</p>
+</div>
+
+<div class="step">
+<h2>Étape 2 : Vérifier Supabase</h2>
+<p id="dbStatus">⏳ En attente...</p>
+<button class="btn" onclick="testDB()">🔍 Tester la base de données</button>
+</div>
+
+<div class="step">
+<h2>Étape 3 : Recharger le site</h2>
+<p id="reloadStatus">⏳ En attente...</p>
+<a href="/" class="btn" id="reloadBtn" style="opacity:0.3;pointer-events:none">🏠 Aller sur le site</a>
+<p class="info">Après avoir vidé le cache et testé la BDD</p>
+</div>
+
+<div id="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script><script>
+function show(id,msg,type){
+var el=document.getElementById(id);
+el.innerHTML=msg;
+el.style.color=type==='ok'?'#4caf50':type==='err'?'#f44336':'rgba(255,255,255,0.7)';
+}
+
+async function clearAllCache(){
+try{
+localStorage.clear();
+sessionStorage.clear();
+if('caches' in window){
+var names=await caches.keys();
+for(var i=0;i<names.length;i++){await caches.delete(names[i]);}
+}
+document.cookie.split(';').forEach(function(c){document.cookie=c.replace(/^ +/,'').replace(/=.*/,'=;expires='+new Date().toUTCString()+';path=/');});
+show('cacheStatus','✅ CACHE COMPLÈTEMENT VIDÉ !','ok');
+checkReady();
+}catch(e){
+show('cacheStatus','❌ Erreur : '+e.message,'err');
+}
+}
+
+async function testDB(){
+try{
+if(typeof window.supabase==='undefined'){show('dbStatus','❌ SDK non chargé','err');return;}
+var sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
+var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
+if(r.error){show('dbStatus','❌ Erreur SQL : '+r.error.message,'err');return;}
+var count=r.data?r.data.length:0;
+if(count===0){show('dbStatus','⚠️ Aucune vidéo dans la table','err');return;}
+show('dbStatus','✅ '+count+' vidéo(s) trouvée(s) — La première : "'+r.data[0].title+'"','ok');
+checkReady();
+}catch(e){
+show('dbStatus','❌ Exception : '+e.message,'err');
+}
+}
+
+var cacheDone=false,dbDone=false;
+function checkReady(){
+if(document.getElementById('cacheStatus').textContent.indexOf('✅')!==-1)cacheDone=true;
+if(document.getElementById('dbStatus').textContent.indexOf('✅')!==-1)dbDone=true;
+if(cacheDone&&dbDone){
+var btn=document.getElementById('reloadBtn');
+btn.style.opacity='1';btn.style.pointerEvents='auto';
+show('reloadStatus','✅ PRÊT ! Clique ci-dessous pour aller sur le site','ok');
+var s=document.getElementById('status');
+s.style.display='block';s.style.background='rgba(76,175,80,0.1)';s.style.border='1px solid #4caf50';s.style.color='#4caf50';
+s.innerHTML='🎉 TOUT EST PRÊT<br><span style="font-size:0.85rem;font-weight:400">Cache vidé + Base de données OK<br>Clique sur "Aller sur le site"</span>';
+}else{show('reloadStatus','⏳ Fais les étapes 1 et 2 d\'abord','');
+}
+}
+</script>
+</body>
+</html>
