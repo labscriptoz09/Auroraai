@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debug AuroraAI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:monospace;padding:1rem;font-size:13px}
+h1{color:#d4af37;margin-bottom:1rem;font-size:1.2rem}
+.step{margin-bottom:1rem;padding:1rem;border:1px solid rgba(212,175,55,0.2);border-radius:10px}
+.step h2{color:#d4af37;font-size:0.9rem;margin-bottom:0.5rem}
+.ok{color:#4caf50}
+.err{color:#f44336}
+.raw{background:rgba(212,175,55,0.05);padding:0.8rem;border-radius:8px;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:0.5rem;white-space:pre-wrap;font-size:11px;line-height:1.4}
+.render-test{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1rem}
+.card{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:1rem}
+.card img{width:100%;border-radius:8px;margin-bottom:0.5rem;max-height:150px;object-fit:cover}
+.card h3{color:#d4af37;font-size:0.9rem;margin-bottom:0.3rem}
+.card p{color:rgba(255,255,255,0.6);font-size:0.8rem}
+.video-test{margin-top:1rem}
+.video-test video{width:100%;border-radius:8px;border:1px solid rgba(212,175,55,0.3)}
+.back{display:inline-block;margin-top:2rem;color:#d4af37;text-decoration:none;font-size:0.9rem}
+</style>
+</head>
+<body>
+<h1>🔧 Debug AuroraAI</h1>
+
+<div class="step" id="step1">
+<h2>1. SDK Supabase chargé ?</h2>
+<div id="result1">⏳ Test en cours...</div>
+</div>
+
+<div class="step" id="step2">
+<h2>2. Connexion Supabase</h2>
+<div id="result2">⏳ En attente...</div>
+</div>
+
+<div class="step" id="step3">
+<h2>3. Requêtes SELECT * FROM videos</h2>
+<div id="result3">⏳ En attente...</div>
+<div class="raw" id="rawData" style="display:none"></div>
+</div>
+
+<div class="step" id="step4">
+<h2>4. Rendu des cartes (même code que index.html)</h2>
+<div id="result4">⏳ En attente...</div>
+<div class="render-test" id="renderGrid"></div>
+</div>
+<div class="step" id="step5">
+<h2>5. Test lecture vidéo Cloudinary</h2>
+<div id="result5">⏳ En attente...</div>
+<div class="video-test" id="videoTest"></div>
+</div>
+
+<a href="/" class="back">← Retour au site</a>
+
+<script>
+var SB_URL='https://knecqgspkalwepdwwpud.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
+
+function set(id,html){document.getElementById(id).innerHTML=html;}
+
+async function run(){
+// STEP 1: SDK
+if(typeof window.supabase==='undefined'){
+set('result1','<span class="err">❌ SDK Supabase NON chargé</span>');
+return;
+}
+set('result1','<span class="ok">✅ SDK Supabase chargé</span>');
+
+// STEP 2: Connexion
+try{
+var sb=window.supabase.createClient(SB_URL,SB_KEY);
+set('result2','<span class="ok">✅ Client créé : '+SB_URL+'</span>');
+}catch(e){
+set('result2','<span class="err">❌ Erreur : '+e.message+'</span>');
+return;
+}
+
+// STEP 3: SELECT
+try{
+var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
+if(r.error){
+set('result3','<span class="err">❌ Erreur SQL : '+JSON.stringify(r.error)+'</span>');
+return;
+}
+var data=r.data||[];
+set('result3','<span class="ok">✅ '+data.length+' vidéo(s) trouvée(s)</span>');
+document.getElementById('rawData').style.display='block';
+document.getElementById('rawData').textContent=JSON.stringify(data,null,2);
+
+if(data.length===0){
+set('result4','<span class="err">❌ Aucune vidéo à afficher</span>');
+set('result5','<span class="err">❌ Aucune vidéo à tester</span>');
+return;
+}
+// STEP 4: Rendu cartes
+var grid=document.getElementById('renderGrid');
+var cardsHtml='';
+for(var i=0;i<data.length;i++){
+var v=data[i];
+var img=v.thumbnail?'<img src="'+v.thumbnail+'" alt="thumb">':'<div style="width:100%;height:100px;background:#111;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#555">Pas de thumbnail</div>';
+cardsHtml+='<div class="card">'+img+'<h3>'+v.title+'</h3><p>Auteur: '+v.author+'</p><p>Catégorie: '+v.category+'</p><p>Vues: '+v.views+'</p><p>Likes: '+v.likes+'</p><p>ID: '+v.id+'</p><p>viewer_id: '+(v.viewer_id||'NULL')+'</p><p>URL vidéo: '+(v.video_url?v.video_url.substring(0,60)+'...':'NULL')+'</p></div>';
+}
+grid.innerHTML=cardsHtml;
+set('result4','<span class="ok">✅ '+data.length+' carte(s) rendue(s) ci-dessous</span>');
+
+// STEP 5: Test vidéo
+var firstVideo=data[0];
+if(firstVideo.video_url){
+var isBlob=firstVideo.video_url.startsWith('blob:');
+if(isBlob){
+set('result5','<span class="err">❌ URL blob locale ! Non accessible hors appareil.</span>');
+document.getElementById('videoTest').innerHTML='<p style="color:#f44336">Cette vidéo a été uploadée en mode local. Réuploadez-la via /upload.html</p>';
+}else{
+set('result5','<span class="ok">✅ URL Cloudinary détectée. Test lecture...</span>');
+document.getElementById('videoTest').innerHTML='<video controls playsinline preload="metadata"><source src="'+firstVideo.video_url+'">Votre navigateur ne supporte pas la vidéo.</video><p style="color:rgba(255,255,255,0.5);font-size:0.75rem;margin-top:0.5rem">Si la vidéo ne charge pas → problème CORS ou URL invalide</p>';
+}
+}else{
+set('result5','<span class="err">❌ Pas d\'URL vidéo dans les données</span>');
+}
+
+}catch(e){
+set('result3','<span class="err">❌ Exception : '+e.message+'</span>');
+}
+}
+
+run();
+</script>
+</body>
+</html>
