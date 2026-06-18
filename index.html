@@ -195,7 +195,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 <a href="/contact.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Contact</a>
 <a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a>
 <a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a></div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.0 FINAL</p>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.1 SECURE</p>
 </footer>
 <div class="toast" id="toast"></div>
 <script>
@@ -253,11 +253,38 @@ renderVideos();
 function updFavBadge(){var b=document.getElementById('favBadge');if(favorites.length>0){b.textContent=favorites.length;b.classList.add('visible');}else b.classList.remove('visible');}
 function toggleFav(id){var i=favorites.indexOf(id);if(i>-1){favorites.splice(i,1);toast('Retiré des favoris');}else{favorites.push(id);toast('❤️ Ajouté aux favoris','success');}localStorage.setItem('aurorafavs',JSON.stringify(favorites));updFavBadge();renderVideos();renderHero();}
 
-// LIKE
-async function quickLike(e,vid){e.stopPropagation();var v=videos.find(function(x){return x.id===vid;});if(!v)return;var k='liked_'+vid,isL=localStorage.getItem(k)==='true';
-if(sb){try{if(isL){await sb.from('video_likes').delete().eq('video_id',vid).eq('viewer_id',viewerId);v.likes=Math.max((v.likes||0)-1,0);}else{var r=await sb.from('video_likes').insert([{video_id:vid,viewer_id:viewerId}]);if(r.error&&r.error.code!=='23505')throw r.error;v.likes=(v.likes||0)+1;addPoints(3,'like',v.viewer_id);}await sb.from('videos').update({likes:v.likes}).eq('id',vid);localStorage.setItem(k,isL?'false':'true');toast(isL?'Like retiré':'❤️ Vidéo aimée','success');}catch(err){toast('❌ Erreur like','error');}}
-else{v.likes=isL?Math.max((v.likes||0)-1,0):(v.likes||0)+1;localStorage.setItem(k,isL?'false':'true');toast(isL?'Like retiré':'❤️ Vidéo aimée','success');}
-renderVideos();}
+// LIKE SÉCURISÉ ANTI-SPAM
+async function quickLike(e,vid){
+e.stopPropagation();
+var v=videos.find(function(x){return x.id===vid;});
+if(!v)return;
+var k='liked_'+vid,isL=localStorage.getItem(k)==='true';
+if(sb){
+try{
+if(isL){
+await sb.from('video_likes').delete().eq('video_id',vid).eq('viewer_id',viewerId);
+v.likes=Math.max((v.likes||0)-1,0);
+}else{
+var r=await sb.from('video_likes').insert([{video_id:vid,viewer_id:viewerId}]);
+if(r.error&&r.error.code!=='23505')throw r.error;
+v.likes=(v.likes||0)+1;
+var history=await sb.from('video_likes_history').select('id').eq('video_id',vid).eq('viewer_id',viewerId).single();
+if(history.error||!history.data){
+await sb.from('video_likes_history').insert([{video_id:vid,viewer_id:viewerId}]);
+addPoints(3,'like',v.viewer_id);
+}
+}
+await sb.from('videos').update({likes:v.likes}).eq('id',vid);
+localStorage.setItem(k,isL?'false':'true');
+toast(isL?'Like retiré':'❤️ Vidéo aimée','success');
+}catch(err){toast('❌ Erreur like','error');}
+}else{
+v.likes=isL?Math.max((v.likes||0)-1,0):(v.likes||0)+1;
+localStorage.setItem(k,isL?'false':'true');
+toast(isL?'Like retiré':'❤️ Vidéo aimée','success');
+}
+renderVideos();
+}
 
 // PLAYER
 function playVideo(video){document.getElementById('playerFrame').src='/player.html?id='+video.id;document.getElementById('playerOverlay').style.display='block';document.body.style.overflow='hidden';var vk='viewed_'+video.id+'_'+new Date().toISOString().split('T')[0];if(!localStorage.getItem(vk)){addPoints(10,'watch',video.viewer_id);localStorage.setItem(vk,'1');}}
@@ -265,8 +292,7 @@ function closePlayer(){document.getElementById('playerFrame').src='';document.ge
 window.addEventListener('message',function(e){if(e.data&&e.data.type==='closePlayer')closePlayer();});
 
 // SHARE
-function openShareModal(){document.getElementById('shareModal').classList.add('active');document.body.style.overflow='hidden';}
-function closeShareModal(){document.getElementById('shareModal').classList.remove('active');document.body.style.overflow='';}
+function openShareModal(){document.getElementById('shareModal').classList.add('active');document.body.style.overflow='hidden';}function closeShareModal(){document.getElementById('shareModal').classList.remove('active');document.body.style.overflow='';}
 function shareVia(platform){var sk='shares_today_'+new Date().toISOString().split('T')[0],sc=parseInt(localStorage.getItem(sk)||'0');if(sc>=2){toast('⚠️ Limite 2/jour','error');return;}var url=location.origin,text='Découvrez AuroraAI ! 🎬✨',links={twitter:'https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),facebook:'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),whatsapp:'https://wa.me/?text='+encodeURIComponent(text+' '+url),telegram:'https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text)};if(links[platform]){window.open(links[platform],'_blank');localStorage.setItem(sk,(sc+1).toString());addPoints(5,'share');toast('📤 '+platform,'success');}}
 function copySiteLink(){var sk='shares_today_'+new Date().toISOString().split('T')[0],sc=parseInt(localStorage.getItem(sk)||'0');if(sc>=2){toast('⚠️ Limite 2/jour','error');return;}navigator.clipboard.writeText(location.origin).then(function(){localStorage.setItem(sk,(sc+1).toString());addPoints(5,'share');toast('📋 Lien copié ! +5 ⭐','success');});}
 
@@ -292,12 +318,13 @@ if(heroIdx>=s.length)heroIdx=0;
 var v=s[heroIdx],st='',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"'),isFav=favorites.includes(v.id);
 for(var i=1;i<=5;i++)st+=i<=Math.round(v.rating||0)?'⭐':'☆';
 var playSvg='<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>',heartSvg='<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
-fr.innerHTML=(v.thumbnail?'<img class="hero-thumb" src="'+v.thumbnail+'" alt="'+esc(v.title)+'">':'<div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:rgba(212,175,55,.2);font-size:3rem">🎬</div>')+'<div class="hero-info"><div class="hero-editorial">'+getLabel(v,heroIdx)+'</div><div class="hero-badge-row"><span class="hero-cat">'+esc(v.category)+'</span>'+(v.rating?'<span class="hero-rating">'+st+'</span>':'')+'<span style="font-size:.75rem;color:rgba(255,255,255,.45)">👁️ '+fmt(v.views)+'</span></div><div class="hero-title">'+esc(v.title)+'</div><div class="hero-author">par '+esc(v.author)+'</div><div class="hero-desc">'+esc(v.description||'Film généré par IA.')+'</div><div class="hero-btns"><button class="hero-icon-btn play" onclick="event.stopPropagation();APP.playVideo('+vs+')">'+playSvg+'</button><button class="hero-icon-btn fav'+(isFav?' is-fav':'')+'" onclick="event.stopPropagation();APP.toggleFav('+v.id+')">'+heartSvg+'</button></div></div>';fr.onclick=function(){playVideo(v);};
+fr.innerHTML=(v.thumbnail?'<img class="hero-thumb" src="'+v.thumbnail+'" alt="'+esc(v.title)+'">':'<div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:rgba(212,175,55,.2);font-size:3rem">🎬</div>')+'<div class="hero-info"><div class="hero-editorial">'+getLabel(v,heroIdx)+'</div><div class="hero-badge-row"><span class="hero-cat">'+esc(v.category)+'</span>'+(v.rating?'<span class="hero-rating">'+st+'</span>':'')+'<span style="font-size:.75rem;color:rgba(255,255,255,.45)">👁️ '+fmt(v.views)+'</span></div><div class="hero-title">'+esc(v.title)+'</div><div class="hero-author">par '+esc(v.author)+'</div><div class="hero-desc">'+esc(v.description||'Film généré par IA.')+'</div><div class="hero-btns"><button class="hero-icon-btn play" onclick="event.stopPropagation();APP.playVideo('+vs+')">'+playSvg+'</button><button class="hero-icon-btn fav'+(isFav?' is-fav':'')+'" onclick="event.stopPropagation();APP.toggleFav('+v.id+')">'+heartSvg+'</button></div></div>';
+fr.onclick=function(){playVideo(v);};
 var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===heroIdx?' active':'')+'" onclick="APP.heroGoTo('+j+')"></div>';
 nv.innerHTML=d;
 }
 
-// INIT (IIFE async = ZÉRO race condition)
+// INIT
 (async function(){
 try{
 if(typeof window.supabase==='undefined'){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ SDK Supabase non chargé</p>';return;}
@@ -306,12 +333,10 @@ var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
 if(r.error){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+r.error.message+'</p>';return;}
 videos=r.data||[];
 renderVideos();renderHero();renderTopRated();startHeroAuto();updFavBadge();loadUserPoints();checkDailyLogin();
-// Realtime
 sb.channel('videos_changes').on('postgres_changes',{event:'*',schema:'public',table:'videos'},function(){(async function(){var r2=await sb.from('videos').select('*').order('created_at',{ascending:false});if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated();}})();}).subscribe();
 }catch(e){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+e.message+'</p>';}
 })();
 
-// API publique
 return{handleSearch:handleSearch,filterCategory:filterCategory,toggleMenu:toggleMenu,showAllVideos:showAllVideos,showFavorites:showFavorites,quickLike:quickLike,playVideo:playVideo,toggleFav:toggleFav,openShareModal:openShareModal,closeShareModal:closeShareModal,shareVia:shareVia,copySiteLink:copySiteLink,openSaveModal:openSaveModal,closeSaveModal:closeSaveModal,savePointsWithEmail:savePointsWithEmail,heroGoTo:heroGoTo};
 })();
 </script>
