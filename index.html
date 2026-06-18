@@ -47,8 +47,7 @@
 <section class="hero"><div class="badge">PLATEFORME CINÉMA & SÉRIES IA</div><h1>L'IA réinvente le cinéma</h1><p>Découvrez, téléchargez et soutenez les meilleurs films et séries générés par intelligence artificielle.</p><div><button class="btn btn-primary" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">📥 Télécharger</button><button class="btn btn-secondary" onclick="showUpload()">📤 Partager vidéo AI</button></div></section>
 <section class="content" id="content"><h2 class="section-title" id="sectionTitle">🔥 Tendances</h2><div class="video-grid" id="videoGrid"><p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Chargement...</p></div></section>
 </div>
-<div id="uploadPage" class="upload-section"><div style="max-width:600px;margin:0 auto"><h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1><p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p>
-<form class="upload-form" id="uploadForm">
+<div id="uploadPage" class="upload-section"><div style="max-width:600px;margin:0 auto"><h1 style="font-size:2rem;margin-bottom:1rem;color:#d4af37">🎬 Publier une vidéo</h1><p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Partagez votre création IA</p><form class="upload-form" id="uploadForm">
 <div class="form-group"><label>Vidéo *</label><div class="upload-zone" id="videoZone" onclick="document.getElementById('videoInput').click()"><div class="icon">📹</div><div class="text">Cliquez pour uploader</div><div class="hint">MP4, WebM, MOV (max 100MB)</div></div><input type="file" id="videoInput" accept="video/*" style="display:none" required onchange="handleFileSelect(this,'video')"><div class="preview-container" id="videoPreview"></div></div>
 <div class="form-group"><label>Image de couverture</label><div class="upload-zone" id="thumbZone" onclick="document.getElementById('thumbInput').click()"><div class="icon">🖼️</div><div class="text">Cliquez pour uploader</div><div class="hint">JPG, PNG</div></div><input type="file" id="thumbInput" accept="image/*" style="display:none" onchange="handleFileSelect(this,'thumbnail')"><div class="preview-container" id="thumbPreview"></div></div>
 <div class="form-group"><label>Titre *</label><input type="text" id="videoTitle" required></div>
@@ -60,6 +59,15 @@
 <button type="button" class="btn btn-secondary" style="width:100%;margin-top:.5rem" onclick="showHome()">Retour</button>
 </form></div></div>
 <div id="playerOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;background:#000"><iframe id="playerFrame" style="width:100%;height:100%;border:none" allowfullscreen></iframe></div>
+<footer style="position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)">
+<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
+<a href="#" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none;transition:color 0.3s">Mentions Légales</a>
+<a href="#" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none;transition:color 0.3s">CGU</a>
+<a href="#" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none;transition:color 0.3s">Confidentialité</a>
+<a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
+</div>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — La plateforme cinéma & séries IA</p>
+</footer>
 <div class="toast" id="toast"></div>
 <script>
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
@@ -88,7 +96,6 @@ document.getElementById('uploadForm').addEventListener('submit',async function(e
 function renderVideos(){var f=currentCategory==='all'?videos:videos.filter(function(v){return v.category===currentCategory;});if(searchQuery){f=f.filter(function(v){return v.title.toLowerCase().indexOf(searchQuery)!==-1||v.author.toLowerCase().indexOf(searchQuery)!==-1||(v.description&&v.description.toLowerCase().indexOf(searchQuery)!==-1)||v.category.toLowerCase().indexOf(searchQuery)!==-1;});}renderVideosList(f);}
 function renderVideosList(list){var g=document.getElementById('videoGrid');if(list.length===0){g.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">'+(searchQuery?'Aucun résultat pour "'+searchQuery+'"':'Aucune vidéo')+'</p>';return;}g.innerHTML=list.map(function(v){var lk='liked_'+v.id,isL=localStorage.getItem(lk)==='true',lc=isL?'liked':'',ll=isL?'❤️ Aimé':'🤍 J\'aime',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');var img=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+v.title+'" loading="lazy">':'';return'<div class="video-card" onclick=\'playVideo('+vs+')\'>'+img+'<h3>'+v.title+'</h3><p>'+v.author+' • 👁️ '+formatNumber(v.views)+' vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">'+v.category+'</p><div class="video-card-stats"><span class="stat">👁️ '+formatNumber(v.views)+' vues</span><button class="like-btn-card '+lc+'" onclick="quickLike(event,'+v.id+')">'+ll+' ('+formatNumber(v.likes)+')</button></div></div>';}).join('');}
 window.addEventListener('message',function(e){if(e.data&&e.data.type==='closePlayer')closeVideoModal();});
-updateFavBadge();initBackend();
-</script>
+updateFavBadge();initBackend();</script>
 </body>
 </html>
