@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - AuroraAI.watch</title>
+<meta name="description" content="Contactez l'équipe AuroraAI : questions, suggestions, signalements, partenariats. Réponse sous 24h.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh;overflow-x:hidden}
+#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
+.logo-container{display:flex;align-items:center;gap:0.8rem;text-decoration:none}
+.play-icon{width:38px;height:38px;border:2px solid #d4af37;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(212,175,55,0.5);flex-shrink:0}
+.play-icon::before{content:'';width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #d4af37;margin-left:3px}
+.logo{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:1px}
+.back-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.6rem 1.2rem;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.4rem}
+.back-btn:hover{background:rgba(212,175,55,0.3)}
+.main{position:relative;z-index:10;max-width:700px;margin:0 auto;padding:6rem 1.5rem 3rem}
+.page-title{color:#d4af37;font-size:2rem;font-weight:800;margin-bottom:0.5rem;text-align:center}
+.page-subtitle{color:rgba(255,255,255,0.5);font-size:0.95rem;text-align:center;margin-bottom:2.5rem}
+.contact-grid{display:grid;grid-template-columns:1fr;gap:2rem}
+@media(min-width:768px){.contact-grid{grid-template-columns:1fr 1fr}}
+.contact-form{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:2rem}
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;color:#d4af37;margin-bottom:0.4rem;font-weight:600;font-size:0.9rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:0.8rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:10px;color:#fff;font-size:0.9rem;outline:none;transition:all 0.3s;font-family:sans-serif}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#d4af37;background:rgba(212,175,55,0.12);box-shadow:0 0 10px rgba(212,175,55,0.15)}
+.form-group textarea{min-height:120px;resize:vertical}
+.form-group select option{background:#000;color:#fff}
+.submit-btn{width:100%;padding:0.9rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.3s}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem}
+.info-card{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.5rem;transition:all 0.3s}
+.info-card:hover{border-color:rgba(212,175,55,0.3)}
+.info-card h3{color:#d4af37;font-size:1rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem}
+.info-card p{color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.5}
+.info-card a{color:#d4af37;text-decoration:none;transition:opacity 0.3s}
+.info-card a:hover{opacity:0.8}
+.social-links{display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem}
+.social-link{display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.9rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);border-radius:20px;color:#d4af37;text-decoration:none;font-size:0.8rem;font-weight:600;transition:all 0.3s}
+.social-link:hover{background:rgba(212,175,55,0.25);transform:translateY(-1px)}
+.faq-link{text-align:center;margin-top:2rem;padding:1.5rem;background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.15);border-radius:12px}
+.faq-link p{color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:0.8rem}
+.faq-link a{color:#d4af37;font-weight:700;text-decoration:none;font-size:0.95rem;transition:opacity 0.3s}
+.faq-link a:hover{opacity:0.8}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-left-color:#f4d03f}
+.toast.error{border-left-color:#ff4d4d}footer{position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)}
+footer p{color:rgba(255,255,255,0.3);font-size:0.75rem}
+@media(max-width:768px){.main{padding:5rem 1rem 2rem}.page-title{font-size:1.5rem}.contact-form{padding:1.5rem}}
+</style>
+</head>
+<body>
+<canvas id="plexusCanvas"></canvas>
+<header>
+<a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
+<a href="/" class="back-btn">← Retour</a>
+</header>
+<div class="main">
+<h1 class="page-title">📬 Contactez-nous</h1>
+<p class="page-subtitle">Une question, une suggestion, un partenariat ? Écrivez-nous.</p>
+
+<div class="contact-grid">
+<form class="contact-form" id="contactForm">
+<div class="form-group">
+<label>Sujet *</label>
+<select id="contactSubject" required>
+<option value="">Sélectionnez un sujet...</option>
+<option value="question">❓ Question générale</option>
+<option value="bug">🐛 Signaler un bug</option>
+<option value="contenu">🎬 Problème avec un contenu</option>
+<option value="partenariat">🤝 Partenariat / Business</option>
+<option value="presse">📰 Presse / Média</option>
+<option value="autre">💬 Autre</option>
+</select>
+</div>
+<div class="form-group">
+<label>Votre nom *</label>
+<input type="text" id="contactName" placeholder="Votre nom ou pseudo" maxlength="100" required>
+</div>
+<div class="form-group">
+<label>Votre email *</label>
+<input type="email" id="contactEmail" placeholder="votre@email.com" required>
+</div>
+<div class="form-group">
+<label>Message *</label>
+<textarea id="contactMessage" placeholder="Décrivez votre demande en détail..." maxlength="2000" required></textarea>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:0.3rem;text-align:right"><span id="charCount">0</span>/2000</p>
+</div>
+<button type="submit" class="submit-btn">📤 Envoyer le message</button>
+</form>
+
+<div class="contact-info">
+<div class="info-card">
+<h3>📧 Email direct</h3>
+<p>Pour toute demande urgente ou confidentielle :</p>
+<p style="margin-top:0.5rem"><a href="mailto:contact@auroraai.watch" style="font-size:1rem;font-weight:700">contact@auroraai.watch</a></p></div>
+
+<div class="info-card">
+<h3>⏱️ Temps de réponse</h3>
+<p>Nous répondons sous <strong>24 heures</strong> en moyenne. Les signalements de contenu sont traités en priorité.</p>
+</div>
+
+<div class="info-card">
+<h3>🌐 Suivez AuroraAI</h3>
+<p>Restez informé des nouveautés et des films à l'affiche :</p>
+<div class="social-links">
+<a href="#" class="social-link">🐦 Twitter/X</a>
+<a href="#" class="social-link">📸 Instagram</a>
+<a href="#" class="social-link">🎵 TikTok</a>
+<a href="#" class="social-link">📘 Facebook</a>
+<a href="#" class="social-link">💬 Discord</a>
+</div>
+</div>
+
+<div class="info-card">
+<h3>🎬 Créateurs</h3>
+<p>Vous êtes créateur IA et vous souhaitez collaborer ou mettre en avant vos films ? Contactez-nous via le formulaire ou par email.</p>
+</div>
+</div>
+</div>
+
+<div class="faq-link">
+<p>💡 Avant de nous écrire, consultez notre FAQ. La réponse s'y trouve peut-être déjà !</p>
+<a href="/faq.html">→ Voir la FAQ complète</a>
+</div>
+</div>
+
+<footer>
+<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
+<a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a>
+<a href="/cgu.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">CGU</a>
+<a href="/confidentialite.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Confidentialité</a>
+<a href="/faq.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">FAQ</a>
+<a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
+</div>
+<p>© 2026 AuroraAI.watch — La plateforme cinéma & séries IA</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
+
+// Compteur caractères
+document.getElementById('contactMessage').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length;
+});
+
+// Soumission formulaire
+document.getElementById('contactForm').addEventListener('submit',async function(e){
+e.preventDefault();
+var subject=document.getElementById('contactSubject').value;
+var name=document.getElementById('contactName').value.trim();
+var email=document.getElementById('contactEmail').value.trim();
+var message=document.getElementById('contactMessage').value.trim();
+
+if(!subject||!name||!email||!message){showToast('❌ Tous les champs sont obligatoires','error');return;}
+
+// Envoi via mailto (fallback sans backend)
+var mailtoLink='mailto:contact@auroraai.watch?subject='+encodeURIComponent('[AuroraAI] '+subject+' - '+name)+'&body='+encodeURIComponent('Nom: '+name+'\nEmail: '+email+'\nSujet: '+subject+'\n\nMessage:\n'+message);
+window.location.href=mailtoLink;
+
+showToast('✅ Votre client mail s\'ouvre pour envoyer le message','success');
+this.reset();
+document.getElementById('charCount').textContent='0';
+});
+
+// Plexus
+(function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',function(){resize();init();});})();
+</script>
+</body>
+  </html>
