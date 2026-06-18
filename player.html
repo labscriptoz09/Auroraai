@@ -170,7 +170,7 @@ else{showToast('⭐ Note sauvegardée localement','');}
 
 async function recordView(v){if(!sb)return;var vk='viewed_'+v.id;var lv=localStorage.getItem(vk);var now=Date.now();if(!lv||(now-lv)>86400000){var nv=(v.views||0)+1;await sb.from('videos').update({views:nv}).eq('id',v.id);try{await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);}catch(e){}var el=document.getElementById('vViews');if(el)el.textContent='👁️ '+fmt(nv)+' vues';localStorage.setItem(vk,now.toString());}}
 
-// LIKE SÉCURISÉ ANTI-SPAM (PLAYER)
+// LIKE SÉCURISÉ ANTI-SPAM
 async function toggleLike(){
 var v=window._currentVideo;if(!v)return;
 if(!sb){showToast('⚠️ Like disponible uniquement en ligne','error');return;}
@@ -215,23 +215,29 @@ if(!r.error&&r.data&&r.data.length>0){document.getElementById('cmtCount').textCo
 else{document.getElementById('cmtCount').textContent='0';list.innerHTML='<p class="no-comments">Aucun commentaire. Soyez le premier !</p>';}}
 catch(e){list.innerHTML='<p class="no-comments">Erreur chargement</p>';}}
 
+// COMMENTAIRE SÉCURISÉ ANTI-SPAM
 async function postComment(){
 var name=(document.getElementById('cmtName').value||'').trim();
 var email=(document.getElementById('cmtEmail').value||'').trim();
 var text=(document.getElementById('cmtText').value||'').trim();
 if(!name){showToast('❌ Nom requis','error');return;}
 if(!text){showToast('❌ Commentaire vide','error');return;}
-var ck='comments_today_'+new Date().toISOString().split('T')[0];
-var cc=parseInt(localStorage.getItem(ck)||'0');
-if(cc>=3){showToast('⚠️ Limite de 3 commentaires/jour','error');return;}
+if(text.length<3){showToast('❌ Commentaire trop court (min 3 caractères)','error');return;}
 if(!sb){try{sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}catch(e){showToast('❌ Connexion requise','error');return;}}
 try{
-var r=await sb.from('comments').insert([{video_id:videoId,author_name:name,author_email:email||null,content:text}]);if(r.error)throw r.error;
-localStorage.setItem(ck,(cc+1).toString());
+var history=await sb.from('comment_history').select('id').eq('video_id',videoId).eq('viewer_id',viewerId).single();
+if(!history.error&&history.data){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');return;}
+var r=await sb.from('comments').insert([{video_id:videoId,author_name:name,author_email:email||null,content:text}]);
+if(r.error)throw r.error;
+await sb.from('comment_history').insert([{video_id:videoId,viewer_id:viewerId}]);
 var v=window._currentVideo;addPointsPlayer(5,'comment',v?v.viewer_id:null);
 document.getElementById('cmtName').value='';document.getElementById('cmtEmail').value='';document.getElementById('cmtText').value='';
 await loadComments(videoId);
-}catch(e){showToast('❌ Erreur: '+e.message,'error');}
+showToast('💬 Commentaire publié ! +5 ⭐','success');
+}catch(e){
+if(e.code==='23505'){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');}
+else{showToast('❌ Erreur: '+e.message,'error');}
+}
 }
 
 init();
