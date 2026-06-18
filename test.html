@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnostic AuroraAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:2rem 1rem;min-height:100vh}
+h1{color:#d4af37;font-size:1.5rem;margin-bottom:0.5rem;text-align:center}
+.subtitle{color:rgba(255,255,255,0.4);text-align:center;margin-bottom:2rem;font-size:0.8rem}
+.test-card{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:1.2rem;margin-bottom:1rem;transition:all 0.3s}
+.test-card.running{border-color:rgba(212,175,55,0.4)}
+.test-card.success{border-color:#4caf50;background:rgba(76,175,80,0.05)}
+.test-card.error{border-color:#f44336;background:rgba(244,67,54,0.05)}
+.test-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem}
+.test-name{font-weight:700;font-size:1rem;color:#fff}
+.test-status{font-size:0.8rem;padding:0.3rem 0.8rem;border-radius:20px;font-weight:700}
+.status-pending{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)}
+.status-running{background:rgba(212,175,55,0.2);color:#d4af37;animation:pulse 1s infinite}
+.status-success{background:rgba(76,175,80,0.2);color:#4caf50}
+.status-error{background:rgba(244,67,54,0.2);color:#f44336}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.test-detail{color:rgba(255,255,255,0.6);font-size:0.8rem;line-height:1.6;word-break:break-all}
+.test-detail strong{color:#d4af37}
+.test-detail .err{color:#f44336}
+.test-detail .ok{color:#4caf50}
+.btn-run{display:block;width:100%;max-width:300px;margin:2rem auto;padding:1rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:12px;color:#000;font-weight:800;font-size:1.1rem;cursor:pointer;font-family:inherit;transition:all 0.3s}
+.btn-run:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}
+.btn-run:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.summary{text-align:center;margin-top:2rem;padding:1.5rem;border-radius:12px;font-weight:700;font-size:1.1rem;display:none}
+.summary.all-ok{display:block;background:rgba(76,175,80,0.1);border:1px solid #4caf50;color:#4caf50}
+.summary.has-errors{display:block;background:rgba(244,67,54,0.1);border:1px solid #f44336;color:#f44336}
+.back-link{display:block;text-align:center;margin-top:2rem;color:rgba(212,175,55,0.5);text-decoration:none;font-size:0.85rem}
+.back-link:hover{color:#d4af37}
+</style>
+</head>
+<body>
+<h1>🔧 Diagnostic AuroraAI</h1>
+<p class="subtitle">Test complet de toutes les connexions et bases de données</p>
+
+<button class="btn-run" id="btnRun" onclick="runAllTests()">▶ Lancer tous les tests</button>
+
+<div id="testsContainer"></div>
+<div id="summary" class="summary"></div>
+
+<a href="/" class="back-link">← Retour au site</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
+var CLOUDINARY_CLOUD='dcnldgsyn';
+var SITE_URL=window.location.origin||'https://auroraai-one.vercel.app';
+
+var tests=[
+{id:'supabase_conn',name:'1. Connexion Supabase',desc:'Vérifie la connexion au serveur Supabase'},
+{id:'table_videos',name:'2. Table "videos"',desc:'Vérifie que la table videos existe et contient des données'},
+{id:'table_user_points',name:'3. Table "user_points"',desc:'Vérifie que la table user_points existe'},
+{id:'table_video_ratings',name:'4. Table "video_ratings"',desc:'Vérifie que la table video_ratings existe'},
+{id:'table_video_likes',name:'5. Table "video_likes"',desc:'Vérifie que la table video_likes existe'},
+{id:'table_video_views',name:'6. Table "video_views"',desc:'Vérifie que la table video_views existe'},
+{id:'table_comments',name:'7. Table "comments"',desc:'Vérifie que la table comments existe'},
+{id:'cloudinary_ping',name:'8. Cloudinary API',desc:'Vérifie la connectivité avec Cloudinary'},
+{id:'cloudinary_images',name:'9. Images Cloudinary',desc:'Vérifie que les thumbnails sont accessibles'},
+{id:'cloudinary_videos',name:'10. Vidéos Cloudinary',desc:'Vérifie que les fichiers vidéo sont accessibles'},
+{id:'viewer_id',name:'11. Viewer ID local',desc:'Vérifie le système d\'identification local'},
+{id:'localStorage',name:'12. LocalStorage',desc:'Vérifie que le stockage local fonctionne'},
+{id:'cors',name:'13. CORS / Origine',desc:'Vérifie l\'origine actuelle du site'}
+];
+
+function renderTests(){
+var c=document.getElementById('testsContainer');
+c.innerHTML=tests.map(function(t){
+return'<div class="test-card" id="card_'+t.id+'">'+
+'<div class="test-header"><span class="test-name">'+t.name+'</span>'+
+'<span class="test-status status-pending" id="status_'+t.id+'">⏳ En attente</span></div>'+
+'<div class="test-detail" id="detail_'+t.id+'">'+t.desc+'</div></div>';
+}).join('');
+}
+
+function setStatus(id,state,msg){
+var card=document.getElementById('card_'+id);
+var status=document.getElementById('status_'+id);
+var detail=document.getElementById('detail_'+id);
+card.className='test-card '+state;
+if(state==='running'){status.className='test-status status-running';status.textContent='🔄 Test en cours...';}
+else if(state==='success'){status.className='test-status status-success';status.textContent='✅ OK';}
+else if(state==='error'){status.className='test-status status-error';status.textContent='❌ ERREUR';}
+if(msg)detail.innerHTML=msg;
+}
+
+async function runAllTests(){
+var btn=document.getElementById('btnRun');
+btn.disabled=true;btn.textContent='⏳ Tests en cours...';
+document.getElementById('summary').className='summary';document.getElementById('summary').style.display='none';
+renderTests();
+var errors=0;
+var sb=null;
+// TEST 1: Connexion Supabase
+setStatus('supabase_conn','running');
+try{
+if(typeof window.supabase==='undefined')throw new Error('SDK Supabase non chargé');
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var ping=await sb.from('videos').select('id').limit(1);
+if(ping.error)throw ping.error;
+setStatus('supabase_conn','success','<span class="ok">✔ Connexion Supabase établie</span><br>URL: <strong>'+SUPABASE_URL+'</strong>');
+}catch(e){errors++;setStatus('supabase_conn','error','<span class="err">✘ '+e.message+'</span><br>Vérifiez l\'URL et la clé Supabase.');}
+
+// TEST 2: Table videos
+setStatus('table_videos','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('videos').select('*');
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;
+var cols=count>0?Object.keys(r.data[0]).join(', '):'aucune donnée';
+var sampleUrl=count>0&&r.data[0].thumbnail?r.data[0].thumbnail:'N/A';
+setStatus('table_videos','success','<span class="ok">✔ Table videos accessible</span><br>Lignes: <strong>'+count+'</strong><br>Colonnes: <strong>'+cols+'</strong><br>Sample thumbnail: <strong>'+sampleUrl.substring(0,80)+'...</strong>');
+}catch(e){errors++;setStatus('table_videos','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 3: Table user_points
+setStatus('table_user_points','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('user_points').select('*').limit(5);
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;
+var cols=count>0?Object.keys(r.data[0]).join(', '):'(vide ou inexistante)';
+setStatus('table_user_points','success','<span class="ok">✔ Table user_points accessible</span><br>Lignes: <strong>'+count+'</strong><br>Colonnes: <strong>'+cols+'</strong>');
+}catch(e){errors++;setStatus('table_user_points','error','<span class="err">✘ '+e.message+'</span><br>Exécutez le SQL de création de la table user_points.');}
+
+// TEST 4: Table video_ratings
+setStatus('table_video_ratings','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('video_ratings').select('*').limit(5);
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;
+setStatus('table_video_ratings','success','<span class="ok">✔ Table video_ratings accessible</span><br>Lignes: <strong>'+count+'</strong>');
+}catch(e){errors++;setStatus('table_video_ratings','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 5: Table video_likes
+setStatus('table_video_likes','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('video_likes').select('*').limit(5);
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;setStatus('table_video_likes','success','<span class="ok">✔ Table video_likes accessible</span><br>Lignes: <strong>'+count+'</strong>');
+}catch(e){errors++;setStatus('table_video_likes','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 6: Table video_views
+setStatus('table_video_views','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('video_views').select('*').limit(5);
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;
+setStatus('table_video_views','success','<span class="ok">✔ Table video_views accessible</span><br>Lignes: <strong>'+count+'</strong>');
+}catch(e){errors++;setStatus('table_video_views','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 7: Table comments
+setStatus('table_comments','running');
+try{
+if(!sb)throw new Error('Supabase non connecté');
+var r=await sb.from('comments').select('*').limit(5);
+if(r.error)throw r.error;
+var count=r.data?r.data.length:0;
+setStatus('table_comments','success','<span class="ok">✔ Table comments accessible</span><br>Lignes: <strong>'+count+'</strong>');
+}catch(e){errors++;setStatus('table_comments','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 8: Cloudinary API ping
+setStatus('cloudinary_ping','running');
+try{
+var ctrl=new AbortController();
+var timeout=setTimeout(function(){ctrl.abort();},8000);
+var resp=await fetch('https://res.cloudinary.com/'+CLOUDINARY_CLOUD+'/image/upload/v1/sample.jpg',{method:'HEAD',signal:ctrl.signal});
+clearTimeout(timeout);
+if(!resp.ok)throw new Error('HTTP '+resp.status);
+setStatus('cloudinary_ping','success','<span class="ok">✔ Cloudinary joignable</span><br>Cloud: <strong>'+CLOUDINARY_CLOUD+'</strong><br>HTTP: <strong>'+resp.status+'</strong>');
+}catch(e){errors++;setStatus('cloudinary_ping','error','<span class="err">✘ '+e.message+'</span><br>Vérifiez le nom du cloud Cloudinary.');}
+
+// TEST 9: Images Cloudinary (thumbnails réels)
+setStatus('cloudinary_images','running');
+try{
+if(!sb)throw new Error('Supabase requis');
+var vids=await sb.from('videos').select('thumbnail,title').not('thumbnail','is',null).limit(3);
+if(vids.error)throw vids.error;
+if(!vids.data||vids.data.length===0){setStatus('cloudinary_images','success','<span class="ok">✔ Aucune image à tester (base vide)</span>');} 
+else{
+var results=[];
+for(var i=0;i<vids.data.length;i++){
+var v=vids.data[i];
+var ctrl2=new AbortController();
+var t2=setTimeout(function(){ctrl2.abort();},8000);
+try{
+var imgResp=await fetch(v.thumbnail,{method:'HEAD',signal:ctrl2.signal});
+clearTimeout(t2);results.push({title:v.title,status:imgResp.status,ok:imgResp.ok});
+}catch(e2){clearTimeout(t2);results.push({title:v.title,status:'ERR',ok:false,err:e2.message});}
+}
+var allOk=results.every(function(r){return r.ok;});
+var detail=results.map(function(r){return(r.ok?'<span class="ok">✔</span>':'<span class="err">✘ HTTP '+r.status+'</span>')+' '+r.title+(r.err?' ('+r.err+')':'');}).join('<br>');
+if(allOk)setStatus('cloudinary_images','success','<span class="ok">✔ Toutes les images accessibles</span><br>'+detail);
+else{errors++;setStatus('cloudinary_images','error','<span class="err">✘ Certaines images bloquées</span><br>'+detail);}
+}
+}catch(e){errors++;setStatus('cloudinary_images','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 10: Vidéos Cloudinary
+setStatus('cloudinary_videos','running');
+try{
+if(!sb)throw new Error('Supabase requis');
+var vids2=await sb.from('videos').select('video_url,title').not('video_url','is',null).limit(3);
+if(vids2.error)throw vids2.error;
+if(!vids2.data||vids2.data.length===0){setStatus('cloudinary_videos','success','<span class="ok">✔ Aucune vidéo à tester (base vide)</span>');}
+else{
+var results2=[];
+for(var j=0;j<vids2.data.length;j++){
+var v2=vids2.data[j];
+var isBlob=v2.video_url.startsWith('blob:');
+if(isBlob){results2.push({title:v2.title,status:'BLOB',ok:false,err:'URL locale blob (non accessible hors appareil)'});continue;}
+var ctrl3=new AbortController();
+var t3=setTimeout(function(){ctrl3.abort();},10000);
+try{
+var vidResp=await fetch(v2.video_url,{method:'HEAD',signal:ctrl3.signal});
+clearTimeout(t3);
+results2.push({title:v2.title,status:vidResp.status,ok:vidResp.ok});
+}catch(e3){clearTimeout(t3);results2.push({title:v2.title,status:'ERR',ok:false,err:e3.message});}
+}
+var allOk2=results2.every(function(r){return r.ok;});
+var detail2=results2.map(function(r){return(r.ok?'<span class="ok">✔</span>':'<span class="err">✘ '+(r.err||'HTTP '+r.status)+'</span>')+' '+r.title;}).join('<br>');
+if(allOk2)setStatus('cloudinary_videos','success','<span class="ok">✔ Toutes les vidéos accessibles</span><br>'+detail2);
+else{errors++;setStatus('cloudinary_videos','error','<span class="err">✘ Certaines vidéos bloquées</span><br>'+detail2+'<br><br>💡 Les URLs <strong>blob:</strong> sont locales et ne fonctionnent PAS sur d\'autres appareils. Réuploadez ces vidéos via Cloudinary.');}
+}
+}catch(e){errors++;setStatus('cloudinary_videos','error','<span class="err">✘ '+e.message+'</span>');}
+
+// TEST 11: Viewer ID
+setStatus('viewer_id','running');
+try{
+var vid=localStorage.getItem('aurora_viewer_id');
+if(!vid){
+vid='viewer_test_'+Date.now();
+localStorage.setItem('aurora_viewer_id',vid);
+setStatus('viewer_id','success','<span class="ok">✔ Viewer ID créé</span><br>ID: <strong>'+vid+'</strong>');
+}else{
+setStatus('viewer_id','success','<span class="ok">✔ Viewer ID existant</span><br>ID: <strong>'+vid+'</strong>');
+}
+}catch(e){errors++;setStatus('viewer_id','error','<span class="err">✘ '+e.message+'</span>');}
+// TEST 12: LocalStorage
+setStatus('localStorage','running');
+try{
+localStorage.setItem('_diag_test','ok_'+Date.now());
+var val=localStorage.getItem('_diag_test');
+localStorage.removeItem('_diag_test');
+if(val&&val.startsWith('ok_'))setStatus('localStorage','success','<span class="ok">✔ LocalStorage fonctionnel</span><br>Lecture/écriture: <strong>OK</strong>');
+else throw new Error('Échec lecture après écriture');
+}catch(e){errors++;setStatus('localStorage','error','<span class="err">✘ '+e.message+'</span><br>Le navigateur bloque peut-être le stockage local.');}
+
+// TEST 13: CORS / Origine
+setStatus('cors','running');
+try{
+var origin=window.location.origin;
+var protocol=window.location.protocol;
+var hostname=window.location.hostname;
+var isSecure=protocol==='https:';
+var isLocal=hostname==='localhost'||hostname==='127.0.0.1';
+var warn='';
+if(!isSecure&&!isLocal)warn='<br><span class="err">⚠ Site non HTTPS ! Cloudinary et Supabase peuvent bloquer les requêtes.</span>';
+setStatus('cors','success','<span class="ok">✔ Origine détectée</span><br>Origin: <strong>'+origin+'</strong><br>Protocol: <strong>'+protocol+'</strong><br>Hostname: <strong>'+hostname+'</strong>'+warn);
+if(!isSecure&&!isLocal)errors++;
+}catch(e){errors++;setStatus('cors','error','<span class="err">✘ '+e.message+'</span>');}
+
+// RÉSUMÉ
+btn.disabled=false;btn.textContent='▶ Relancer les tests';
+var sumEl=document.getElementById('summary');
+if(errors===0){sumEl.className='summary all-ok';sumEl.innerHTML='✅ TOUS LES TESTS SONT PASSÉS ('+tests.length+'/'+tests.length+')<br><span style="font-size:0.85rem;font-weight:400">Votre site est correctement configuré.</span>';}
+else{sumEl.className='summary has-errors';sumEl.innerHTML='❌ '+errors+' ERREUR(S) DÉTECTÉE(S) sur '+tests.length+' tests<br><span style="font-size:0.85rem;font-weight:400">Corrigez les erreurs ci-dessus puis relancez.</span>';}
+}
+
+renderTests();
+</script>
+</body>
+</html>
