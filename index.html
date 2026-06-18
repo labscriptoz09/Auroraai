@@ -242,12 +242,15 @@ else{var t=document.createElement('textarea');t.value=url;document.body.appendCh
 
 // ========== CHARGEMENT VIDÉOS (SUPABASE UNIQUEMENT) ==========
 async function loadVideos(){
-if(!supabase||backendMode!=='cloud'){videos=[];renderVideos();renderHeroProjector();renderTopRated();return;}
-try{var result=await supabase.from('videos').select('*').order('created_at',{ascending:false});
-if(result.error){console.log('Load error:',result.error);videos=[];renderVideos();renderHeroProjector();renderTopRated();return;}
+if(!supabase){console.log('[AuroraAI] No supabase client');videos=[];renderVideos();renderHeroProjector();renderTopRated();return;}
+try{console.log('[AuroraAI] Fetching videos from Supabase...');
+var result=await supabase.from('videos').select('*').order('created_at',{ascending:false});
+console.log('[AuroraAI] Supabase result:',result);
+if(result.error){console.log('[AuroraAI] Load error:',result.error);videos=[];renderVideos();renderHeroProjector();renderTopRated();return;}
 videos=result.data||[];
+console.log('[AuroraAI] Videos loaded:',videos.length);
 renderVideos();renderHeroProjector();renderTopRated();
-}catch(e){console.log('Load exception:',e);videos=[];renderVideos();renderHeroProjector();renderTopRated();}
+}catch(e){console.log('[AuroraAI] Load exception:',e);videos=[];renderVideos();renderHeroProjector();renderTopRated();}
 }
 
 // ========== REALTIME SUPABASE ==========
@@ -256,25 +259,26 @@ if(!supabase||backendMode!=='cloud')return;
 if(realtimeChannel){supabase.removeChannel(realtimeChannel);}
 realtimeChannel=supabase.channel('videos_changes')
 .on('postgres_changes',{event:'*',schema:'public',table:'videos'},function(payload){
-console.log('Realtime:',payload.eventType,payload.new?.id||payload.old?.id);
+console.log('[AuroraAI] Realtime event:',payload.eventType,payload.new?.id||payload.old?.id);
 loadVideos();
 })
-.subscribe(function(status){console.log('Realtime status:',status);});
+.subscribe(function(status){console.log('[AuroraAI] Realtime status:',status);});
 }
 
+// ========== INIT BACKEND (CORRIGÉ) ==========
 async function initBackend(){
 try{
-await new Promise(function(r){setTimeout(r,500);});
-if(typeof window.supabase==='undefined'){backendMode='local';loadVideos();return;}
+console.log('[AuroraAI] Initializing backend...');
+if(typeof window.supabase==='undefined'){console.log('[AuroraAI] No SDK found');backendMode='local';loadVideos();return;}
 supabase=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-var result=await supabase.from('videos').select('*').limit(1);
-if(result.error){backendMode='local';loadVideos();return;}
 backendMode='cloud';
+console.log('[AuroraAI] Supabase client created, mode=cloud');
 await loadVideos();
 subscribeRealtime();
 loadUserPoints();
 checkDailyLogin();
-}catch(e){backendMode='local';loadVideos();}
+console.log('[AuroraAI] Backend initialized successfully');
+}catch(e){console.log('[AuroraAI] Init error:',e);backendMode='local';loadVideos();}
 }
 
 function renderVideos(){var f=currentCategory==='all'?videos:videos.filter(function(v){return v.category===currentCategory;});if(searchQuery){f=f.filter(function(v){return v.title.toLowerCase().indexOf(searchQuery)!==-1||v.author.toLowerCase().indexOf(searchQuery)!==-1||(v.description&&v.description.toLowerCase().indexOf(searchQuery)!==-1)||v.category.toLowerCase().indexOf(searchQuery)!==-1;});}renderVideosList(f);}
@@ -288,11 +292,11 @@ function startHeroAuto(){if(heroAutoTimer){clearInterval(heroAutoTimer);heroAuto
 function heroGoTo(idx){pauseHeroAuto();heroIdx=idx;renderHeroProjector();}
 function renderHeroProjector(){
 var fr=document.getElementById('heroFrame'),nv=document.getElementById('heroNav');
-if(!fr||!videos.length){if(fr)fr.innerHTML='<p style="text-align:center;color:rgba(255,255,255,.4);padding:4rem 1rem">Aucun film en projection</p>';if(nv)nv.innerHTML='';return;}
-var s=videos.slice().sort(function(a,b){return(b.views||0)-(a.views||0);});
+if(!fr||!videos.length){if(fr)fr.innerHTML='<p style="text-align:center;color:rgba(255,255,255,.4);padding:4rem 1rem">Aucun film en projection</p>';if(nv)nv.innerHTML='';return;}var s=videos.slice().sort(function(a,b){return(b.views||0)-(a.views||0);});
 if(heroIdx>=s.length)heroIdx=0;
 var v=s[heroIdx],st='',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"');
-for(var i=1;i<=5;i++)st+=i<=Math.round(v.rating||0)?'⭐':'☆';var isFav=favorites.includes(v.id);var editorial=getEditorialLabel(v,heroIdx);
+for(var i=1;i<=5;i++)st+=i<=Math.round(v.rating||0)?'⭐':'☆';
+var isFav=favorites.includes(v.id);var editorial=getEditorialLabel(v,heroIdx);
 var playSvg='<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>';
 var heartSvg='<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
 fr.innerHTML=(v.thumbnail?'<img class="hero-thumb" src="'+v.thumbnail+'" alt="'+escapeHtml(v.title)+'">':'<div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:rgba(212,175,55,.2);font-size:3rem">🎬</div>')+'<div class="hero-info"><div class="hero-editorial">'+editorial+'</div><div class="hero-badge-row"><span class="hero-cat">'+escapeHtml(v.category)+'</span>'+(v.rating?'<span class="hero-rating">'+st+'</span>':'')+'<span style="font-size:.75rem;color:rgba(255,255,255,.45)">👁️ '+formatNumber(v.views)+' vues</span></div><div class="hero-title">'+escapeHtml(v.title)+'</div><div class="hero-author">par '+escapeHtml(v.author)+'</div><div class="hero-desc">'+escapeHtml(v.description||'Découvrez ce film généré par intelligence artificielle.')+'</div><div class="hero-btns"><button class="hero-icon-btn play" onclick="event.stopPropagation();playVideo('+vs+')" aria-label="Regarder">'+playSvg+'</button><button class="hero-icon-btn fav'+(isFav?' is-fav':'')+'" onclick="event.stopPropagation();toggleFav('+v.id+')" aria-label="Favoris">'+heartSvg+'</button></div></div>';
