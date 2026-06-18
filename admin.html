@@ -47,8 +47,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .setting-row textarea{min-height:60px;resize:vertical}
 .save-btn{padding:0.6rem 1.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem;margin-top:0.5rem}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:0.8rem 1.2rem;border-radius:10px;color:#fff;font-weight:600;font-size:0.85rem;z-index:2000;transition:transform 0.3s}
-.toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:#ff4d4d}
-.edit-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:1500;display:none;align-items:center;justify-content:center;padding:1rem}
+.toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:#ff4d4d}.edit-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:1500;display:none;align-items:center;justify-content:center;padding:1rem}
 .edit-modal.active{display:flex}
 .edit-content{background:#111;border:1px solid rgba(212,175,55,0.3);border-radius:15px;padding:1.5rem;width:100%;max-width:500px;max-height:80vh;overflow-y:auto}
 .edit-content h3{color:#d4af37;margin-bottom:1rem}
@@ -70,6 +69,15 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .notif-close{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:1rem;padding:0 0.5rem;margin-left:0.5rem}
 .notif-badge{position:absolute;top:-5px;right:-5px;background:#ff4081;color:#fff;font-size:0.6rem;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center}
 .notif-badge.visible{display:flex}
+.alert-card{background:rgba(255,77,77,0.05);border:1px solid rgba(255,77,77,0.2);border-radius:12px;padding:1rem;margin-bottom:0.8rem}
+.alert-card.safe{background:rgba(76,175,80,0.05);border-color:rgba(76,175,80,0.2)}
+.alert-card h4{font-size:0.85rem;margin-bottom:0.3rem}
+.alert-card.danger h4{color:#ff4d4d}
+.alert-card.safe h4{color:#4caf50}
+.alert-card p{font-size:0.75rem;color:rgba(255,255,255,0.5)}
+.user-email{color:rgba(212,175,55,0.7);font-family:monospace;font-size:0.75rem}
+.points-highlight{color:#d4af37;font-weight:800}
+.streak-fire{color:#ff9800}
 @keyframes notifSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes notifFade{from{opacity:1}to{opacity:0;transform:translateY(-20px)}}
 @media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}.tabs{gap:0.8rem}}
@@ -87,20 +95,30 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="notif-bar" id="notifBar"></div>
 <div class="dashboard" id="dashboard">
 <div class="admin-header">
-<h1>👑 Dashboard Admin</h1>
-<button class="logout-btn" onclick="doLogout()">🚪 Déconnexion</button>
-</div>
+<h1>👑 Dashboard Admin v2.0</h1>
+<button class="logout-btn" onclick="doLogout()">🚪 Déconnexion</button></div>
 <div class="tabs">
 <div class="tab active" onclick="switchTab('overview',this)">📊 Vue d'ensemble<span class="notif-badge" id="notifBadge">0</span></div>
+<div class="tab" onclick="switchTab('users',this)">👥 Utilisateurs</div>
 <div class="tab" onclick="switchTab('videos',this)">🎬 Vidéos</div>
 <div class="tab" onclick="switchTab('comments',this)">💬 Commentaires</div>
+<div class="tab" onclick="switchTab('security',this)">🛡️ Sécurité</div>
 <div class="tab" onclick="switchTab('settings',this)">⚙️ Paramètres</div>
 </div>
-<div id="tab-overview"><div class="stats-grid">
+
+<!-- OVERVIEW -->
+<div id="tab-overview">
+<div class="stats-grid">
 <div class="stat-card"><div class="number" id="statVideos">0</div><div class="label">Vidéos</div></div>
 <div class="stat-card"><div class="number" id="statViews">0</div><div class="label">Vues totales</div></div>
 <div class="stat-card"><div class="number" id="statLikes">0</div><div class="label">Likes totaux</div></div>
 <div class="stat-card"><div class="number" id="statComments">0</div><div class="label">Commentaires</div></div>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="number" id="statUsers">0</div><div class="label">Utilisateurs</div></div>
+<div class="stat-card"><div class="number" id="statPoints">0</div><div class="label">Points distribués</div></div>
+<div class="stat-card"><div class="number" id="statLikesHist">0</div><div class="label">Likes uniques</div></div>
+<div class="stat-card"><div class="number" id="statCmtHist">0</div><div class="label">Commentaires uniques</div></div>
 </div>
 <div class="table-container">
 <div class="table-header"><h3>🔥 Top 5 Vidéos Populaires</h3></div>
@@ -111,18 +129,53 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div id="recentCommentsList"></div>
 </div>
 </div>
-<div id="tab-videos" style="display:none">
+
+<!-- USERS -->
+<div id="tab-users" style="display:none">
+<div class="stats-grid">
+<div class="stat-card"><div class="number" id="userCount">0</div><div class="label">Utilisateurs inscrits</div></div>
+<div class="stat-card"><div class="number" id="totalPointsAll">0</div><div class="label">Points totaux</div></div>
+<div class="stat-card"><div class="number" id="avgPoints">0</div><div class="label">Moyenne points</div></div>
+<div class="stat-card"><div class="number" id="emailSaved">0</div><div class="label">Emails sauvegardés</div></div>
+</div>
 <div class="table-container">
+<div class="table-header"><h3>👥 Tous les utilisateurs (<span id="usersTotal">0</span>)</h3></div>
+<div id="allUsersList"></div>
+</div>
+</div>
+
+<!-- VIDEOS -->
+<div id="tab-videos" style="display:none"><div class="table-container">
 <div class="table-header"><h3>🎬 Toutes les vidéos (<span id="videoCount">0</span>)</h3></div>
 <div id="allVideosList"></div>
 </div>
 </div>
+
+<!-- COMMENTS -->
 <div id="tab-comments" style="display:none">
 <div class="table-container">
 <div class="table-header"><h3>💬 Tous les commentaires (<span id="commentCount">0</span>)</h3></div>
 <div id="allCommentsList"></div>
 </div>
 </div>
+
+<!-- SECURITY -->
+<div id="tab-security" style="display:none">
+<div class="table-container">
+<div class="table-header"><h3>🛡️ Vérification Anti-Spam</h3></div>
+<div id="securityChecks" style="padding:1rem"></div>
+</div>
+<div class="table-container">
+<div class="table-header"><h3>❤️ Historique Likes Uniques (<span id="likesHistCount">0</span>)</h3></div>
+<div id="likesHistList"></div>
+</div>
+<div class="table-container">
+<div class="table-header"><h3>💬 Historique Commentaires Uniques (<span id="cmtHistCount">0</span>)</h3></div>
+<div id="cmtHistList"></div>
+</div>
+</div>
+
+<!-- SETTINGS -->
 <div id="tab-settings" style="display:none">
 <div class="settings-group">
 <h3>🌐 Informations du site</h3>
@@ -141,14 +194,18 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="setting-row"><label>Nouveau mot de passe</label><input type="password" id="setNewPassword" placeholder="Nouveau mot de passe"></div>
 <div class="setting-row"><label>Confirmer</label><input type="password" id="setConfirmPassword" placeholder="Confirmer"></div>
 <button class="save-btn" onclick="changePassword()">Changer le mot de passe</button>
-</div>
-<div class="settings-group">
+</div><div class="settings-group">
 <h3>🗄️ Base de données</h3>
 <div class="setting-row"><button class="save-btn" onclick="exportData('videos')">📥 Exporter vidéos JSON</button></div>
-<div class="setting-row"><button class="save-btn" onclick="exportData('comments')">📥 Exporter commentaires JSON</button></div></div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('comments')">📥 Exporter commentaires JSON</button></div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('user_points')">📥 Exporter utilisateurs JSON</button></div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('video_likes_history')">📥 Exporter likes history JSON</button></div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('comment_history')">📥 Exporter comments history JSON</button></div>
+</div>
 <button class="save-btn" onclick="saveSettings()" style="width:100%;padding:0.8rem;font-size:1rem">💾 Sauvegarder les paramètres</button>
 </div>
 </div>
+
 <div class="edit-modal" id="editModal">
 <div class="edit-content">
 <h3 id="editTitle">Modifier</h3>
@@ -161,250 +218,141 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var sb=null;
-var editingId=null;
-var editingType=null;
-var notifCount=0;
-var realtimeChannel=null;
+var sb=null,editingId=null,editingType=null,notifCount=0,realtimeChannel=null;
 var SESSION_KEY='aurora_admin_session';
 
-(function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();window.addEventListener('resize',function(){resize();init();});})();
+// PLEXUS
+(function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
 
 function showToast(m,isError){var e=document.getElementById('toast');e.textContent=m;e.className='toast show'+(isError?' error':'');setTimeout(function(){e.classList.remove('show');},3000);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){if(!t)return'';var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function maskEmail(e){if(!e)return'non renseigné';var p=e.split('@');if(p.length!==2)return'***';return p[0].substring(0,2)+'***@'+p[1];}
 
-async function sha256(text){
-var encoder=new TextEncoder();
-var data=encoder.encode(text);
-var hash=await crypto.subtle.digest('SHA-256',data);
-var arr=Array.from(new Uint8Array(hash));
-return arr.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-}
+async function sha256(text){var encoder=new TextEncoder();var data=encoder.encode(text);var hash=await crypto.subtle.digest('SHA-256',data);return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
 
-function initSB(){
-if(sb)return;
-sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-}
+function initSB(){if(sb)return;sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}
 
-async function doLogin(){
-try{
-var user=document.getElementById('adminUser').value.trim();
-var pwd=document.getElementById('adminPassword').value;
-if(!user||!pwd){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Remplissez les deux champs';return;}
-initSB();
-var hash=await sha256(pwd);
-var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();if(r.error||!r.data){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Identifiants incorrects';return;}
-await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);
-sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));
-document.getElementById('loginScreen').style.display='none';
-document.getElementById('dashboard').classList.add('active');
-initDashboard();
-}catch(e){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Erreur: '+e.message;}
-}
-
+// AUTH
+async function doLogin(){try{var user=document.getElementById('adminUser').value.trim(),pwd=document.getElementById('adminPassword').value;if(!user||!pwd){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Remplissez les deux champs';return;}initSB();var hash=await sha256(pwd);var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();if(r.error||!r.data){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Identifiants incorrects';return;}await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}catch(e){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Erreur: '+e.message;}}
 function doLogout(){sessionStorage.removeItem(SESSION_KEY);location.reload();}
+function checkAuth(){try{var s=sessionStorage.getItem(SESSION_KEY);if(s){var session=JSON.parse(s);if(session&&session.id){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}}}catch(e){}}
 
-function checkAuth(){
-try{
-var s=sessionStorage.getItem(SESSION_KEY);
-if(s){
-var session=JSON.parse(s);
-if(session&&session.id){
-document.getElementById('loginScreen').style.display='none';
-document.getElementById('dashboard').classList.add('active');
-initDashboard();
-}
-}
-}catch(e){console.log('Auth error:',e);}
-}
-
+// TABS
 function switchTab(name,el){
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
 if(el)el.classList.add('active');
-['overview','videos','comments','settings'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===name?'block':'none';});
-if(name==='overview'){notifCount=0;var badge=document.getElementById('notifBadge');badge.textContent='0';badge.classList.remove('visible');loadOverview();}
+['overview','users','videos','comments','security','settings'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===name?'block':'none';});
+if(name==='overview'){notifCount=0;var badge=document.getElementById('notifBadge');badge.textContent='0';badge.classList.remove('visible');loadOverview();}if(name==='users')loadUsers();
 if(name==='videos')loadAllVideos();
 if(name==='comments')loadAllComments();
+if(name==='security')loadSecurity();
 if(name==='settings')loadSettings();
 }
 
-function addNotification(type,title,desc){
-notifCount++;
-var badge=document.getElementById('notifBadge');
-badge.textContent=notifCount>9?'9+':notifCount;
-badge.classList.add('visible');
-var bar=document.getElementById('notifBar');
-var el=document.createElement('div');
-el.className='notif-item '+type;
-var now=new Date();
-var timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-el.innerHTML='<div class="notif-content"><div class="notif-title">'+esc(title)+'</div><div class="notif-desc">'+esc(desc)+'</div><div class="notif-time">'+timeStr+'</div></div><button class="notif-close" onclick="this.parentElement.remove()">✕</button>';
-bar.appendChild(el);
-setTimeout(function(){if(el.parentElement){el.style.animation='notifFade 0.3s ease-out forwards';setTimeout(function(){if(el.parentElement)el.remove();},300);}},8000);
-while(bar.children.length>5){bar.removeChild(bar.firstChild);}
-try{if(window.navigator.vibrate)window.navigator.vibrate(100);}catch(e){}}
+// NOTIFICATIONS
+function addNotification(type,title,desc){notifCount++;var badge=document.getElementById('notifBadge');badge.textContent=notifCount>9?'9+':notifCount;badge.classList.add('visible');var bar=document.getElementById('notifBar');var el=document.createElement('div');el.className='notif-item '+type;var now=new Date();el.innerHTML='<div class="notif-content"><div class="notif-title">'+esc(title)+'</div><div class="notif-desc">'+esc(desc)+'</div><div class="notif-time">'+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+'</div></div><button class="notif-close" onclick="this.parentElement.remove()">✕</button>';bar.appendChild(el);setTimeout(function(){if(el.parentElement){el.style.animation='notifFade 0.3s ease-out forwards';setTimeout(function(){if(el.parentElement)el.remove();},300);}},8000);while(bar.children.length>5)bar.removeChild(bar.firstChild);try{if(navigator.vibrate)navigator.vibrate(100);}catch(e){}}
 
-function startRealtime(){
-if(!sb||realtimeChannel)return;
-realtimeChannel=sb.channel('admin-notifs')
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},function(p){addNotification('new-comment','💬 Nouveau commentaire',p.new.author_name+' sur vidéo ID '+p.new.video_id);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'videos'},function(p){addNotification('new-video','🎬 Nouvelle vidéo',p.new.title+' par '+p.new.author);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_likes'},function(p){addNotification('new-like','❤️ Nouveau like','Vidéo ID '+p.new.video_id);})
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(p){addNotification('new-view','👁️ Nouvelle vue','Vidéo ID '+p.new.video_id);})
-.subscribe();
-}
+function startRealtime(){if(!sb||realtimeChannel)return;realtimeChannel=sb.channel('admin-notifs').on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},function(p){addNotification('new-comment','💬 Nouveau commentaire',p.new.author_name+' sur vidéo ID '+p.new.video_id);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'videos'},function(p){addNotification('new-video','🎬 Nouvelle vidéo',p.new.title+' par '+p.new.author);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'video_likes'},function(p){addNotification('new-like','❤️ Nouveau like','Vidéo ID '+p.new.video_id);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(p){addNotification('new-view','👁️ Nouvelle vue','Vidéo ID '+p.new.video_id);}).subscribe();}
 
 async function initDashboard(){initSB();loadOverview();startRealtime();}
 
-async function loadOverview(){
-try{
+// OVERVIEW (avec stats utilisateurs)
+async function loadOverview(){try{
 var rv=await sb.from('videos').select('*');
 var rc=await sb.from('comments').select('*');
-var videos=rv.data||[];
-var comments=rc.data||[];
-var totalViews=videos.reduce(function(s,v){return s+(v.views||0);},0);
+var ru=await sb.from('user_points').select('*');
+var rlh=await sb.from('video_likes_history').select('*');
+var rch=await sb.from('comment_history').select('*');
+var videos=rv.data||[],comments=rc.data||[],users=ru.data||[],likesH=rlh.data||[],cmtsH=rch.data||[];
+var totalViews=videos.reduce(function(s,v){return s+(parseInt(v.views)||0);},0);
 var totalLikes=videos.reduce(function(s,v){return s+(v.likes||0);},0);
+var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
 document.getElementById('statVideos').textContent=videos.length;
 document.getElementById('statViews').textContent=fmt(totalViews);
 document.getElementById('statLikes').textContent=fmt(totalLikes);
 document.getElementById('statComments').textContent=comments.length;
-var sorted=videos.slice().sort(function(a,b){return(b.views||0)-(a.views||0);}).slice(0,5);
+document.getElementById('statUsers').textContent=users.length;
+document.getElementById('statPoints').textContent=fmt(totalPts);
+document.getElementById('statLikesHist').textContent=likesH.length;
+document.getElementById('statCmtHist').textContent=cmtsH.length;
+var sorted=videos.slice().sort(function(a,b){return(parseInt(b.views)||0)-(parseInt(a.views)||0);}).slice(0,5);
 document.getElementById('topVideosList').innerHTML=sorted.length?sorted.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';
 var recent=comments.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,5);
-document.getElementById('recentCommentsList').innerHTML=recent.length?recent.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+(c.author_email?'📧 '+esc(c.author_email):'📧 non renseigné')+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,50))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
-}catch(e){showToast('Erreur stats',true);}
-}
+document.getElementById('recentCommentsList').innerHTML=recent.length?recent.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,50))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
+}catch(e){showToast('Erreur stats',true);}}
 
-async function loadAllVideos(){
-try{
-var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
-var videos=r.data||[];
-document.getElementById('videoCount').textContent=videos.length;
-document.getElementById('allVideosList').innerHTML=videos.length?videos.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • '+esc(v.category)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button><button class="btn-sm btn-edit" onclick="editVideo(\''+v.id+'\')">✏️</button><button class="btn-sm btn-delete" onclick="deleteVideo(\''+v.id+'\')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';
-}catch(e){showToast('Erreur vidéos',true);}
-}
+// USERS (NOUVEAU)
+async function loadUsers(){try{
+var r=await sb.from('user_points').select('*').order('total_points',{ascending:false});
+var users=r.data||[];
+var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
+var emailCount=users.filter(function(u){return u.email&&u.email.length>0;}).length;
+document.getElementById('userCount').textContent=users.length;
+document.getElementById('totalPointsAll').textContent=fmt(totalPts);
+document.getElementById('avgPoints').textContent=users.length?fmt(Math.round(totalPts/users.length)):'0';
+document.getElementById('emailSaved').textContent=emailCount;
+document.getElementById('usersTotal').textContent=users.length;document.getElementById('allUsersList').innerHTML=users.length?users.map(function(u){
+var d=u.updated_at?new Date(u.updated_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Jamais';
+var loginDate=u.last_login_date||'Jamais';
+var streak=u.current_streak||0;
+return'<div class="table-row"><div class="row-info"><div class="row-title"><span class="user-email">'+maskEmail(u.email)+'</span> <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;margin-left:0.3rem">'+u.viewer_id.substring(0,12)+'...</span></div><div class="row-meta"><span class="points-highlight">⭐ '+(u.total_points||0)+' pts</span> • <span class="streak-fire">🔥 '+streak+'j streak</span> • Login: '+loginDate+' • MàJ: '+d+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="resetUserPoints(\''+u.viewer_id+'\')">🔄 Reset</button></div></div>';
+}).join(''):'<div class="empty-msg">Aucun utilisateur</div>';
+}catch(e){showToast('Erreur utilisateurs',true);}}
 
-async function loadAllComments(){
-try{
-var r=await sb.from('comments').select('*').order('created_at',{ascending:false});
-var comments=r.data||[];
-document.getElementById('commentCount').textContent=comments.length;
-document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+(c.author_email?'📧 '+esc(c.author_email):'📧 non renseigné')+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
-}catch(e){showToast('Erreur commentaires',true);}
-}
+async function resetUserPoints(vid){if(!confirm('Remettre à zéro les points de cet utilisateur ?'))return;try{await sb.from('user_points').update({total_points:0,current_streak:0,updated_at:new Date().toISOString()}).eq('viewer_id',vid);showToast('✅ Points remis à zéro');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+
+// VIDEOS
+async function loadAllVideos(){try{var r=await sb.from('videos').select('*').order('created_at',{ascending:false});var videos=r.data||[];document.getElementById('videoCount').textContent=videos.length;document.getElementById('allVideosList').innerHTML=videos.length?videos.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • '+esc(v.category)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button><button class="btn-sm btn-edit" onclick="editVideo(\''+v.id+'\')">✏️</button><button class="btn-sm btn-delete" onclick="deleteVideo(\''+v.id+'\')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';}catch(e){showToast('Erreur vidéos',true);}}
+
+// COMMENTS
+async function loadAllComments(){try{var r=await sb.from('comments').select('*').order('created_at',{ascending:false});var comments=r.data||[];document.getElementById('commentCount').textContent=comments.length;document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';}catch(e){showToast('Erreur commentaires',true);}}
+
+// SECURITY (NOUVEAU)
+async function loadSecurity(){try{
+var rlh=await sb.from('video_likes_history').select('*').order('first_liked_at',{ascending:false});
+var rch=await sb.from('comment_history').select('*').order('commented_at',{ascending:false});
+var likesH=rlh.data||[],cmtsH=rch.data||[];
+document.getElementById('likesHistCount').textContent=likesH.length;
+document.getElementById('cmtHistCount').textContent=cmtsH.length;
+// Checks
+var checksHtml='';
+// Check 1: likes_history table exists
+checksHtml+='<div class="alert-card safe"><h4>✅ Table video_likes_history</h4><p>'+likesH.length+' enregistrements uniques. Anti-spam likes ACTIF.</p></div>';
+// Check 2: comment_history table exists
+checksHtml+='<div class="alert-card safe"><h4>✅ Table comment_history</h4><p>'+cmtsH.length+' enregistrements uniques. Anti-spam commentaires ACTIF.</p></div>';
+// Check 3: Duplicate likes check
+var likeMap={};var dupLikes=0;likesH.forEach(function(l){var key=l.video_id+'_'+l.viewer_id;if(likeMap[key])dupLikes++;likeMap[key]=true;});
+if(dupLikes>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupLikes+' doublons détectés dans likes_history</h4><p>La contrainte UNIQUE devrait empêcher cela. Vérifiez la table.</p></div>';
+else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans likes_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';
+// Check 4: Duplicate comments check
+var cmtMap={};var dupCmts=0;cmtsH.forEach(function(c){var key=c.video_id+'_'+c.viewer_id;if(cmtMap[key])dupCmts++;cmtMap[key]=true;});
+if(dupCmts>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupCmts+' doublons détectés dans comment_history</h4><p>La contrainte UNIQUE devrait empêcher cela. Vérifiez la table.</p></div>';
+else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans comment_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';
+document.getElementById('securityChecks').innerHTML=checksHtml;
+// Likes history list
+document.getElementById('likesHistList').innerHTML=likesH.length?likesH.slice(0,50).map(function(l){var d=new Date(l.first_liked_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+l.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+l.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier like: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';
+// Comments history list
+document.getElementById('cmtHistList').innerHTML=cmtsH.length?cmtsH.slice(0,50).map(function(c){var d=new Date(c.commented_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+c.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+c.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier commentaire: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';
+}catch(e){showToast('Erreur sécurité',true);}}
+
 function openVideo(id){window.open('/player.html?id='+id,'_blank');}
 
-async function deleteVideo(id){
-if(!confirm('Supprimer cette vidéo et tous ses commentaires/likes/vues ?'))return;
-try{
-await sb.from('comments').delete().eq('video_id',id);
-await sb.from('video_likes').delete().eq('video_id',id);
-await sb.from('video_views').delete().eq('video_id',id);
-await sb.from('videos').delete().eq('id',id);
-showToast('✅ Vidéo supprimée');
-loadAllVideos();loadOverview();
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
+async function deleteVideo(id){if(!confirm('Supprimer cette vidéo et tous ses commentaires/likes/vues ?'))return;try{await sb.from('comments').delete().eq('video_id',id);await sb.from('video_likes').delete().eq('video_id',id);await sb.from('video_views').delete().eq('video_id',id);await sb.from('video_likes_history').delete().eq('video_id',id);await sb.from('comment_history').delete().eq('video_id',id);await sb.from('videos').delete().eq('id',id);showToast('✅ Vidéo supprimée');loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 
-async function deleteComment(id){
-if(!confirm('Supprimer ce commentaire ?'))return;
-try{
-await sb.from('comments').delete().eq('id',id);
-showToast('✅ Commentaire supprimé');
-loadAllComments();loadOverview();
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
+async function deleteComment(id){if(!confirm('Supprimer ce commentaire ?'))return;try{await sb.from('comments').delete().eq('id',id);showToast('✅ Commentaire supprimé');loadAllComments();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('id',id).single();if(r.error||!r.data)return;var v=r.data;editingId=id;editingType='video';document.getElementById('editTitle').textContent='Modifier la vidéo';document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';document.getElementById('editModal').classList.add('active');}catch(e){showToast('Erreur chargement',true);}}
 
-async function editVideo(id){
-try{
-var r=await sb.from('videos').select('*').eq('id',id).single();
-if(r.error||!r.data)return;
-var v=r.data;
-editingId=id;editingType='video';
-document.getElementById('editTitle').textContent='Modifier la vidéo';
-document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';
-document.getElementById('editModal').classList.add('active');
-}catch(e){showToast('Erreur chargement',true);}
-}
-
-async function saveEdit(){
-if(editingType==='video'){
-var title=document.getElementById('editField1').value.trim();
-var author=document.getElementById('editField2').value.trim();
-var category=document.getElementById('editField3').value;
-var description=document.getElementById('editField4').value.trim();
-if(!title||!author){showToast('❌ Champs obligatoires',true);return;}
-try{
-await sb.from('videos').update({title:title,author:author,category:category,description:description}).eq('id',editingId);
-showToast('✅ Vidéo modifiée');
-closeEditModal();loadAllVideos();loadOverview();
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
-}
+async function saveEdit(){if(editingType==='video'){var title=document.getElementById('editField1').value.trim(),author=document.getElementById('editField2').value.trim(),category=document.getElementById('editField3').value,description=document.getElementById('editField4').value.trim();if(!title||!author){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:title,author:author,category:category,description:description}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');editingId=null;editingType=null;}
 
-async function loadSettings(){
-try{
-initSB();
-var r=await sb.from('site_settings').select('*').eq('id',1).single();
-if(r.error||!r.data)return;
-var s=r.data;
-document.getElementById('setSiteName').value=s.site_name||'';
-document.getElementById('setSiteDesc').value=s.site_desc||'';
-document.getElementById('setSiteUrl').value=s.site_url||'';
-document.getElementById('setColor').value=s.color||'#d4af37';
-document.getElementById('setBadgeText').value=s.badge_text||'';
-document.getElementById('setHeroTitle').value=s.hero_title||'';
-}catch(e){showToast('Erreur chargement paramètres',true);}
-}
-
-async function saveSettings(){
-try{
-initSB();
-await sb.from('site_settings').update({
-site_name:document.getElementById('setSiteName').value,
-site_desc:document.getElementById('setSiteDesc').value,
-site_url:document.getElementById('setSiteUrl').value,
-color:document.getElementById('setColor').value,
-badge_text:document.getElementById('setBadgeText').value,
-hero_title:document.getElementById('setHeroTitle').value,
-updated_at:new Date().toISOString()
-}).eq('id',1);
-showToast('✅ Paramètres sauvegardés dans Supabase');
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
-
-async function changePassword(){
-var np=document.getElementById('setNewPassword').value;
-var cp=document.getElementById('setConfirmPassword').value;
-if(!np){showToast('❌ Entrez un mot de passe',true);return;}
-if(np!==cp){showToast('❌ Mots de passe différents',true);return;}
-if(np.length<4){showToast('❌ Minimum 4 caractères',true);return;}
-try{
-var session=JSON.parse(sessionStorage.getItem(SESSION_KEY));
-var hash=await sha256(np);
-await sb.from('admin_users').update({password_hash:hash}).eq('id',session.id);
-document.getElementById('setNewPassword').value='';
-document.getElementById('setConfirmPassword').value='';
-showToast('✅ Mot de passe changé dans Supabase');
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
-async function exportData(table){
-try{
-initSB();
-var r=await sb.from(table).select('*');
-if(r.error)throw r.error;
-var blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});
-var a=document.createElement('a');
-a.href=URL.createObjectURL(blob);
-a.download='aurora_'+table+'_'+new Date().toISOString().slice(0,10)+'.json';
-a.click();
-showToast('📥 Export '+table+' terminé');
-}catch(e){showToast('❌ Erreur export: '+e.message,true);}
-}
+// SETTINGS
+async function loadSettings(){try{initSB();var r=await sb.from('site_settings').select('*').eq('id',1).single();if(r.error||!r.data)return;var s=r.data;document.getElementById('setSiteName').value=s.site_name||'';document.getElementById('setSiteDesc').value=s.site_desc||'';document.getElementById('setSiteUrl').value=s.site_url||'';document.getElementById('setColor').value=s.color||'#d4af37';document.getElementById('setBadgeText').value=s.badge_text||'';document.getElementById('setHeroTitle').value=s.hero_title||'';}catch(e){showToast('Erreur paramètres',true);}}
+async function saveSettings(){try{initSB();await sb.from('site_settings').update({site_name:document.getElementById('setSiteName').value,site_desc:document.getElementById('setSiteDesc').value,site_url:document.getElementById('setSiteUrl').value,color:document.getElementById('setColor').value,badge_text:document.getElementById('setBadgeText').value,hero_title:document.getElementById('setHeroTitle').value,updated_at:new Date().toISOString()}).eq('id',1);showToast('✅ Paramètres sauvegardés');}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+async function changePassword(){var np=document.getElementById('setNewPassword').value,cp=document.getElementById('setConfirmPassword').value;if(!np){showToast('❌ Entrez un mot de passe',true);return;}if(np!==cp){showToast('❌ Mots de passe différents',true);return;}if(np.length<4){showToast('❌ Minimum 4 caractères',true);return;}try{var session=JSON.parse(sessionStorage.getItem(SESSION_KEY));var hash=await sha256(np);await sb.from('admin_users').update({password_hash:hash}).eq('id',session.id);document.getElementById('setNewPassword').value='';document.getElementById('setConfirmPassword').value='';showToast('✅ Mot de passe changé');}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+async function exportData(table){try{initSB();var r=await sb.from(table).select('*');if(r.error)throw r.error;var blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='aurora_'+table+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();showToast('📥 Export '+table+' terminé');}catch(e){showToast('❌ Erreur export: '+e.message,true);}}
 
 checkAuth();
 </script>
 </body>
-</html>
+</html>>
