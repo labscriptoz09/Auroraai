@@ -3,10 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AuroraAI - Lecteur</title>
+<title>Lecteur Vidéo | AuroraAI.watch - Films et Séries IA</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#000000">
+<!-- SEO -->
+<meta name="description" content="Regardez des films et séries générés par IA sur AuroraAI. Lecteur vidéo avec notation, commentaires et soutien aux créateurs.">
+<meta name="keywords" content="lecteur vidéo IA, films IA, streaming IA, AuroraAI player, cinéma génératif">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://auroraai-one.vercel.app/player.html">
+<!-- Open Graph -->
+<meta property="og:title" content="Lecteur Vidéo | AuroraAI.watch">
+<meta property="og:description" content="Regardez des films et séries générés par IA. Notez, commentez et soutenez les créateurs.">
+<meta property="og:type" content="video.other">
+<meta property="og:url" content="https://auroraai-one.vercel.app/player.html">
+<meta property="og:site_name" content="AuroraAI.watch">
+<meta property="og:locale" content="fr_FR">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lecteur Vidéo | AuroraAI.watch">
+<meta name="twitter:description" content="Regardez des films et séries générés par IA sur AuroraAI.">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -31,8 +47,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .video-meta{display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap}
 .video-meta span{background:rgba(212,175,55,0.1);padding:0.25rem 0.7rem;border-radius:15px;font-size:0.75rem;border:1px solid rgba(212,175,55,0.2);color:rgba(255,255,255,0.8)}
 .rating-section{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;padding:0.6rem 0;border-bottom:1px solid rgba(212,175,55,0.1)}
-.rating-label{color:rgba(255,255,255,0.6);font-size:0.85rem;font-weight:600}
-.stars-container{display:flex;gap:0.3rem;align-items:center}
+.rating-label{color:rgba(255,255,255,0.6);font-size:0.85rem;font-weight:600}.stars-container{display:flex;gap:0.3rem;align-items:center}
 .star-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;color:rgba(212,175,55,0.3);transition:all 0.2s;padding:0;line-height:1}
 .star-btn:hover,.star-btn.active{color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,0.5);transform:scale(1.15)}
 .rating-display{color:#d4af37;font-size:0.85rem;font-weight:700;margin-left:0.5rem}
@@ -47,7 +62,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .tip-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:1rem}
 .tip-section h3{color:#d4af37;margin-bottom:0.4rem;font-size:0.9rem}
 .tip-section input{width:100%;padding:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;margin-bottom:0.4rem;font-size:0.85rem}
-.tip-section button{width:100%;padding:0.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem}.comments-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:2rem}
+.tip-section button{width:100%;padding:0.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem}
+.comments-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:2rem}
 .comments-section h3{color:#d4af37;margin-bottom:0.6rem;font-size:0.9rem}
 .comment-form{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem}
 .comment-form input,.comment-form textarea{width:100%;padding:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;font-size:0.85rem}
@@ -80,9 +96,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <div class="main" id="mainContent">
 <div class="loading" id="loadingMsg">Chargement de la vidéo...</div>
 </div>
-<div class="toast" id="toast"></div>
-<!-- POINT REVEAL GLOBAL COMPONENT -->
-<script src="/point-reveal.js"></script>
+<div class="toast" id="toast"></div><script src="/point-reveal.js"></script>
 <script>
 // ========== MODE OFFLINE CHECK ==========
 (async function(){
@@ -96,20 +110,19 @@ throw new Error('OFFLINE_MODE');
 }catch(e){if(e.message==='OFFLINE_MODE')return;}
 })();
 
-var sb=null,videoId=null;var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
+var sb=null,videoId=null;
+var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
 function getParam(name){return new URLSearchParams(window.location.search).get(name);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
 function closePlayer(){try{window.parent.postMessage({type:'closePlayer'},'*');}catch(e){}window.location.href='/';}
 
-// ===== POINT REVEAL GLOBAL HELPER =====
 function triggerPointReveal(amount, reason, total) {
     window.dispatchEvent(new CustomEvent('aurora:points', {
         detail: { amount: amount, reason: reason, total: total }
     }));
 }
-// ===== FIN HELPER =====
 
 async function addPointsPlayer(points,reason,creatorViewerId){
 if(!sb)return;
@@ -132,8 +145,7 @@ async function loadPlayerPoints(){if(!sb)return;try{var se=localStorage.getItem(
 
 function buildCreatorLinks(linksStr){
 if(!linksStr||!linksStr.trim())return'';
-var links=linksStr.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
-if(!links.length)return'';
+var links=linksStr.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});if(!links.length)return'';
 var html='<div class="creator-links-section">';
 links.forEach(function(link){
 var url=link;
@@ -145,7 +157,8 @@ html+='</div>';
 return html;
 }
 
-async function init(){videoId=getParam('id');
+async function init(){
+videoId=getParam('id');
 if(!videoId){document.getElementById('loadingMsg').textContent='Aucune vidéo sélectionnée';return;}
 try{
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
@@ -181,8 +194,7 @@ creatorLinksHtml+
 '<div class="tip-section"><h3>💰 Soutenir l\'auteur</h3><input type="email" id="tipEmail" placeholder="Votre email"><button onclick="sendTip()">Envoyer un tip</button></div>'+
 '<div class="comments-section"><h3>💬 Commentaires (<span id="cmtCount">0</span>)</h3>'+
 '<div class="comment-form"><input type="text" id="cmtName" placeholder="Votre nom *" maxlength="50"><input type="email" id="cmtEmail" placeholder="Email (optionnel)"><textarea id="cmtText" placeholder="Écrivez un commentaire..." maxlength="500"></textarea><button onclick="postComment()">Publier</button></div>'+
-'<div class="comments-list" id="cmtList"><p class="no-comments">Chargement...</p></div></div></div>';
-window._currentVideo=v;
+'<div class="comments-list" id="cmtList"><p class="no-comments">Chargement...</p></div></div></div>';window._currentVideo=v;
 }
 
 async function rateVideo(stars){
@@ -194,7 +206,8 @@ document.getElementById('ratingDisplay').textContent=stars+'/5';
 localStorage.setItem(ratingKey,stars.toString());
 if(sb){try{
 await sb.from('video_ratings').insert([{video_id:v.id,viewer_id:viewerId,rating:stars}]);
-var avgResult=await sb.from('video_ratings').select('rating').eq('video_id',v.id);if(!avgResult.error&&avgResult.data&&avgResult.data.length>0){var sum=0;avgResult.data.forEach(function(r){sum+=r.rating;});var avg=Math.round(sum/avgResult.data.length*10)/10;await sb.from('videos').update({rating:avg}).eq('id',v.id);}
+var avgResult=await sb.from('video_ratings').select('rating').eq('video_id',v.id);
+if(!avgResult.error&&avgResult.data&&avgResult.data.length>0){var sum=0;avgResult.data.forEach(function(r){sum+=r.rating;});var avg=Math.round(sum/avgResult.data.length*10)/10;await sb.from('videos').update({rating:avg}).eq('id',v.id);}
 addPointsPlayer(5,'Film noté',v.viewer_id);
 }catch(e){showToast('⭐ Note sauvegardée localement','');}}
 else{showToast('⭐ Note sauvegardée localement','');}
@@ -230,8 +243,7 @@ addPointsPlayer(3,'Vidéo aimée',v.viewer_id);
 await sb.from('videos').update({likes:v.likes}).eq('id',v.id);
 localStorage.setItem(k,isL?'false':'true');
 var btn=document.getElementById('likeBtn'),txt=document.getElementById('likeText');
-btn.classList.toggle('liked',!isL);txt.textContent=isL?'J\'aime':'Aimé';
-document.getElementById('vLikes').textContent='❤️ '+fmt(v.likes)+' likes';
+btn.classList.toggle('liked',!isL);txt.textContent=isL?'J\'aime':'Aimé';document.getElementById('vLikes').textContent='❤️ '+fmt(v.likes)+' likes';
 showToast(isL?'Like retiré':'❤️ Vidéo aimée',isL?'':'success');
 }catch(e){showToast('❌ Erreur like','error');}
 }
@@ -243,7 +255,8 @@ async function sendTip(){
 var userEmail=document.getElementById('tipEmail').value.trim();
 if(!userEmail){showToast('❌ Email requis','error');return;}
 var v=window._currentVideo;
-if(!v||!sb){showToast('❌ Erreur connexion','error');return;}try{
+if(!v||!sb){showToast('❌ Erreur connexion','error');return;}
+try{
 var r=await sb.from('videos').select('tip_email').eq('id',v.id).single();
 if(r.error||!r.data||!r.data.tip_email){showToast('❌ Email créateur non disponible','error');return;}
 addPointsPlayer(50,'Tip envoyé',null);
@@ -279,8 +292,7 @@ document.getElementById('cmtName').value='';document.getElementById('cmtEmail').
 await loadComments(videoId);
 showToast('💬 Commentaire publié !','success');
 }catch(e){
-if(e.code==='23505'){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');}
-else{showToast('❌ Erreur: '+e.message,'error');}
+if(e.code==='23505'){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');}else{showToast('❌ Erreur: '+e.message,'error');}
 }
 }
 
