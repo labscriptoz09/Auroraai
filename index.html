@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AuroraAI.watch - Films et Séries IA</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
 <meta name="description" content="Découvrez les meilleurs films et séries générés par intelligence artificielle.">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta property="og:title" content="AuroraAI - L'IA réinvente le cinéma">
@@ -44,10 +47,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .close-btn:hover{background:rgba(212,175,55,0.25);transform:rotate(90deg)}
 .menu-search-wrap{width:100%;max-width:350px;padding:0.5rem 1.5rem 1rem;position:relative}
 .menu-search-wrap input{width:100%;padding:0.7rem 1rem 0.7rem 2.8rem;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:14px;color:#fff;font-size:0.95rem;outline:none;transition:all 0.3s}
-.menu-search-wrap input:focus{border-color:#d4af37;background:rgba(212,175,55,0.1);box-shadow:0 0 20px rgba(212,175,55,0.1)}
-.menu-search-wrap input::placeholder{color:rgba(255,255,255,0.3)}
+.menu-search-wrap input:focus{border-color:#d4af37;background:rgba(212,175,55,0.1);box-shadow:0 0 20px rgba(212,175,55,0.1)}.menu-search-wrap input::placeholder{color:rgba(255,255,255,0.3)}
 .menu-search-wrap .ms-icon{position:absolute;left:2.2rem;top:50%;transform:translateY(-50%);color:rgba(212,175,55,0.5);pointer-events:none}
-.menu-search-wrap .ms-icon svg{width:16px;height:16px;stroke:rgba(212,175,55,0.5);fill:none;stroke-width:2}.menu-nav{width:100%;max-width:350px;padding:0 1.5rem;display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+.menu-search-wrap .ms-icon svg{width:16px;height:16px;stroke:rgba(212,175,55,0.5);fill:none;stroke-width:2}
+.menu-nav{width:100%;max-width:350px;padding:0 1.5rem;display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
 .menu-link{display:flex;align-items:center;gap:0.8rem;color:rgba(255,255,255,0.75);font-size:0.95rem;font-weight:600;text-decoration:none;padding:0.85rem 1rem;border-radius:12px;transition:all 0.3s;border:1px solid transparent;position:relative;overflow:hidden}
 .menu-link::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#d4af37;border-radius:0 2px 2px 0;opacity:0;transition:opacity 0.3s}
 .menu-link:hover{background:rgba(212,175,55,0.08);border-color:rgba(212,175,55,0.15);color:#fff;transform:translateX(4px)}
@@ -93,10 +96,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .publish-cta-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.7rem 2rem;border-radius:50px;cursor:pointer;font-size:0.9rem;font-weight:700;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem}
 .publish-cta-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37;transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.3)}
 .filters-bar{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:0 2rem 1rem;display:flex;align-items:center;gap:0.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.filters-bar::-webkit-scrollbar{display:none}
-.filter-chip{padding:0.4rem 1rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:20px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;flex-shrink:0}
+.filters-bar::-webkit-scrollbar{display:none}.filter-chip{padding:0.4rem 1rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:20px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;flex-shrink:0}
 .filter-chip:hover{background:rgba(212,175,55,0.15);border-color:rgba(212,175,55,0.4);color:#d4af37}
-.filter-chip.active{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;border-color:#d4af37;font-weight:700}.filter-separator{width:1px;height:20px;background:rgba(212,175,55,0.2);flex-shrink:0;margin:0 0.3rem}
+.filter-chip.active{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;border-color:#d4af37;font-weight:700}
+.filter-separator{width:1px;height:20px;background:rgba(212,175,55,0.2);flex-shrink:0;margin:0 0.3rem}
 .content{max-width:1200px;margin:0 auto;padding:2rem;position:relative;z-index:10}
 .section-title{color:#d4af37;font-size:1.5rem;margin-bottom:1.5rem}
 .video-grid{display:grid;grid-template-columns:1fr;gap:1rem}
@@ -132,7 +135,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .share-option .share-icon{font-size:1.5rem}
 .share-copy{grid-column:span 2;margin-top:0.5rem;padding:0.8rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#d4af37;font-weight:700;cursor:pointer;font-size:0.9rem;text-align:center}
 .share-copy:hover{background:rgba(212,175,55,0.25)}
-/* ===== POINT REVEAL PREMIUM ===== */
 .point-reveal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:9999;background:rgba(0,0,0,0.92);border:1px solid rgba(212,175,55,0.4);border-radius:20px;padding:1.5rem 2.5rem;text-align:center;pointer-events:none;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);backdrop-filter:blur(10px);box-shadow:0 0 40px rgba(212,175,55,0.3)}
 .point-reveal.active{transform:translate(-50%,-50%) scale(1);opacity:1}
 .point-reveal .pr-icon{font-size:2rem;margin-bottom:0.3rem;animation:prPulse 0.6s ease}
@@ -143,9 +145,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 @keyframes prPulse{0%{transform:scale(1)}50%{transform:scale(1.3);filter:brightness(1.5)}100%{transform:scale(1)}}
 @media(max-width:768px){
 .search-bar{display:none}
-.logo{font-size:1.3rem}
-.play-icon{width:30px;height:30px}
-.play-icon::before{border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}.points-badge{padding:0.3rem 0.5rem;font-size:0.7rem}
+.logo{font-size:1.3rem}.play-icon{width:30px;height:30px}
+.play-icon::before{border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}
+.points-badge{padding:0.3rem 0.5rem;font-size:0.7rem}
 .menu-btn{padding:0.4rem 0.7rem;font-size:0.8rem}
 header{padding:0.8rem 1rem;gap:0.5rem}
 .filters-bar{padding:0 1rem 1rem}
@@ -192,9 +194,9 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <button class="cat-btn" onclick="APP.filterCategory('Romance',this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Romance</button>
 <button class="cat-btn" onclick="APP.filterCategory('Pub',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Pub</button>
 <button class="cat-btn" onclick="APP.filterCategory('Dessin animé',this)"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg> Animé</button>
-<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button>
+<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button></div>
 </div>
-</div><div id="homePage">
+<div id="homePage">
 <div id="heroTagline" class="tagline-section" style="padding-top:5.5rem"></div>
 <section class="hero-projector">
 <div class="hero-beam"></div>
@@ -234,7 +236,6 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <input type="email" id="saveEmail" placeholder="votre@email.com">
 <button onclick="APP.savePointsWithEmail()">Sauvegarder</button>
 </div></div>
-<!-- POINT REVEAL PREMIUM -->
 <div class="point-reveal" id="pointReveal">
 <div class="pr-icon">⭐</div>
 <div class="pr-amount" id="prAmount">+10</div>
@@ -242,15 +243,15 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <div class="pr-bar"><div class="pr-bar-fill" id="prBar"></div></div>
 </div>
 <footer style="position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)">
-<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
-<a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a><a href="/cgu.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">CGU</a>
+<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem"><a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a>
+<a href="/cgu.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">CGU</a>
 <a href="/confidentialite.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Confidentialité</a>
 <a href="/faq.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">FAQ</a>
 <a href="/contact.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Contact</a>
 <a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a>
 <a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
 </div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.6 POINT REVEAL</p>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.6 FAVICON</p>
 </footer>
 <div class="toast" id="toast"></div>
 <script>
@@ -274,7 +275,6 @@ function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFi
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
 
-// ========== POINT REVEAL PREMIUM ==========
 function showPointReveal(amount,reason,currentTotal){
 var el=document.getElementById('pointReveal');
 if(!el)return;
@@ -287,13 +287,12 @@ document.getElementById('prBar').style.width=pct+'%';
 el.classList.add('active');
 setTimeout(function(){el.classList.remove('active');},1800);
 }
-// ========== FIN POINT REVEAL ==========
 
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
 
 (function(){var el=document.getElementById('heroTagline');if(!el)return;var l1=['Ici,','chaque','vue','récompense.'],l2=['Chaque','création','inspire.'];function span(t,last){var s=document.createElement('span');s.textContent=t;s.style.cssText='display:inline-block;opacity:0;transition:opacity 0.6s ease;font-size:.85rem;letter-spacing:1.5px;color:rgba(212,175,55,.75);font-weight:600;margin-right:.35rem';if(last){s.style.color='#d4af37';s.style.fontWeight='800';s.style.fontSize='1rem';s.style.textShadow='0 0 20px rgba(212,175,55,.4)';s.style.marginRight='0';}return s;}var r1=document.createElement('div');r1.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center';var r2=document.createElement('div');r2.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:.15rem';el.appendChild(r1);el.appendChild(r2);var d=600;l1.forEach(function(w,i){var s=span(w,false);r1.appendChild(s);setTimeout(function(){s.style.opacity='1';},d+i*300);});d+=l1.length*300+350;l2.forEach(function(w,i){var s=span(w,i===l2.length-1);r2.appendChild(s);setTimeout(function(){s.style.opacity='1';},d+i*300);});})();
-(function(){var hp=document.querySelector('.hero-projector');if(hp){hp.addEventListener('touchstart',function(e){_touchX=e.changedTouches[0].screenX;},{passive:true});hp.addEventListener('touchend',function(e){var diff=e.changedTouches[0].screenX-_touchX;if(Math.abs(diff)>50){var max=Math.min(videos.length,10);if(diff<0&&heroIdx<max-1)heroGoTo(heroIdx+1);else if(diff>0&&heroIdx>0)heroGoTo(heroIdx-1);}},{passive:true});}})();
 
+(function(){var hp=document.querySelector('.hero-projector');if(hp){hp.addEventListener('touchstart',function(e){_touchX=e.changedTouches[0].screenX;},{passive:true});hp.addEventListener('touchend',function(e){var diff=e.changedTouches[0].screenX-_touchX;if(Math.abs(diff)>50){var max=Math.min(videos.length,10);if(diff<0&&heroIdx<max-1)heroGoTo(heroIdx+1);else if(diff>0&&heroIdx>0)heroGoTo(heroIdx-1);}},{passive:true});}})();
 async function addPoints(pts,reason,creatorVid){
 if(!sb)return;
 try{
@@ -341,8 +340,8 @@ if(isL){
 await sb.from('video_likes').delete().eq('video_id',vid).eq('viewer_id',viewerId);
 v.likes=Math.max((v.likes||0)-1,0);
 }else{
-var r=await sb.from('video_likes').insert([{video_id:vid,viewer_id:viewerId}]);if(r.error&&r.error.code!=='23505')throw r.error;
-v.likes=(v.likes||0)+1;
+var r=await sb.from('video_likes').insert([{video_id:vid,viewer_id:viewerId}]);
+if(r.error&&r.error.code!=='23505')throw r.error;v.likes=(v.likes||0)+1;
 var history=await sb.from('video_likes_history').select('id').eq('video_id',vid).eq('viewer_id',viewerId).single();
 if(history.error||!history.data){
 await sb.from('video_likes_history').insert([{video_id:vid,viewer_id:viewerId}]);
@@ -390,8 +389,8 @@ var v=s[heroIdx],st='',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"'),
 for(var i=1;i<=5;i++)st+=i<=Math.round(v.rating||0)?'⭐':'☆';
 var playSvg='<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>',heartSvg='<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
 fr.innerHTML=(v.thumbnail?'<img class="hero-thumb" src="'+v.thumbnail+'" alt="'+esc(v.title)+'">':'<div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:rgba(212,175,55,.2);font-size:3rem">🎬</div>')+'<div class="hero-info"><div class="hero-editorial">'+getLabel(v,heroIdx)+'</div><div class="hero-badge-row"><span class="hero-cat">'+esc(v.category)+'</span>'+(v.rating?'<span class="hero-rating">'+st+'</span>':'')+'<span style="font-size:.75rem;color:rgba(255,255,255,.45)">👁️ '+fmt(v.views)+'</span></div><div class="hero-title">'+esc(v.title)+'</div><div class="hero-author">par '+esc(v.author)+'</div><div class="hero-desc">'+esc(v.description||'Film généré par IA.')+'</div><div class="hero-btns"><button class="hero-icon-btn play" onclick="event.stopPropagation();APP.playVideo('+vs+')">'+playSvg+'</button><button class="hero-icon-btn fav'+(isFav?' is-fav':'')+'" onclick="event.stopPropagation();APP.toggleFav('+v.id+')">'+heartSvg+'</button></div></div>';
-fr.onclick=function(){playVideo(v);};var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===heroIdx?' active':'')+'" onclick="APP.heroGoTo('+j+')"></div>';
-nv.innerHTML=d;
+fr.onclick=function(){playVideo(v);};
+var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===heroIdx?' active':'')+'" onclick="APP.heroGoTo('+j+')"></div>';nv.innerHTML=d;
 }
 
 (async function(){
