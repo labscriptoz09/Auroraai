@@ -142,10 +142,11 @@ if(!videoId){document.getElementById('loadingMsg').textContent='Aucune vidéo s�
 try{
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
 loadPlayerPoints();
-var r=await sb.from('videos').select('*').eq('id',videoId).single();
+// ===== CHANGEMENT 1 : LECTURE DEPUIS video_stats =====
+var r=await sb.from('video_stats').select('*').eq('id',videoId).single();
 if(r.error||!r.data){document.getElementById('loadingMsg').textContent='Vidéo introuvable';return;}
-renderVideo(r.data);recordView(r.data);loadComments(videoId);
-}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}}
+renderVideo(r.data);recordView(r.data);loadComments(videoId);}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}
+}
 
 function renderVideo(v){
 var likedKey='liked_'+v.id,isLiked=localStorage.getItem(likedKey)==='true';
@@ -192,18 +193,17 @@ addPointsPlayer(5,'Film noté',v.viewer_id);
 else{showToast('⭐ Note sauvegardée localement','');}
 }
 
-async function recordView(v){
-if(!sb)return;
-try{var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
-if(r.error&&r.error.code==='23505')return;
+// ===== CHANGEMENT 2 : RECORD VIEW SIMPLIFIÉ =====
+async function recordView(v){if(!sb)return;
+try{
+// On insère juste la vue, la vue video_stats recalculera automatiquement
+var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
+if(r.error&&r.error.code==='23505')return; // Déjà vu
 if(r.error)throw r.error;
-var nv=(v.views||0)+1;
-await sb.from('videos').update({views:nv}).eq('id',v.id);
-var el=document.getElementById('vViews');
-if(el)el.textContent='👁️ '+fmt(nv)+' vues';
-v.views=nv;
+// Pas besoin d'update videos.views, la vue s'en occupe
 }catch(e){console.log('View error:',e);}
 }
+// ===== FIN CHANGEMENT 2 =====
 
 async function toggleLike(){
 var v=window._currentVideo;if(!v)return;
