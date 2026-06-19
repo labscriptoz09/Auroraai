@@ -117,7 +117,8 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 </div>
 
 <div class="toast" id="toast"></div>
-
+<!-- POINT REVEAL GLOBAL COMPONENT -->
+<script src="/point-reveal.js"></script>
 <script>
 // ========== PLEXUS CANVAS ==========
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
@@ -144,8 +145,8 @@ var MAX_LINKS=5;
 // ========== VALIDATION FUNCTIONS ==========
 function validateVideoFile(file){
     if(!file)return'❌ Veuillez sélectionner un fichier vidéo.';
-    var ext='.'+file.name.split('.').pop().toLowerCase();
-    var typeOk=ALLOWED_VIDEO_TYPES.indexOf(file.type)!==-1;    var extOk=ALLOWED_VIDEO_EXT.indexOf(ext)!==-1;
+    var ext='.'+file.name.split('.').pop().toLowerCase();    var typeOk=ALLOWED_VIDEO_TYPES.indexOf(file.type)!==-1;
+    var extOk=ALLOWED_VIDEO_EXT.indexOf(ext)!==-1;
     if(!typeOk&&!extOk)return'❌ Format vidéo non supporté. Utilisez : MP4, MOV, WebM, AVI ou MKV.';
     if(file.size>MAX_VIDEO_SIZE){var mo=Math.round(file.size/1024/1024);return'❌ La vidéo fait '+mo+' Mo. Maximum autorisé : 100 Mo.';}
     if(file.size===0)return'❌ Le fichier vidéo est vide.';
@@ -193,8 +194,8 @@ function validateDescription(val){
 function validateCreatorEmail(val){
     var v=val.trim();
     if(!v)return'❌ L\'email créateur est obligatoire.';
-    if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email créateur invalide. Exemple : vous@email.com';
-    return null;}
+    if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email créateur invalide. Exemple : vous@email.com';    return null;
+}
 
 function validateTipEmail(val){
     var v=val.trim();
@@ -242,8 +243,8 @@ async function handleUpload(){
 
     if(btn.disabled)return;
 
-    var videoFile=document.getElementById('videoFile').files[0];
-    var thumbFile=document.getElementById('thumbFile').files[0];    var title=document.getElementById('title').value;
+    var videoFile=document.getElementById('videoFile').files[0];    var thumbFile=document.getElementById('thumbFile').files[0];
+    var title=document.getElementById('title').value;
     var author=document.getElementById('author').value;
     var category=document.getElementById('category').value;
     var description=document.getElementById('description').value;
@@ -320,9 +321,16 @@ async function handleUpload(){
         progressFill.style.width='100%';
         showToast('✅ Film publié avec succès !','success');
 
+        // ===== POINT REVEAL POUR L'UPLOAD =====
+        var uploadPoints = 50;
+        window.dispatchEvent(new CustomEvent('aurora:points', {
+            detail: { amount: uploadPoints, reason: 'Film publié !', total: uploadPoints }
+        }));
+        // ===== FIN POINT REVEAL UPLOAD =====
+
         setTimeout(function(){
             window.location.href='/';
-        },1500);
+        },2500);
 
     }catch(err){
         console.error('Upload error:',err);
@@ -333,6 +341,5 @@ async function handleUpload(){
         progressFill.style.width='0%';
     }
 }
-</script>
-</body>
+</script></body>
 </html>
