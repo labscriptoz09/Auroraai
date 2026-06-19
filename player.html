@@ -81,6 +81,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <div class="loading" id="loadingMsg">Chargement de la vidéo...</div>
 </div>
 <div class="toast" id="toast"></div>
+<!-- POINT REVEAL GLOBAL COMPONENT -->
+<script src="/point-reveal.js"></script>
 <script>
 // ========== MODE OFFLINE CHECK ==========
 (async function(){
@@ -93,14 +95,21 @@ throw new Error('OFFLINE_MODE');
 }
 }catch(e){if(e.message==='OFFLINE_MODE')return;}
 })();
-// ========== FIN MODE OFFLINE CHECK ==========
 
-var sb=null,videoId=null;
-var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();function getParam(name){return new URLSearchParams(window.location.search).get(name);}
+var sb=null,videoId=null;var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
+function getParam(name){return new URLSearchParams(window.location.search).get(name);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
 function closePlayer(){try{window.parent.postMessage({type:'closePlayer'},'*');}catch(e){}window.location.href='/';}
+
+// ===== POINT REVEAL GLOBAL HELPER =====
+function triggerPointReveal(amount, reason, total) {
+    window.dispatchEvent(new CustomEvent('aurora:points', {
+        detail: { amount: amount, reason: reason, total: total }
+    }));
+}
+// ===== FIN HELPER =====
 
 async function addPointsPlayer(points,reason,creatorViewerId){
 if(!sb)return;
@@ -110,10 +119,10 @@ if(savedEmail){existing=await sb.from('user_points').select('total_points,viewer
 if(!existing||existing.error)existing=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
 var nt=points;
 if(!existing.error&&existing.data)nt=existing.data.total_points+points;
-else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:points,email:savedEmail||null}]);document.getElementById('playerPoints').textContent=fmt(points);showToast('⭐ +'+points+' points !','success');return;}
+else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:points,email:savedEmail||null}]);document.getElementById('playerPoints').textContent=fmt(points);triggerPointReveal(points,reason,points);return;}
 await sb.from('user_points').update({total_points:nt,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);
 document.getElementById('playerPoints').textContent=fmt(nt);
-showToast('⭐ +'+points+' points !','success');
+triggerPointReveal(points,reason,nt);
 if(creatorViewerId&&creatorViewerId!==viewerId){var ce=await sb.from('user_points').select('total_points').eq('viewer_id',creatorViewerId).single();if(!ce.error&&ce.data)await sb.from('user_points').update({total_points:ce.data.total_points+points,updated_at:new Date().toISOString()}).eq('viewer_id',creatorViewerId);else await sb.from('user_points').insert([{viewer_id:creatorViewerId,total_points:points}]);}
 }catch(e){console.log('Points error:',e);}
 }
@@ -136,16 +145,15 @@ html+='</div>';
 return html;
 }
 
-async function init(){
-videoId=getParam('id');
+async function init(){videoId=getParam('id');
 if(!videoId){document.getElementById('loadingMsg').textContent='Aucune vidéo sélectionnée';return;}
 try{
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
 loadPlayerPoints();
-// ===== CHANGEMENT 1 : LECTURE DEPUIS video_stats =====
 var r=await sb.from('video_stats').select('*').eq('id',videoId).single();
 if(r.error||!r.data){document.getElementById('loadingMsg').textContent='Vidéo introuvable';return;}
-renderVideo(r.data);recordView(r.data);loadComments(videoId);}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}
+renderVideo(r.data);recordView(r.data);loadComments(videoId);
+}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}
 }
 
 function renderVideo(v){
@@ -186,24 +194,20 @@ document.getElementById('ratingDisplay').textContent=stars+'/5';
 localStorage.setItem(ratingKey,stars.toString());
 if(sb){try{
 await sb.from('video_ratings').insert([{video_id:v.id,viewer_id:viewerId,rating:stars}]);
-var avgResult=await sb.from('video_ratings').select('rating').eq('video_id',v.id);
-if(!avgResult.error&&avgResult.data&&avgResult.data.length>0){var sum=0;avgResult.data.forEach(function(r){sum+=r.rating;});var avg=Math.round(sum/avgResult.data.length*10)/10;await sb.from('videos').update({rating:avg}).eq('id',v.id);}
+var avgResult=await sb.from('video_ratings').select('rating').eq('video_id',v.id);if(!avgResult.error&&avgResult.data&&avgResult.data.length>0){var sum=0;avgResult.data.forEach(function(r){sum+=r.rating;});var avg=Math.round(sum/avgResult.data.length*10)/10;await sb.from('videos').update({rating:avg}).eq('id',v.id);}
 addPointsPlayer(5,'Film noté',v.viewer_id);
 }catch(e){showToast('⭐ Note sauvegardée localement','');}}
 else{showToast('⭐ Note sauvegardée localement','');}
 }
 
-// ===== CHANGEMENT 2 : RECORD VIEW SIMPLIFIÉ =====
-async function recordView(v){if(!sb)return;
+async function recordView(v){
+if(!sb)return;
 try{
-// On insère juste la vue, la vue video_stats recalculera automatiquement
 var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
-if(r.error&&r.error.code==='23505')return; // Déjà vu
+if(r.error&&r.error.code==='23505')return;
 if(r.error)throw r.error;
-// Pas besoin d'update videos.views, la vue s'en occupe
 }catch(e){console.log('View error:',e);}
 }
-// ===== FIN CHANGEMENT 2 =====
 
 async function toggleLike(){
 var v=window._currentVideo;if(!v)return;
@@ -239,11 +243,11 @@ async function sendTip(){
 var userEmail=document.getElementById('tipEmail').value.trim();
 if(!userEmail){showToast('❌ Email requis','error');return;}
 var v=window._currentVideo;
-if(!v||!sb){showToast('❌ Erreur connexion','error');return;}
-try{
+if(!v||!sb){showToast('❌ Erreur connexion','error');return;}try{
 var r=await sb.from('videos').select('tip_email').eq('id',v.id).single();
 if(r.error||!r.data||!r.data.tip_email){showToast('❌ Email créateur non disponible','error');return;}
-addPointsPlayer(50,'Tip envoyé',null);showToast('💰 Tip envoyé à '+esc(v.author)+' (+50 ⭐)','success');
+addPointsPlayer(50,'Tip envoyé',null);
+showToast('💰 Tip envoyé à '+esc(v.author)+' (+50 ⭐)','success');
 document.getElementById('tipEmail').value='';
 }catch(e){showToast('❌ Erreur: '+e.message,'error');}
 }
