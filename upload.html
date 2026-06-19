@@ -97,7 +97,13 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 
 <div class="form-group">
 <label>Email créateur *</label><input type="email" id="creatorEmail" placeholder="votre@email.com">
-<div class="file-info">Pour recevoir les tips et notifications</div>
+<div class="file-info">Pour les notifications système (non visible publiquement)</div>
+</div>
+
+<div class="form-group">
+<label>💰 Email pour les tips *</label>
+<input type="email" id="tipEmail" placeholder="paypal@email.com ou kofi@email.com">
+<div class="file-info">L'email où vous recevez les soutiens des spectateurs</div>
 </div>
 
 <div class="form-group">
@@ -139,13 +145,13 @@ var MAX_LINKS=5;
 function validateVideoFile(file){
     if(!file)return'❌ Veuillez sélectionner un fichier vidéo.';
     var ext='.'+file.name.split('.').pop().toLowerCase();
-    var typeOk=ALLOWED_VIDEO_TYPES.indexOf(file.type)!==-1;
-    var extOk=ALLOWED_VIDEO_EXT.indexOf(ext)!==-1;
+    var typeOk=ALLOWED_VIDEO_TYPES.indexOf(file.type)!==-1;    var extOk=ALLOWED_VIDEO_EXT.indexOf(ext)!==-1;
     if(!typeOk&&!extOk)return'❌ Format vidéo non supporté. Utilisez : MP4, MOV, WebM, AVI ou MKV.';
     if(file.size>MAX_VIDEO_SIZE){var mo=Math.round(file.size/1024/1024);return'❌ La vidéo fait '+mo+' Mo. Maximum autorisé : 100 Mo.';}
     if(file.size===0)return'❌ Le fichier vidéo est vide.';
     return null;
 }
+
 function validateThumbFile(file){
     if(!file)return'❌ Veuillez sélectionner une image de couverture.';
     var ext='.'+file.name.split('.').pop().toLowerCase();
@@ -184,17 +190,24 @@ function validateDescription(val){
     return null;
 }
 
-function validateEmail(val){
+function validateCreatorEmail(val){
     var v=val.trim();
     if(!v)return'❌ L\'email créateur est obligatoire.';
-    if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email invalide. Exemple : vous@email.com';
+    if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email créateur invalide. Exemple : vous@email.com';
+    return null;}
+
+function validateTipEmail(val){
+    var v=val.trim();
+    if(!v)return'❌ L\'email pour les tips est obligatoire.';
+    if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email tip invalide. Exemple : paypal@email.com';
     return null;
 }
 
 function validateLinks(val){
     var v=val.trim();
     if(!v)return null;
-    var links=v.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});    if(links.length>MAX_LINKS)return'❌ Maximum '+MAX_LINKS+' liens autorisés.';
+    var links=v.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
+    if(links.length>MAX_LINKS)return'❌ Maximum '+MAX_LINKS+' liens autorisés.';
     for(var i=0;i<links.length;i++){
         if(!links[i].startsWith('http://')&&!links[i].startsWith('https://')){
             return'❌ Chaque lien doit commencer par http:// ou https://\nLien problématique : '+links[i];
@@ -230,23 +243,25 @@ async function handleUpload(){
     if(btn.disabled)return;
 
     var videoFile=document.getElementById('videoFile').files[0];
-    var thumbFile=document.getElementById('thumbFile').files[0];
-    var title=document.getElementById('title').value;
+    var thumbFile=document.getElementById('thumbFile').files[0];    var title=document.getElementById('title').value;
     var author=document.getElementById('author').value;
     var category=document.getElementById('category').value;
     var description=document.getElementById('description').value;
     var creatorEmail=document.getElementById('creatorEmail').value;
+    var tipEmail=document.getElementById('tipEmail').value;
     var creatorLinks=document.getElementById('creatorLinks').value;
 
-    // ===== VALIDATION COMPLÈTE =====
+    // ===== VALIDATION COMPLÈTE (9 vérifications) =====
     var errors=[];
     var e;
     e=validateVideoFile(videoFile);if(e)errors.push(e);
     e=validateThumbFile(thumbFile);if(e)errors.push(e);
-    e=validateTitle(title);if(e)errors.push(e);    e=validateAuthor(author);if(e)errors.push(e);
+    e=validateTitle(title);if(e)errors.push(e);
+    e=validateAuthor(author);if(e)errors.push(e);
     e=validateCategory(category);if(e)errors.push(e);
     e=validateDescription(description);if(e)errors.push(e);
-    e=validateEmail(creatorEmail);if(e)errors.push(e);
+    e=validateCreatorEmail(creatorEmail);if(e)errors.push(e);
+    e=validateTipEmail(tipEmail);if(e)errors.push(e);
     e=validateLinks(creatorLinks);if(e)errors.push(e);
 
     if(errors.length>0){
@@ -277,7 +292,6 @@ async function handleUpload(){
         var videoUrl=videoData.secure_url;
 
         progressFill.style.width='80%';
-
         // Viewer ID
         var viewerId=localStorage.getItem('aurora_viewer_id');
         if(!viewerId){
@@ -285,14 +299,15 @@ async function handleUpload(){
             localStorage.setItem('aurora_viewer_id',viewerId);
         }
 
-        // Insertion Supabase
+        // Insertion Supabase (avec tip_email séparé)
         var insertRes=await sb.from('videos').insert([{
             title:title.trim(),
             author:author.trim(),
             category:category,
             description:description.trim()||null,
             video_url:videoUrl,
-            thumbnail:thumbUrl,            tip_email:creatorEmail.trim(),
+            thumbnail:thumbUrl,
+            tip_email:tipEmail.trim(),
             creator_links:creatorLinks.trim()||null,
             viewer_id:viewerId,
             views:0,
