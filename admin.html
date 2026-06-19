@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AuroraAI - Admin Dashboard</title>
+<title>Admin Dashboard | AuroraAI.watch - Gestion Sécurisée</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Dashboard administrateur AuroraAI. Gestion des vidéos, utilisateurs, commentaires et paramètres du site.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://auroraai-one.vercel.app/admin.html">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -12,8 +18,13 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .login-screen{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
 .login-screen h1{color:#d4af37;font-size:2rem;margin-bottom:1rem}
 .login-screen input{padding:0.8rem 1.5rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#fff;font-size:1rem;width:280px;text-align:center}
-.login-screen button{padding:0.8rem 2rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:1rem;cursor:pointer}
-.login-error{color:#ff4d4d;font-size:0.9rem;display:none}
+.login-screen button{padding:0.8rem 2rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.3s}
+.login-screen button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,175,55,0.3)}
+.login-screen button:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.login-error{color:#ff4d4d;font-size:0.9rem;display:none;text-align:center;max-width:280px}
+.rate-limit-info{color:rgba(255,255,255,0.4);font-size:0.75rem;display:none;text-align:center;max-width:280px;margin-top:0.3rem}
+.rate-limit-info.visible{display:block}
+.rate-limit-info.blocked{color:#ff4d4d;font-weight:700}
 .dashboard{position:relative;z-index:10;display:none;padding:1rem;max-width:1200px;margin:0 auto}
 .dashboard.active{display:block}
 .admin-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;margin-bottom:1.5rem;border-bottom:1px solid rgba(212,175,55,0.2)}
@@ -36,8 +47,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .row-meta{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:0.2rem}
 .row-actions{display:flex;gap:0.3rem;flex-shrink:0;flex-wrap:wrap}
 .btn-sm{padding:0.3rem 0.6rem;border-radius:6px;border:none;cursor:pointer;font-size:0.7rem;font-weight:600}
-.btn-edit{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.3)}
-.btn-delete{background:rgba(255,77,77,0.2);color:#ff4d4d;border:1px solid rgba(255,77,77,0.3)}
+.btn-edit{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.3)}.btn-delete{background:rgba(255,77,77,0.2);color:#ff4d4d;border:1px solid rgba(255,77,77,0.3)}
 .btn-view{background:rgba(100,200,255,0.2);color:#64c8ff;border:1px solid rgba(100,200,255,0.3)}
 .btn-danger{background:rgba(255,0,0,0.3);color:#ff4d4d;border:1px solid rgba(255,0,0,0.5)}
 .settings-group{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;margin-bottom:1rem}
@@ -86,22 +96,22 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 @media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}.tabs{gap:0.8rem}}
 </style>
 </head>
-<body>
-<canvas id="plexusCanvas"></canvas>
+<body><canvas id="plexusCanvas"></canvas>
 
 <div class="login-screen" id="loginScreen">
 <h1>🔐 AuroraAI Admin</h1>
 <input type="text" id="adminUser" placeholder="Identifiant" style="margin-bottom:0.5rem">
 <input type="password" id="adminPassword" placeholder="Mot de passe" onkeypress="if(event.key==='Enter')doLogin()">
-<button onclick="doLogin()">Se connecter</button>
+<button id="loginBtn" onclick="doLogin()">Se connecter</button>
 <p class="login-error" id="loginError">❌ Identifiants incorrects</p>
+<p class="rate-limit-info" id="rateLimitInfo"></p>
 </div>
 <div class="notif-bar" id="notifBar"></div>
 
 <div class="dashboard" id="dashboard">
 <div class="offline-warning" id="offlineWarning">🚫 MODE MAINTENANCE ACTIVÉ — Le site est hors ligne pour les visiteurs</div>
 <div class="admin-header">
-<h1>👑 Dashboard Admin v3.0</h1>
+<h1>👑 Dashboard Admin v3.1</h1>
 <button class="logout-btn" onclick="doLogout()">🚪 Déconnexion</button>
 </div>
 
@@ -135,8 +145,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="table-container">
 <div class="table-header"><h3>💬 Derniers Commentaires</h3></div>
 <div id="recentCommentsList"></div>
-</div>
-</div>
+</div></div>
 
 <!-- USERS -->
 <div id="tab-users" style="display:none">
@@ -185,8 +194,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 
 <!-- SETTINGS -->
 <div id="tab-settings" style="display:none">
-<div class="settings-group">
-<h3>🚫 Mode Maintenance</h3>
+<div class="settings-group"><h3>🚫 Mode Maintenance</h3>
 <div class="setting-row">
 <label>Activer le mode offline</label>
 <select id="setOfflineMode">
@@ -235,18 +243,104 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div id="editFields"></div>
 <div class="edit-actions">
 <button class="btn-cancel" onclick="closeEditModal()">Annuler</button>
-<button class="btn-save" onclick="saveEdit()">Sauvegarder</button>
-</div>
+<button class="btn-save" onclick="saveEdit()">Sauvegarder</button></div>
 </div>
 </div>
 <div class="toast" id="toast"></div>
-
+<script src="/point-reveal.js"></script>
 <script>
 var sb=null,editingId=null,editingType=null,notifCount=0,realtimeChannel=null;
 var SESSION_KEY='aurora_admin_session';
+// ===== RATE LIMIT CONFIG =====
+var RATE_LIMIT_MAX=5;
+var RATE_LIMIT_WINDOW=5*60*1000; // 5 minutes en ms
+var RATE_LIMIT_KEY='aurora_admin_rate_limit';
+
+function getRateLimitState(){
+    try{
+        var raw=localStorage.getItem(RATE_LIMIT_KEY);
+        if(!raw)return{attempts:[],blockedUntil:0};
+        return JSON.parse(raw);
+    }catch(e){return{attempts:[],blockedUntil:0};}
+}
+
+function saveRateLimitState(state){
+    localStorage.setItem(RATE_LIMIT_KEY,JSON.stringify(state));
+}
+
+function cleanOldAttempts(state){
+    var now=Date.now();
+    state.attempts=state.attempts.filter(function(t){return now-t<RATE_LIMIT_WINDOW;});
+    return state;
+}
+
+function checkRateLimit(){
+    var state=getRateLimitState();
+    var now=Date.now();
+    // Vérifier si bloqué
+    if(state.blockedUntil&&now<state.blockedUntil){
+        var remaining=Math.ceil((state.blockedUntil-now)/1000);
+        return{allowed:false,remaining:remaining,attemptsLeft:0};
+    }
+    // Nettoyer anciennes tentatives
+    state=cleanOldAttempts(state);
+    var attemptsLeft=RATE_LIMIT_MAX-state.attempts.length;
+    if(attemptsLeft<=0){
+        // Bloquer pour 5 min
+        state.blockedUntil=now+RATE_LIMIT_WINDOW;
+        saveRateLimitState(state);
+        return{allowed:false,remaining:300,attemptsLeft:0};
+    }
+    saveRateLimitState(state);
+    return{allowed:true,remaining:0,attemptsLeft:attemptsLeft};}
+
+function recordFailedAttempt(){
+    var state=getRateLimitState();
+    state=cleanOldAttempts(state);
+    state.attempts.push(Date.now());
+    if(state.attempts.length>=RATE_LIMIT_MAX){
+        state.blockedUntil=Date.now()+RATE_LIMIT_WINDOW;
+    }
+    saveRateLimitState(state);
+}
+
+function resetRateLimit(){
+    localStorage.removeItem(RATE_LIMIT_KEY);
+}
+
+function updateRateLimitUI(){
+    var info=document.getElementById('rateLimitInfo');
+    var btn=document.getElementById('loginBtn');
+    var check=checkRateLimit();
+    if(!check.allowed){
+        info.textContent='🔒 Trop de tentatives. Réessayez dans '+check.remaining+'s';
+        info.className='rate-limit-info visible blocked';
+        btn.disabled=true;
+        // Countdown
+        if(window._rateLimitInterval)clearInterval(window._rateLimitInterval);
+        window._rateLimitInterval=setInterval(function(){
+            var c=checkRateLimit();
+            if(c.allowed){
+                clearInterval(window._rateLimitInterval);
+                info.className='rate-limit-info';
+                btn.disabled=false;
+            }else{
+                info.textContent='🔒 Trop de tentatives. Réessayez dans '+c.remaining+'s';
+            }
+        },1000);
+    }else if(check.attemptsLeft<RATE_LIMIT_MAX){
+        info.textContent='⚠️ '+check.attemptsLeft+'/'+RATE_LIMIT_MAX+' tentatives restantes';
+        info.className='rate-limit-info visible';
+        btn.disabled=false;
+    }else{
+        info.className='rate-limit-info';
+        btn.disabled=false;
+    }
+}
+// ===== FIN RATE LIMIT =====
+
 // PLEXUS
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
-
 function showToast(m,isError){var e=document.getElementById('toast');e.textContent=m;e.className='toast show'+(isError?' error':'');setTimeout(function(){e.classList.remove('show');},3000);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){if(!t)return'';var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
@@ -256,11 +350,47 @@ async function sha256(text){var encoder=new TextEncoder();var data=encoder.encod
 
 function initSB(){if(sb)return;sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}
 
-// AUTH
-async function doLogin(){try{var user=document.getElementById('adminUser').value.trim(),pwd=document.getElementById('adminPassword').value;if(!user||!pwd){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Remplissez les deux champs';return;}initSB();var hash=await sha256(pwd);var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();if(r.error||!r.data){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Identifiants incorrects';return;}await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}catch(e){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Erreur: '+e.message;}}
+// AUTH AVEC RATE LIMIT
+async function doLogin(){
+    // Vérifier rate limit AVANT toute chose
+    var rlCheck=checkRateLimit();
+    if(!rlCheck.allowed){
+        updateRateLimitUI();
+        return;
+    }
+    try{
+        var user=document.getElementById('adminUser').value.trim(),pwd=document.getElementById('adminPassword').value;
+        if(!user||!pwd){
+            document.getElementById('loginError').style.display='block';
+            document.getElementById('loginError').textContent='❌ Remplissez les deux champs';
+            return;
+        }
+        initSB();
+        var hash=await sha256(pwd);
+        var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();
+        if(r.error||!r.data){
+            // ÉCHEC → enregistrer tentative
+            recordFailedAttempt();
+            updateRateLimitUI();
+            document.getElementById('loginError').style.display='block';
+            document.getElementById('loginError').textContent='❌ Identifiants incorrects';
+            return;
+        }
+        // SUCCÈS → reset rate limit
+        resetRateLimit();
+        updateRateLimitUI();
+        await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);
+        sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('dashboard').classList.add('active');
+        initDashboard();
+    }catch(e){
+        document.getElementById('loginError').style.display='block';
+        document.getElementById('loginError').textContent='❌ Erreur: '+e.message;
+    }
+}
 function doLogout(){sessionStorage.removeItem(SESSION_KEY);location.reload();}
 function checkAuth(){try{var s=sessionStorage.getItem(SESSION_KEY);if(s){var session=JSON.parse(s);if(session&&session.id){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}}}catch(e){}}
-
 // TABS
 function switchTab(name,el){
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
@@ -309,8 +439,7 @@ document.getElementById('recentCommentsList').innerHTML=recent.length?recent.map
 
 // USERS
 async function loadUsers(){try{
-var r=await sb.from('user_points').select('*').order('total_points',{ascending:false});
-var users=r.data||[];
+var r=await sb.from('user_points').select('*').order('total_points',{ascending:false});var users=r.data||[];
 var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
 var emailCount=users.filter(function(u){return u.email&&u.email.length>0;}).length;
 document.getElementById('userCount').textContent=users.length;
@@ -359,8 +488,7 @@ async function loadAllVideos(){try{var r=await sb.from('videos').select('*').ord
 async function loadAllComments(){try{var r=await sb.from('comments').select('*').order('created_at',{ascending:false});var comments=r.data||[];document.getElementById('commentCount').textContent=comments.length;document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';}catch(e){showToast('Erreur commentaires',true);}}
 
 // SECURITY
-async function loadSecurity(){try{
-var rlh=await sb.from('video_likes_history').select('*').order('first_liked_at',{ascending:false});
+async function loadSecurity(){try{var rlh=await sb.from('video_likes_history').select('*').order('first_liked_at',{ascending:false});
 var rch=await sb.from('comment_history').select('*').order('commented_at',{ascending:false});
 var likesH=rlh.data||[],cmtsH=rch.data||[];
 document.getElementById('likesHistCount').textContent=likesH.length;
@@ -390,7 +518,8 @@ async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('i
 async function saveEdit(){if(editingType==='video'){var title=document.getElementById('editField1').value.trim(),author=document.getElementById('editField2').value.trim(),category=document.getElementById('editField3').value,description=document.getElementById('editField4').value.trim();if(!title||!author){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:title,author:author,category:category,description:description}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');editingId=null;editingType=null;}
 
-// SETTINGSasync function loadSettings(){try{initSB();var r=await sb.from('site_settings').select('*').eq('id',1).single();if(r.error||!r.data)return;var s=r.data;document.getElementById('setSiteName').value=s.site_name||'';document.getElementById('setSiteDesc').value=s.site_desc||'';document.getElementById('setSiteUrl').value=s.site_url||'';document.getElementById('setColor').value=s.color||'#d4af37';document.getElementById('setBadgeText').value=s.badge_text||'';document.getElementById('setHeroTitle').value=s.hero_title||'';document.getElementById('setOfflineMode').value=s.offline_mode?'true':'false';document.getElementById('setOfflineMsg').value=s.offline_msg||'Le site est en maintenance. Revenez bientôt !';}catch(e){showToast('Erreur paramètres',true);}}
+// SETTINGS
+async function loadSettings(){try{initSB();var r=await sb.from('site_settings').select('*').eq('id',1).single();if(r.error||!r.data)return;var s=r.data;document.getElementById('setSiteName').value=s.site_name||'';document.getElementById('setSiteDesc').value=s.site_desc||'';document.getElementById('setSiteUrl').value=s.site_url||'';document.getElementById('setColor').value=s.color||'#d4af37';document.getElementById('setBadgeText').value=s.badge_text||'';document.getElementById('setHeroTitle').value=s.hero_title||'';document.getElementById('setOfflineMode').value=s.offline_mode?'true':'false';document.getElementById('setOfflineMsg').value=s.offline_msg||'Le site est en maintenance. Revenez bientôt !';}catch(e){showToast('Erreur paramètres',true);}}
 
 async function saveSettings(){try{initSB();await sb.from('site_settings').update({site_name:document.getElementById('setSiteName').value,site_desc:document.getElementById('setSiteDesc').value,site_url:document.getElementById('setSiteUrl').value,color:document.getElementById('setColor').value,badge_text:document.getElementById('setBadgeText').value,hero_title:document.getElementById('setHeroTitle').value,offline_mode:document.getElementById('setOfflineMode').value==='true',offline_msg:document.getElementById('setOfflineMsg').value,updated_at:new Date().toISOString()}).eq('id',1);showToast('✅ Paramètres sauvegardés');checkOfflineStatus();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 
@@ -398,6 +527,8 @@ async function changePassword(){var np=document.getElementById('setNewPassword')
 
 async function exportData(table){try{initSB();var r=await sb.from(table).select('*');if(r.error)throw r.error;var blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='aurora_'+table+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();showToast('📥 Export '+table+' terminé');}catch(e){showToast('❌ Erreur export: '+e.message,true);}}
 
+// Initialiser le rate limit UI au chargement
+updateRateLimitUI();
 checkAuth();
 </script>
 </body>
