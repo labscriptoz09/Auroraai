@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Badges | AuroraAI.watch</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex, follow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh;overflow-x:hidden}
+#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
+.logo-container{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+.play-icon{width:32px;height:32px;border:2px solid #d4af37;border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(212,175,55,0.4)}
+.play-icon::before{content:'';width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}
+.logo{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:1px}
+.back-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.5rem 1rem;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem}
+.back-btn:hover{background:rgba(212,175,55,0.3)}
+
+/* MAIN */
+.main{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:5rem 1rem 3rem}
+.page-title{color:#d4af37;font-size:2rem;font-weight:900;text-align:center;margin-bottom:0.3rem;letter-spacing:2px}
+.page-subtitle{color:rgba(255,255,255,0.4);font-size:0.8rem;text-align:center;margin-bottom:2rem;letter-spacing:3px;text-transform:uppercase}
+
+/* STATS BAR */
+.stats-bar{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem;padding:1rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.15);border-radius:16px}
+.stat-item{text-align:center}
+.stat-value{color:#d4af37;font-size:1.8rem;font-weight:900}
+.stat-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;margin-top:0.2rem}
+
+/* PROGRESS BAR */
+.progress-wrap{margin-bottom:2rem}
+.progress-bar{width:100%;height:8px;background:rgba(212,175,55,0.1);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:4px;transition:width 1s ease;box-shadow:0 0 15px rgba(212,175,55,0.4)}
+.progress-text{color:rgba(255,255,255,0.4);font-size:0.7rem;text-align:right;margin-top:0.3rem}
+
+/* BADGES GRID */
+.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.badge-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.12);border-radius:16px;padding:1.2rem 0.6rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.5rem;transition:all 0.3s;position:relative;overflow:hidden}
+.badge-card.unlocked{border-color:rgba(212,175,55,0.4);background:rgba(212,175,55,0.08);box-shadow:0 0 20px rgba(212,175,55,0.1)}
+.badge-card.locked{opacity:0.35;filter:grayscale(1)}
+.badge-card.locked .badge-img{filter:brightness(0.3) grayscale(1)}
+.badge-card.unlocked:hover{transform:translateY(-4px);box-shadow:0 10px 35px rgba(212,175,55,0.25);border-color:#d4af37}
+.badge-img{width:64px;height:64px;object-fit:contain;border-radius:10px;transition:all 0.3s}
+.badge-card.unlocked .badge-img{filter:drop-shadow(0 0 10px rgba(212,175,55,0.5))}.badge-name{color:#fff;font-size:0.75rem;font-weight:700;line-height:1.2}
+.badge-card.unlocked .badge-name{color:#d4af37}
+.badge-condition{color:rgba(255,255,255,0.35);font-size:0.6rem;line-height:1.2}
+.badge-card.unlocked .badge-condition{color:rgba(212,175,55,0.6)}
+.badge-lock-icon{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;opacity:0.6;z-index:2}
+.badge-new-glow{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:16px;box-shadow:inset 0 0 25px rgba(212,175,55,0.4);animation:badgeNewPulse 1.5s ease-in-out 3;pointer-events:none}
+@keyframes badgeNewPulse{0%,100%{box-shadow:inset 0 0 10px rgba(212,175,55,0.1)}50%{box-shadow:inset 0 0 35px rgba(212,175,55,0.6)}}
+
+/* CATEGORY TITLES */
+.cat-title{grid-column:span 4;color:rgba(212,175,55,0.5);font-size:0.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:0.8rem 0 0.2rem;border-bottom:1px solid rgba(212,175,55,0.1);margin-bottom:0.3rem}
+
+/* TOAST */
+.badge-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);z-index:500;background:rgba(0,0,0,0.95);border:2px solid #d4af37;border-radius:20px;padding:2rem;display:none;flex-direction:column;align-items:center;gap:0.8rem;text-align:center;box-shadow:0 0 80px rgba(212,175,55,0.4);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.badge-toast.show{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1)}
+.badge-toast-img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(212,175,55,0.6));animation:badgeToastFloat 2s ease-in-out infinite}
+@keyframes badgeToastFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.badge-toast-title{color:#d4af37;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
+.badge-toast-name{color:#fff;font-size:1.5rem;font-weight:900;letter-spacing:1px;text-shadow:0 0 20px rgba(212,175,55,0.5)}
+.badge-toast-desc{color:rgba(255,255,255,0.5);font-size:0.8rem}
+
+@media(max-width:600px){
+.badges-grid{grid-template-columns:repeat(3,1fr);gap:0.7rem}
+.badge-img{width:48px;height:48px}
+.badge-name{font-size:0.65rem}
+.stats-bar{gap:1rem;padding:0.8rem}
+.stat-value{font-size:1.3rem}
+.page-title{font-size:1.5rem}
+.cat-title{grid-column:span 3}
+}
+@media(max-width:400px){
+.badges-grid{grid-template-columns:repeat(2,1fr)}
+.cat-title{grid-column:span 2}
+}
+</style>
+</head>
+<body>
+<canvas id="plexusCanvas"></canvas>
+
+<header>
+<a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
+<a href="/" class="back-btn">← Retour</a>
+</header>
+
+<div class="main">
+<div class="page-title">🏆 Mes Badges</div>
+<div class="page-subtitle">Collection AuroraAI • 20 Badges à débloquer</div>
+
+<div class="stats-bar">
+<div class="stat-item"><div class="stat-value" id="unlockedCount">0</div><div class="stat-label">Débloqués</div></div>
+<div class="stat-item"><div class="stat-value" id="totalCount">20</div><div class="stat-label">Total</div></div><div class="stat-item"><div class="stat-value" id="pointsDisplay">0</div><div class="stat-label">Points</div></div>
+</div>
+
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+<div class="progress-text" id="progressText">0% complété</div>
+</div>
+
+<div class="badges-grid" id="badgesGrid"></div>
+</div>
+
+<!-- TOAST BADGE DÉBLOQUÉ -->
+<div class="badge-toast" id="badgeToast">
+<div class="badge-toast-title">Badge Débloqué</div>
+<img class="badge-toast-img" id="badgeToastImg" src="" alt="">
+<div class="badge-toast-name" id="badgeToastName"></div>
+<div class="badge-toast-desc" id="badgeToastDesc"></div>
+</div>
+
+<script src="/plexus.js"></script>
+<script>
+// ========== MODE OFFLINE CHECK ==========
+(async function(){
+try{
+var _sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
+var _r=await _sb.from('site_settings').select('offline_mode,offline_msg').eq('id',1).single();
+if(!_r.error&&_r.data&&_r.data.offline_mode){
+document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:2rem"><div><h1 style="color:#d4af37;font-size:2rem;margin-bottom:1rem">🚧 Site en maintenance</h1><p style="color:rgba(255,255,255,0.6);font-size:1.1rem">'+(_r.data.offline_msg||'Revenez bientôt !')+'</p></div></div>';
+throw new Error('OFFLINE_MODE');
+}
+}catch(e){if(e.message==='OFFLINE_MODE')return;}
+})();
+
+var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
+var userPoints=0;
+var sb=null;
+
+function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
+
+// ===== DONNÉES DES 20 BADGES =====
+var BADGES=[
+{id:1,name:"Pousse",cat:"spectateur",condition:"0-99 pts",img:"",check:function(s){return s.points<100;}},
+{id:2,name:"Explorateur",cat:"spectateur",condition:"100-499 pts",img:"https://canva.link/qbnzppxhro6ii9y",check:function(s){return s.points>=100&&s.points<500;}},
+{id:3,name:"Cinéphile",cat:"spectateur",condition:"50 vidéos vues",img:"https://canva.link/c3ck5x63p0cb11k",check:function(s){return s.views>=50;}},
+{id:4,name:"Fan",cat:"spectateur",condition:"50 likes donnés",img:"https://cdn.raphael.app/generated/t2i/raphael-pro/2026-06-19/452e9554-f8de-407f-a40b-95e60a88a710.webp",check:function(s){return s.likesGiven>=50;}},
+{id:5,name:"Commentateur",cat:"spectateur",condition:"20 commentaires",img:"https://sl.bing.net/e2qavF4Dj5w",check:function(s){return s.comments>=20;}},
+{id:6,name:"Critique",cat:"spectateur",condition:"30 films notés",img:"https://sl.bing.net/jrGrUbxJxZs",check:function(s){return s.ratings>=30;}},
+{id:7,name:"Streak 7j",cat:"spectateur",condition:"7 jours consécutifs",img:"https://sl.bing.net/dGaFUEKTyoK",check:function(s){return s.streak>=7;}},
+{id:8,name:"Créateur",cat:"createur",condition:"1ère vidéo publiée",img:"https://sl.bing.net/bDA5iOf2C7M",check:function(s){return s.videosPublished>=1;}},
+{id:9,name:"Réalisateur",cat:"createur",condition:"5 vidéos publiées",img:"https://sl.bing.net/fQZkUm1APGC",check:function(s){return s.videosPublished>=5;}},{id:10,name:"Primé",cat:"createur",condition:"Vidéo 4+ étoiles",img:"https://sl.bing.net/kNMxT4Nu3Fs",check:function(s){return s.hasRatedVideo;}},
+{id:11,name:"Vu 1K",cat:"createur",condition:"1000 vues sur une vidéo",img:"https://sl.bing.net/bHc9KXWAS84",check:function(s){return s.maxVideoViews>=1000;}},
+{id:12,name:"Aimé 100",cat:"createur",condition:"100 likes sur une vidéo",img:"https://sl.bing.net/ew7K5KtCc9I",check:function(s){return s.maxVideoLikes>=100;}},
+{id:13,name:"Tipé",cat:"createur",condition:"1er tip reçu",img:"https://sl.bing.net/g7gkGE4z0zQ",check:function(s){return s.tipsReceived>=1;}},
+{id:14,name:"Producteur",cat:"createur",condition:"20 vidéos publiées",img:"https://sl.bing.net/kzjfDWO0ni8",check:function(s){return s.videosPublished>=20;}},
+{id:15,name:"Ambassadeur",cat:"communaute",condition:"10 partages site",img:"https://sl.bing.net/io6Rvnpi4Ae",check:function(s){return s.shares>=10;}},
+{id:16,name:"Fidèle",cat:"communaute",condition:"Email sauvegardé",img:"https://sl.bing.net/bmMP9RnN2vA",check:function(s){return s.emailSaved;}},
+{id:17,name:"Expert",cat:"communaute",condition:"1500-4999 pts",img:"https://sl.bing.net/cTIJBxT4jM4",check:function(s){return s.points>=1500&&s.points<5000;}},
+{id:18,name:"Maître",cat:"communaute",condition:"5000+ pts",img:"https://sl.bing.net/kHhIXqUE9OS",check:function(s){return s.points>=5000;}},
+{id:19,name:"Streak 30j",cat:"communaute",condition:"30 jours consécutifs",img:"https://sl.bing.net/cWoyjVogoKa",check:function(s){return s.streak>=30;}},
+{id:20,name:"Légende",cat:"communaute",condition:"Tous les badges",img:"https://sl.bing.net/gR7j0QAhQSi",check:function(s){return s.allOtherBadges;}}
+];
+
+var CAT_LABELS={spectateur:"👁️ Spectateur",createur:"🎥 Créateur",communaute:"🤝 Communauté"};
+
+// ===== RÉCUPÉRATION STATS UTILISATEUR =====
+function getUserStats(){
+var stats={
+points:userPoints,
+views:0,likesGiven:0,comments:0,ratings:0,streak:0,
+videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,
+tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false
+};
+for(var i=0;i<localStorage.length;i++){
+var k=localStorage.key(i);
+if(k&&k.indexOf('liked_')===0&&localStorage.getItem(k)==='true')stats.likesGiven++;
+if(k&&k.indexOf('rated_')===0)stats.ratings++;
+if(k&&k.indexOf('viewed_')===0)stats.views++;
+}
+stats.shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
+stats.emailSaved=!!localStorage.getItem('aurora_saved_email');
+try{var sd=JSON.parse(localStorage.getItem('aurora_streak_data')||'{}');stats.streak=sd.current_streak||0;}catch(e){}
+return stats;
+}
+
+// ===== CALCUL BADGES DÉBLOQUÉS =====
+function getUnlockedIds(){
+var stats=getUserStats();
+var unlocked=[];
+var allExcept=true;
+BADGES.forEach(function(b){
+if(b.id===20)return;
+if(b.check(stats))unlocked.push(b.id);else allExcept=false;
+});
+if(allExcept&&unlocked.length===19)unlocked.push(20);
+return unlocked;
+}
+
+// ===== AFFICHAGE =====
+function renderBadges(){var grid=document.getElementById('badgesGrid');
+var unlocked=getUnlockedIds();
+var prev=JSON.parse(localStorage.getItem('aurora_badges_unlocked')||'[]');
+var newly=unlocked.filter(function(id){return prev.indexOf(id)===-1;});
+var html='';
+var currentCat='';
+BADGES.forEach(function(b){
+if(b.cat!==currentCat){
+currentCat=b.cat;
+html+='<div class="cat-title">'+CAT_LABELS[b.cat]+'</div>';
+}
+var isU=unlocked.indexOf(b.id)!==-1;
+var isNew=newly.indexOf(b.id)!==-1;
+html+='<div class="badge-card '+(isU?'unlocked':'locked')+'">';
+if(!isU)html+='<div class="badge-lock-icon">🔒</div>';
+if(b.img)html+='<img class="badge-img" src="'+b.img+'" alt="'+b.name+'" loading="lazy">';
+if(isNew&&isU)html+='<div class="badge-new-glow"></div>';
+html+='<div class="badge-name">'+b.name+'</div>';
+html+='<div class="badge-condition">'+b.condition+'</div>';
+html+='</div>';
+});
+grid.innerHTML=html;
+
+// Stats
+document.getElementById('unlockedCount').textContent=unlocked.length;
+document.getElementById('pointsDisplay').textContent=fmt(userPoints);
+var pct=Math.round((unlocked.length/20)*100);
+document.getElementById('progressFill').style.width=pct+'%';
+document.getElementById('progressText').textContent=pct+'% complété';
+
+// Sauvegarde + toast nouveaux badges
+localStorage.setItem('aurora_badges_unlocked',JSON.stringify(unlocked));
+newly.forEach(function(id,i){
+var badge=BADGES.find(function(b){return b.id===id;});
+if(badge&&badge.img)setTimeout(function(){showBadgeToast(badge);},800*(i+1));
+});
+}
+
+function showBadgeToast(badge){
+var t=document.getElementById('badgeToast');
+document.getElementById('badgeToastImg').src=badge.img;
+document.getElementById('badgeToastName').textContent=badge.name;
+document.getElementById('badgeToastDesc').textContent=badge.condition;
+t.classList.add('show');
+setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+// ===== CHARGEMENT POINTS DEPUIS SUPABASE =====
+async function loadPoints(){
+try{sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
+var se=localStorage.getItem('aurora_saved_email'),r=null;
+if(se)r=await sb.from('user_points').select('total_points').eq('email',se).single();
+if(!r||r.error)r=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
+if(!r.error&&r.data)userPoints=r.data.total_points;
+}catch(e){console.log('[Badges] Points error:',e);}
+renderBadges();
+}
+
+loadPoints();
+</script>
+</body>
+</html>
