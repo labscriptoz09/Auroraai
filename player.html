@@ -99,7 +99,6 @@ function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFi
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
 function closePlayer(){try{window.parent.postMessage({type:'closePlayer'},'*');}catch(e){}window.location.href='/';}
 
-// POINTS PLAYER
 async function addPointsPlayer(points,reason,creatorViewerId){
 if(!sb)return;
 try{
@@ -117,7 +116,6 @@ if(creatorViewerId&&creatorViewerId!==viewerId){var ce=await sb.from('user_point
 }
 async function loadPlayerPoints(){if(!sb)return;try{var se=localStorage.getItem('aurora_saved_email'),r=null;if(se)r=await sb.from('user_points').select('total_points').eq('email',se).single();if(!r||r.error)r=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();if(!r.error&&r.data)document.getElementById('playerPoints').textContent=fmt(r.data.total_points);}catch(e){}}
 
-// PLEXUS
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
 
 function buildCreatorLinks(linksStr){if(!linksStr||!linksStr.trim())return'';var links=linksStr.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});if(!links.length)return'';var html='<div class="creator-links-section">';links.forEach(function(link){var url=link;if(!url.startsWith('http'))url='https://'+url;var label=link.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" class="creator-link">🔗 '+esc(label)+'</a>';});html+='</div>';return html;}
@@ -145,9 +143,9 @@ document.getElementById('mainContent').innerHTML=
 '<div class="video-meta"><span>🎬 '+esc(v.author)+'</span><span>🎭 '+esc(v.category)+'</span>'+(createdDate?'<span>📅 '+createdDate+'</span>':'')+'<span id="vViews">👁️ '+fmt(v.views)+' vues</span><span id="vLikes">❤️ '+fmt(v.likes)+' likes</span></div>'+
 creatorLinksHtml+
 '<div class="rating-section"><span class="rating-label">Noter ce film :</span><div class="stars-container" id="starsContainer">'+
-'<button class="star-btn'+(userRating>=1?' active':'')+'" onclick="rateVideo(1)">★</button>'+'<button class="star-btn'+(userRating>=2?' active':'')+'" onclick="rateVideo(2)">★</button>'+
-'<button class="star-btn'+(userRating>=3?' active':'')+'" onclick="rateVideo(3)">★</button>'+
-'<button class="star-btn'+(userRating>=4?' active':'')+'" onclick="rateVideo(4)">★</button>'+
+'<button class="star-btn'+(userRating>=1?' active':'')+'" onclick="rateVideo(1)">★</button>'+
+'<button class="star-btn'+(userRating>=2?' active':'')+'" onclick="rateVideo(2)">★</button>'+
+'<button class="star-btn'+(userRating>=3?' active':'')+'" onclick="rateVideo(3)">★</button>'+'<button class="star-btn'+(userRating>=4?' active':'')+'" onclick="rateVideo(4)">★</button>'+
 '<button class="star-btn'+(userRating>=5?' active':'')+'" onclick="rateVideo(5)">★</button>'+
 '</div><span class="rating-display" id="ratingDisplay">'+(userRating>0?userRating+'/5':'Non noté')+'</span></div>'+
 '<p class="video-desc">'+(v.description?esc(v.description):'Aucune description disponible.')+'</p>'+
@@ -178,13 +176,25 @@ addPointsPlayer(5,'rate',v.viewer_id);
 else{showToast('⭐ Note sauvegardée localement','');}
 }
 
-async function recordView(v){if(!sb)return;var vk='viewed_'+v.id;var lv=localStorage.getItem(vk);var now=Date.now();if(!lv||(now-lv)>86400000){var nv=(v.views||0)+1;await sb.from('videos').update({views:nv}).eq('id',v.id);try{await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);}catch(e){}var el=document.getElementById('vViews');if(el)el.textContent='👁️ '+fmt(nv)+' vues';localStorage.setItem(vk,now.toString());}}
+// ========== ANTI-SPAM VUES CORRIGÉ ==========
+async function recordView(v){
+if(!sb)return;
+try{
+var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
+if(r.error&&r.error.code==='23505')return;
+if(r.error)throw r.error;
+var nv=(v.views||0)+1;
+await sb.from('videos').update({views:nv}).eq('id',v.id);
+var el=document.getElementById('vViews');
+if(el)el.textContent='👁️ '+fmt(nv)+' vues';
+v.views=nv;
+}catch(e){console.log('View error:',e);}
+}
+// ========== FIN ANTI-SPAM VUES ==========
 
-// LIKE SÉCURISÉ ANTI-SPAM
 async function toggleLike(){
 var v=window._currentVideo;if(!v)return;
-if(!sb){showToast('⚠️ Like disponible uniquement en ligne','error');return;}
-var k='liked_'+v.id,isL=localStorage.getItem(k)==='true';
+if(!sb){showToast('⚠️ Like disponible uniquement en ligne','error');return;}var k='liked_'+v.id,isL=localStorage.getItem(k)==='true';
 try{
 if(isL){
 await sb.from('video_likes').delete().eq('video_id',v.id).eq('viewer_id',viewerId);
@@ -194,7 +204,8 @@ var r=await sb.from('video_likes').insert([{video_id:v.id,viewer_id:viewerId}]);
 if(r.error&&r.error.code!=='23505')throw r.error;
 v.likes=(v.likes||0)+1;
 var history=await sb.from('video_likes_history').select('id').eq('video_id',v.id).eq('viewer_id',viewerId).single();
-if(history.error||!history.data){await sb.from('video_likes_history').insert([{video_id:v.id,viewer_id:viewerId}]);
+if(history.error||!history.data){
+await sb.from('video_likes_history').insert([{video_id:v.id,viewer_id:viewerId}]);
 addPointsPlayer(3,'like',v.viewer_id);
 }
 }
@@ -225,7 +236,6 @@ if(!r.error&&r.data&&r.data.length>0){document.getElementById('cmtCount').textCo
 else{document.getElementById('cmtCount').textContent='0';list.innerHTML='<p class="no-comments">Aucun commentaire. Soyez le premier !</p>';}}
 catch(e){list.innerHTML='<p class="no-comments">Erreur chargement</p>';}}
 
-// COMMENTAIRE SÉCURISÉ ANTI-SPAM
 async function postComment(){
 var name=(document.getElementById('cmtName').value||'').trim();
 var email=(document.getElementById('cmtEmail').value||'').trim();
@@ -233,8 +243,7 @@ var text=(document.getElementById('cmtText').value||'').trim();
 if(!name){showToast('❌ Nom requis','error');return;}
 if(!text){showToast('❌ Commentaire vide','error');return;}
 if(text.length<3){showToast('❌ Commentaire trop court (min 3 caractères)','error');return;}
-if(!sb){try{sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}catch(e){showToast('❌ Connexion requise','error');return;}}
-try{
+if(!sb){try{sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}catch(e){showToast('❌ Connexion requise','error');return;}}try{
 var history=await sb.from('comment_history').select('id').eq('video_id',videoId).eq('viewer_id',viewerId).single();
 if(!history.error&&history.data){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');return;}
 var r=await sb.from('comments').insert([{video_id:videoId,author_name:name,author_email:email||null,content:text}]);
@@ -243,7 +252,8 @@ await sb.from('comment_history').insert([{video_id:videoId,viewer_id:viewerId}])
 var v=window._currentVideo;addPointsPlayer(5,'comment',v?v.viewer_id:null);
 document.getElementById('cmtName').value='';document.getElementById('cmtEmail').value='';document.getElementById('cmtText').value='';
 await loadComments(videoId);
-showToast('💬 Commentaire publié ! +5 ⭐','success');}catch(e){
+showToast('💬 Commentaire publié ! +5 ⭐','success');
+}catch(e){
 if(e.code==='23505'){showToast('⚠️ Vous avez déjà commenté cette vidéo','error');}
 else{showToast('❌ Erreur: '+e.message,'error');}
 }
