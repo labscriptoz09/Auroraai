@@ -7,19 +7,16 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#000000">
-<!-- SEO -->
 <meta name="description" content="Publiez vos films et vidéos générés par IA sur AuroraAI. Upload gratuit, système de points et soutien communautaire.">
 <meta name="keywords" content="upload vidéo IA, publier film IA, créateur IA, AuroraAI upload, cinéma génératif">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://auroraai-one.vercel.app/upload.html">
-<!-- Open Graph -->
 <meta property="og:title" content="Publier un Film IA | AuroraAI.watch">
 <meta property="og:description" content="Upload gratuit de films IA. Gagnez des points et recevez du soutien de la communauté.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://auroraai-one.vercel.app/upload.html">
 <meta property="og:site_name" content="AuroraAI.watch">
 <meta property="og:locale" content="fr_FR">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Publier un Film IA | AuroraAI.watch">
 <meta name="twitter:description" content="Upload gratuit de films IA sur AuroraAI. Gagnez des points et recevez du soutien.">
@@ -47,10 +44,10 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 .file-info{color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:0.3rem}
 .char-count{color:rgba(255,255,255,0.3);font-size:0.7rem;text-align:right;margin-top:0.2rem}
 .submit-btn{width:100%;padding:0.9rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:12px;color:#000;font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.3s;margin-top:0.5rem}
-.submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s;max-width:90%;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.success{border-left-color:#4caf50}
+.toast.show{transform:translateX(-50%) translateY(0)}.toast.success{border-left-color:#4caf50}
 .toast.error{border-left-color:#ff4d4d}
 .progress-bar{width:100%;height:4px;background:rgba(212,175,55,0.15);border-radius:2px;margin-top:1rem;overflow:hidden;display:none}
 .progress-bar.active{display:block}
@@ -96,10 +93,10 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 <select id="category">
 <option value="">-- Choisir --</option>
 <option value="Sci-Fi">🚀 Sci-Fi</option>
-<option value="Onirique">🌙 Onirique</option><option value="Thriller">🔪 Thriller</option>
+<option value="Onirique">🌙 Onirique</option>
+<option value="Thriller">🔪 Thriller</option>
 <option value="Romance">💜 Romance</option>
-<option value="Pub">📢 Pub</option>
-<option value="Dessin animé">🎨 Dessin animé</option>
+<option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option>
 <option value="Divers">✨ Divers</option>
 </select>
 </div>
@@ -145,12 +142,10 @@ document.getElementById('description').addEventListener('input',function(){docum
 // ========== TOAST ==========
 function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');setTimeout(function(){t.classList.remove('show');},4000);}
 
-// ========== VALIDATION CONSTANTS ==========var CLOUD_NAME='dcnldgsyn';
-var UPLOAD_PRESET='auroraai_upload';
+// ========== VALIDATION CONSTANTS ==========
 var ALLOWED_VIDEO_TYPES=['video/mp4','video/quicktime','video/webm','video/x-msvideo','video/x-matroska'];
 var ALLOWED_VIDEO_EXT=['.mp4','.mov','.webm','.avi','.mkv'];
-var ALLOWED_IMAGE_TYPES=['image/jpeg','image/png','image/webp'];
-var ALLOWED_IMAGE_EXT=['.jpg','.jpeg','.png','.webp'];
+var ALLOWED_IMAGE_TYPES=['image/jpeg','image/png','image/webp'];var ALLOWED_IMAGE_EXT=['.jpg','.jpeg','.png','.webp'];
 var MAX_VIDEO_SIZE=100*1024*1024;
 var MAX_IMAGE_SIZE=5*1024*1024;
 var VALID_CATEGORIES=['Sci-Fi','Onirique','Thriller','Romance','Pub','Dessin animé','Divers'];
@@ -194,12 +189,12 @@ function validateAuthor(val){
     if(v.length>50)return'❌ Le nom d\'auteur ne peut pas dépasser 50 caractères.';
     return null;
 }
+
 function validateCategory(val){
     if(!val)return'❌ Veuillez choisir une catégorie.';
     if(VALID_CATEGORIES.indexOf(val)===-1)return'❌ Catégorie invalide.';
     return null;
 }
-
 function validateDescription(val){
     if(val&&val.length>500)return'❌ La description ne peut pas dépasser 500 caractères.';
     return null;
@@ -232,23 +227,23 @@ function validateLinks(val){
     return null;
 }
 
-// ========== UPLOAD TO CLOUDINARY ==========
+// ========== UPLOAD TO CLOUDINARY (IDENTIFIANTS EN DUR) ==========
 async function uploadToCloudinary(file,resourceType){
     var formData=new FormData();
     formData.append('file',file);
-    formData.append('upload_preset',UPLOAD_PRESET);
+    formData.append('upload_preset','auroraai_upload');
     formData.append('resource_type',resourceType);
-    var res=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/'+resourceType+'/upload',{
+    var res=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/'+resourceType+'/upload',{
         method:'POST',
         body:formData
     });
     if(!res.ok){
-        var errText='';        try{var errData=await res.json();errText=errData.error?errData.error.message:res.status;}catch(e){errText=res.status;}
+        var errText='';
+        try{var errData=await res.json();errText=errData.error?errData.error.message:res.status;}catch(e){errText=res.status;}
         throw new Error('Cloudinary '+resourceType+' : '+errText);
     }
     return await res.json();
 }
-
 // ========== MAIN UPLOAD HANDLER ==========
 async function handleUpload(){
     var btn=document.getElementById('submitBtn');
@@ -292,12 +287,12 @@ async function handleUpload(){
     progressFill.style.width='10%';
 
     try{
-        var sb=window.supabase.createClient(            'https://knecqgspkalwepdwwpud.supabase.co',
+        var sb=window.supabase.createClient(
+            'https://knecqgspkalwepdwwpud.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww'
         );
 
-        // Upload image couverture
-        progressFill.style.width='20%';
+        // Upload image couverture        progressFill.style.width='20%';
         var thumbData=await uploadToCloudinary(thumbFile,'image');
         var thumbUrl=thumbData.secure_url;
 
@@ -337,18 +332,16 @@ async function handleUpload(){
         showToast('✅ Film publié avec succès !','success');
 
         // ===== POINT REVEAL POUR L'UPLOAD =====
-        var uploadPoints = 50;
         window.dispatchEvent(new CustomEvent('aurora:points', {
-            detail: { amount: uploadPoints, reason: 'Film publié !', total: uploadPoints }
+            detail: { amount: 50, reason: 'Film publié !', total: 50 }
         }));
-        // ===== FIN POINT REVEAL UPLOAD =====
+
         setTimeout(function(){
             window.location.href='/';
         },2500);
 
     }catch(err){
-        console.error('Upload error:',err);
-        showToast('❌ Erreur : '+err.message,'error');
+        console.error('Upload error:',err);        showToast('❌ Erreur : '+err.message,'error');
         btn.disabled=false;
         btn.textContent='🚀 Publier le film';
         progressBar.classList.remove('active');
@@ -357,4 +350,4 @@ async function handleUpload(){
 }
 </script>
 </body>
-</html>>
+</html>
