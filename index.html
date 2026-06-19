@@ -251,7 +251,7 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a>
 <a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
 </div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.6 FAVICON</p>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v10.7 VUES TEMPS RÉEL</p>
 </footer>
 <div class="toast" id="toast"></div>
 <script>
@@ -397,11 +397,24 @@ var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===
 try{
 if(typeof window.supabase==='undefined'){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ SDK Supabase non chargé</p>';return;}
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
+// ===== CHANGEMENT 1 : LECTURE DEPUIS LA VUE video_stats =====
+var r=await sb.from('video_stats').select('*').order('created_at',{ascending:false});
 if(r.error){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+r.error.message+'</p>';return;}
 videos=r.data||[];
 renderVideos();renderHero();renderTopRated();startHeroAuto();updFavBadge();loadUserPoints();checkDailyLogin();
-sb.channel('videos_changes').on('postgres_changes',{event:'*',schema:'public',table:'videos'},function(){(async function(){var r2=await sb.from('videos').select('*').order('created_at',{ascending:false});if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated();}})();}).subscribe();
+// ===== CHANGEMENT 2 : REALTIME SUR video_views AU LIEU DE videos =====
+sb.channel('views_changes').on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(){
+(async function(){
+var r2=await sb.from('video_stats').select('*').order('created_at',{ascending:false});
+if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated();}
+})();
+}).subscribe();
+sb.channel('videos_changes').on('postgres_changes',{event:'*',schema:'public',table:'videos'},function(){
+(async function(){
+var r2=await sb.from('video_stats').select('*').order('created_at',{ascending:false});
+if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated();}
+})();
+}).subscribe();
 }catch(e){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+e.message+'</p>';}
 })();
 
