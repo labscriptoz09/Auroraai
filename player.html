@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AuroraAI - Lecteur</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -44,10 +47,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .tip-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:1rem}
 .tip-section h3{color:#d4af37;margin-bottom:0.4rem;font-size:0.9rem}
 .tip-section input{width:100%;padding:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;margin-bottom:0.4rem;font-size:0.85rem}
-.tip-section button{width:100%;padding:0.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem}
-.comments-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:2rem}
+.tip-section button{width:100%;padding:0.5rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;font-size:0.85rem}.comments-section{padding:0.8rem;background:rgba(212,175,55,0.03);border-radius:10px;border:1px solid rgba(212,175,55,0.1);margin-bottom:2rem}
 .comments-section h3{color:#d4af37;margin-bottom:0.6rem;font-size:0.9rem}
-.comment-form{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem}.comment-form input,.comment-form textarea{width:100%;padding:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;font-size:0.85rem}
+.comment-form{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem}
+.comment-form input,.comment-form textarea{width:100%;padding:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;font-size:0.85rem}
 .comment-form textarea{min-height:45px;resize:vertical}
 .comment-form button{padding:0.4rem 0.8rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;cursor:pointer;align-self:flex-start;font-size:0.8rem}
 .comments-list{display:flex;flex-direction:column;gap:0.5rem;max-height:250px;overflow-y:auto}
@@ -93,10 +96,10 @@ throw new Error('OFFLINE_MODE');
 // ========== FIN MODE OFFLINE CHECK ==========
 
 var sb=null,videoId=null;
-var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
-function getParam(name){return new URLSearchParams(window.location.search).get(name);}
+var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();function getParam(name){return new URLSearchParams(window.location.search).get(name);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
-function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function showToast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
 function closePlayer(){try{window.parent.postMessage({type:'closePlayer'},'*');}catch(e){}window.location.href='/';}
 
 async function addPointsPlayer(points,reason,creatorViewerId){
@@ -118,7 +121,6 @@ async function loadPlayerPoints(){if(!sb)return;try{var se=localStorage.getItem(
 
 (function(){var c=document.getElementById('plexusCanvas'),ctx=c.getContext('2d');function resize(){c.width=innerWidth;c.height=innerHeight;}var p=[];function init(){p=[];for(var i=0;i<40;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});}function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);for(var i=0;i<p.length;i++){p[i].x+=p[i].vx;p[i].y+=p[i].vy;if(p[i].x<0||p[i].x>c.width)p[i].vx*=-1;if(p[i].y<0||p[i].y>c.height)p[i].vy*=-1;ctx.beginPath();ctx.arc(p[i].x,p[i].y,p[i].r,0,Math.PI*2);ctx.fillStyle='rgba(212,175,55,0.5)';ctx.fill();for(var j=i+1;j<p.length;j++){var dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p[i].x,p[i].y);ctx.lineTo(p[j].x,p[j].y);ctx.strokeStyle='rgba(212,175,55,'+(1-d/200)*0.2+')';ctx.lineWidth=1.7;ctx.stroke();}}}requestAnimationFrame(draw);}resize();init();draw();addEventListener('resize',function(){resize();init();});})();
 
-// ========== LIENS CRÉATEURS SÉCURISÉS ==========
 function buildCreatorLinks(linksStr){
 if(!linksStr||!linksStr.trim())return'';
 var links=linksStr.split(',').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
@@ -133,7 +135,6 @@ html+='<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" class="c
 html+='</div>';
 return html;
 }
-// ========== FIN LIENS CRÉATEURS ==========
 
 async function init(){
 videoId=getParam('id');
@@ -144,16 +145,13 @@ loadPlayerPoints();
 var r=await sb.from('videos').select('*').eq('id',videoId).single();
 if(r.error||!r.data){document.getElementById('loadingMsg').textContent='Vidéo introuvable';return;}
 renderVideo(r.data);recordView(r.data);loadComments(videoId);
-}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}
-}
-// ========== RENDER VIDEO (EMAIL MASQUÉ) ==========
+}catch(e){document.getElementById('loadingMsg').textContent='Erreur: '+e.message;}}
+
 function renderVideo(v){
 var likedKey='liked_'+v.id,isLiked=localStorage.getItem(likedKey)==='true';
 var ratingKey='rated_'+v.id,userRating=parseInt(localStorage.getItem(ratingKey)||'0');
 var createdDate=v.created_at?new Date(v.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'';
 var creatorLinksHtml=buildCreatorLinks(v.creator_links);
-// EMAIL MASQUÉ : le bouton sendTip() ne contient AUCUN email en clair
-// L'email est récupéré dynamiquement depuis Supabase au moment du clic
 document.getElementById('mainContent').innerHTML=
 '<div class="player-wrapper"><video id="vid" controls playsinline autoplay><source src="'+v.video_url+'"></video></div>'+
 '<div class="video-details"><h2>'+esc(v.title)+'</h2>'+
@@ -177,7 +175,6 @@ creatorLinksHtml+
 '<div class="comments-list" id="cmtList"><p class="no-comments">Chargement...</p></div></div></div>';
 window._currentVideo=v;
 }
-// ========== FIN RENDER VIDEO ==========
 
 async function rateVideo(stars){
 var v=window._currentVideo;if(!v)return;
@@ -194,10 +191,10 @@ addPointsPlayer(5,'Film noté',v.viewer_id);
 }catch(e){showToast('⭐ Note sauvegardée localement','');}}
 else{showToast('⭐ Note sauvegardée localement','');}
 }
+
 async function recordView(v){
 if(!sb)return;
-try{
-var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
+try{var r=await sb.from('video_views').insert([{video_id:v.id,viewer_id:viewerId}]);
 if(r.error&&r.error.code==='23505')return;
 if(r.error)throw r.error;
 var nv=(v.views||0)+1;
@@ -238,21 +235,18 @@ showToast(isL?'Like retiré':'❤️ Vidéo aimée',isL?'':'success');
 async function shareVideo(){var v=window._currentVideo;if(!v)return;if(navigator.share){try{await navigator.share({title:v.title,text:'Regardez '+v.title+' sur AuroraAI !',url:location.href});showToast('📤 Partagée','success');}catch(e){}}else{navigator.clipboard.writeText(location.href);showToast('📋 Lien copié','success');}}
 function downloadVideo(){var v=window._currentVideo;if(!v)return;var a=document.createElement('a');a.href=v.video_url;a.download=v.title+'.mp4';a.click();showToast('📥 Téléchargement...','');}
 
-// ========== SEND TIP SÉCURISÉ (EMAIL MASQUÉ) ==========
 async function sendTip(){
 var userEmail=document.getElementById('tipEmail').value.trim();
 if(!userEmail){showToast('❌ Email requis','error');return;}
 var v=window._currentVideo;
-if(!v||!sb){showToast('❌ Erreur connexion','error');return;}try{
-// L'email créateur est récupéré DEPUIS SUPABASE, jamais depuis le HTML
+if(!v||!sb){showToast('❌ Erreur connexion','error');return;}
+try{
 var r=await sb.from('videos').select('tip_email').eq('id',v.id).single();
 if(r.error||!r.data||!r.data.tip_email){showToast('❌ Email créateur non disponible','error');return;}
-addPointsPlayer(50,'Tip envoyé',null);
-showToast('💰 Tip envoyé à '+esc(v.author)+' (+50 ⭐)','success');
+addPointsPlayer(50,'Tip envoyé',null);showToast('💰 Tip envoyé à '+esc(v.author)+' (+50 ⭐)','success');
 document.getElementById('tipEmail').value='';
 }catch(e){showToast('❌ Erreur: '+e.message,'error');}
 }
-// ========== FIN SEND TIP SÉCURISÉ ==========
 
 async function loadComments(vid){
 var list=document.getElementById('cmtList');if(!list)return;
