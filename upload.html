@@ -101,7 +101,7 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 </div>
 
 <div class="form-group">
-<label>💰 Email pour les tips *</label>
+<label>💰 Email pour les tips (optionnel)</label>
 <input type="email" id="tipEmail" placeholder="paypal@email.com ou kofi@email.com">
 <div class="file-info">L'email où vous recevez les soutiens des spectateurs</div>
 </div>
@@ -198,7 +198,7 @@ function validateCreatorEmail(val){
 
 function validateTipEmail(val){
     var v=val.trim();
-    if(!v)return'❌ L\'email pour les tips est obligatoire.';
+    if(!v)return null;
     if(v.indexOf('@')===-1||v.indexOf('.')===-1)return'❌ Email tip invalide. Exemple : paypal@email.com';
     return null;
 }
@@ -299,7 +299,7 @@ async function handleUpload(){
             localStorage.setItem('aurora_viewer_id',viewerId);
         }
 
-        // Insertion Supabase (avec tip_email séparé)
+        // Insertion Supabase
         var insertRes=await sb.from('videos').insert([{
             title:title.trim(),
             author:author.trim(),
@@ -307,7 +307,7 @@ async function handleUpload(){
             description:description.trim()||null,
             video_url:videoUrl,
             thumbnail:thumbUrl,
-            tip_email:tipEmail.trim(),
+            tip_email:tipEmail.trim()||null,
             creator_links:creatorLinks.trim()||null,
             viewer_id:viewerId,
             views:0,
