@@ -12,8 +12,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 #plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-
-/* HEADER */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;background:rgba(0,0,0,0.92);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
 .logo-container{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
 .play-icon{width:32px;height:32px;border:2px solid #d4af37;border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(212,175,55,0.4)}
@@ -22,11 +20,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .back-btn{background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.35);color:#d4af37;padding:0.45rem 0.9rem;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;display:inline-flex;align-items:center;gap:0.35rem;transition:all 0.3s;text-decoration:none;white-space:nowrap;line-height:1}
 .back-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37;transform:translateY(-1px)}
 .back-btn svg{width:14px;height:14px;stroke:#d4af37;fill:none;stroke-width:2;flex-shrink:0}
-
-/* MAIN */
 .main{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:4.5rem 1rem 3rem}
-
-/* PROFILE HEADER */
 .profile-header{text-align:center;margin-bottom:2rem;padding:2rem 1rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.15);border-radius:20px}
 .profile-avatar{width:80px;height:80px;border:3px solid #d4af37;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;box-shadow:0 0 30px rgba(212,175,55,0.3)}
 .profile-name{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:0.3rem}
@@ -35,19 +29,14 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .profile-stat{text-align:center}
 .profile-stat-value{color:#d4af37;font-size:1.6rem;font-weight:900}
 .profile-stat-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;margin-top:0.1rem}
-
-/* CURRENT BADGE */
 .current-badge-section{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2rem;padding:1.2rem;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.25);border-radius:16px}
 .current-badge-img{width:56px;height:56px;object-fit:contain;border-radius:10px;filter:drop-shadow(0 0 12px rgba(212,175,55,0.5))}
 .current-badge-info{text-align:left}
 .current-badge-label{color:rgba(212,175,55,0.6);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
 .current-badge-name{color:#d4af37;font-size:1.3rem;font-weight:900}
-
-/* SECTIONS */
 .section{margin-bottom:2rem}
 .section-title{color:#d4af37;font-size:1.1rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;letter-spacing:0.5px}
 .section-title::before{content:'';width:3px;height:18px;background:#d4af37;border-radius:2px}
-/* BADGES GRID */
 .badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.6rem}
 .badge-item{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:0.8rem 0.3rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.3rem;transition:all 0.3s;position:relative}
 .badge-item.unlocked{border-color:rgba(212,175,55,0.4);background:rgba(212,175,55,0.08)}
@@ -58,10 +47,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .badge-item.unlocked .badge-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.4))}
 .badge-name{color:rgba(255,255,255,0.6);font-size:0.55rem;font-weight:600;line-height:1.1}
 .badge-item.unlocked .badge-name{color:#d4af37}
-.badge-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem;opacity:0.5}
-
-/* ACTIVITY LIST */
-.activity-list{display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto}
+.badge-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem;opacity:0.5}.activity-list{display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto}
 .activity-item{padding:0.7rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.08);border-radius:10px;display:flex;align-items:center;gap:0.7rem;transition:all 0.3s}
 .activity-item:hover{background:rgba(212,175,55,0.08);border-color:rgba(212,175,55,0.2)}
 .activity-icon{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,0.1);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
@@ -69,23 +55,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .activity-text{color:rgba(255,255,255,0.8);font-size:0.8rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .activity-meta{color:rgba(255,255,255,0.3);font-size:0.65rem;margin-top:0.1rem}
 .activity-points{color:#d4af37;font-size:0.7rem;font-weight:700;flex-shrink:0}
-
-/* STATS GRID */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem}
 .stat-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;text-align:center}
 .stat-card-value{color:#d4af37;font-size:1.4rem;font-weight:900}
 .stat-card-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;margin-top:0.2rem}
-
-/* EMPTY STATE */
 .empty-state{text-align:center;padding:1.5rem;color:rgba(255,255,255,0.3);font-size:0.85rem}
-
-/* PROGRESS BAR */
 .progress-wrap{margin-bottom:2rem}
 .progress-bar{width:100%;height:6px;background:rgba(212,175,55,0.1);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:3px;transition:width 1s ease;box-shadow:0 0 10px rgba(212,175,55,0.4)}
 .progress-text{display:flex;justify-content:space-between;color:rgba(255,255,255,0.4);font-size:0.65rem;margin-top:0.3rem}
-
-/* RESPONSIVE */
 @media(max-width:600px){
 .badges-grid{grid-template-columns:repeat(4,1fr)}
 .stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -96,13 +74,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .back-btn span{display:none}
 .back-btn{padding:0.45rem 0.6rem}
 }
-@media(max-width:400px){.badges-grid{grid-template-columns:repeat(3,1fr)}
+@media(max-width:400px){
+.badges-grid{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
-
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
 <a href="/" class="back-btn">
@@ -110,19 +88,18 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <span>Retour</span>
 </a>
 </header>
-
 <div class="main" id="profileContent">
-<!-- Chargement -->
 <div class="empty-state" id="loadingMsg">Chargement du profil...</div>
 </div>
-
 <script src="/plexus.js"></script>
 <script>
 // ========== CONFIG ==========
 var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
+
+// ✅ BUG FIX N°1 : userPoints GLOBAL (pas local dans loadProfile)
+var userPoints=0;
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
@@ -145,7 +122,8 @@ var BADGES_DATA=[
 {id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
 {id:15,name:"Ambassadeur",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
 {id:16,name:"Fidèle",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
-{id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},{id:18,name:"Maître",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
+{id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
+{id:18,name:"Maître",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
 {id:19,name:"Streak 30j",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.streak>=30;}},
 {id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
 ];
@@ -153,7 +131,7 @@ var BADGES_DATA=[
 // ========== LOAD PROFILE ==========
 async function loadProfile(){
 var sb=null;
-var userPoints=0;
+// ✅ userPoints est maintenant GLOBAL, pas local
 var userEmail='';
 var streak=0;
 var comments=[];
@@ -165,10 +143,9 @@ var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');
 try{
 sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// Points + email + streak
+// Points + email + streak → met à jour la variable GLOBALE userPoints
 var se=localStorage.getItem('aurora_saved_email');
-var pr=null;
-if(se){pr=await sb.from('user_points').select('*').eq('email',se).single();}
+var pr=null;if(se){pr=await sb.from('user_points').select('*').eq('email',se).single();}
 if(!pr||pr.error){pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();}
 if(!pr.error&&pr.data){
 userPoints=pr.data.total_points||0;
@@ -194,10 +171,11 @@ if(!lr.error&&lr.data)likesCount=lr.data.length;
 for(var i=0;i<localStorage.length;i++){
 var k=localStorage.key(i);
 if(k&&k.indexOf('viewed_')===0)viewsCount++;
-}var shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
+}
+var shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
 var emailSaved=!!localStorage.getItem('aurora_saved_email');
 
-// Calculer badges débloqués
+// ✅ Calculer badges avec userPoints GLOBAL (maintenant correct)
 var stats={points:userPoints,views:viewsCount,likesGiven:likesCount,comments:comments.length,ratings:ratings.length,streak:streak,videosPublished:0,hasRatedVideo:ratings.length>0,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false};
 var unlocked=[];
 var allExcept=true;
@@ -216,8 +194,7 @@ try{
 var vidParts=viewerId.split('_');
 if(vidParts.length>=2){
 var ts=parseInt(vidParts[1]);
-if(ts>1700000000000){
-var d=new Date(ts);
+if(ts>1700000000000){var d=new Date(ts);
 memberSince=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
 }
 }
@@ -243,7 +220,8 @@ memberSince:memberSince
 
 function renderProfile(data){
 var container=document.getElementById('profileContent');
-var pct=Math.round((data.unlocked.length/20)*100);var displayName=data.email?data.email.split('@')[0]:'Utilisateur';
+var pct=Math.round((data.unlocked.length/20)*100);
+var displayName=data.email?data.email.split('@')[0]:'Utilisateur';
 
 var html='';
 
@@ -266,7 +244,6 @@ html+='<div class="current-badge-info">';
 html+='<div class="current-badge-label">Badge Actuel</div>';
 html+='<div class="current-badge-name">'+esc(data.currentBadge.name)+'</div>';
 html+='</div></div>';
-
 // PROGRESS
 html+='<div class="progress-wrap">';
 html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
@@ -292,7 +269,8 @@ html+='<div class="section">';
 html+='<div class="section-title">📊 Statistiques</div>';
 html+='<div class="stats-grid">';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.viewsCount+'</div><div class="stat-card-label">Vidéos vues</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.likesCount+'</div><div class="stat-card-label">Likes donnés</div></div>';html+='<div class="stat-card"><div class="stat-card-value">'+data.comments.length+'</div><div class="stat-card-label">Commentaires</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.likesCount+'</div><div class="stat-card-label">Likes donnés</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.comments.length+'</div><div class="stat-card-label">Commentaires</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.ratings.length+'</div><div class="stat-card-label">Films notés</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.favorites.length+'</div><div class="stat-card-label">Favoris</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.shares+'</div><div class="stat-card-label">Partages</div></div>';
@@ -314,8 +292,7 @@ html+='<div class="activity-content">';
 html+='<div class="activity-text">« '+esc(c.content)+' »</div>';
 html+='<div class="activity-meta">sur '+esc(title)+(date?' • '+date:'')+'</div>';
 html+='</div>';
-html+='<div class="activity-points">+5 ⭐</div>';
-html+='</div>';
+html+='<div class="activity-points">+5 ⭐</div>';html+='</div>';
 });
 html+='</div>';
 }
@@ -341,7 +318,8 @@ html+='</div>';
 html+='<div class="activity-points">+5 ⭐</div>';
 html+='</div>';
 });
-html+='</div>';}
+html+='</div>';
+}
 html+='</div>';
 
 container.innerHTML=html;
