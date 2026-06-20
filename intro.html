@@ -11,8 +11,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;width:100vw;height:100vh}
-
-/* ===== PHASE 1 : LOGO (0-4s) ===== */
 #phaseLogo{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;transition:opacity 0.8s ease}
 #phaseLogo.fade-out{opacity:0;pointer-events:none}
 .intro-logo-wrap{width:100px;height:100px;border:3px solid #d4af37;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(212,175,55,0.5),0 0 120px rgba(212,175,55,0.2);animation:logoIntroPulse 2s ease-in-out infinite;opacity:0;transform:scale(0.6);transition:all 1.2s cubic-bezier(0.25,0.46,0.45,0.94)}
@@ -23,8 +21,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .intro-title.visible{opacity:1;transform:translateY(0)}
 .intro-tagline{font-size:0.85rem;color:rgba(212,175,55,0.8);letter-spacing:5px;text-transform:uppercase;font-weight:600;margin-top:0.4rem;opacity:0;transform:translateY(10px);transition:all 1s ease 0.9s}
 .intro-tagline.visible{opacity:1;transform:translateY(0)}
-
-/* ===== PHASE 2 : FILM (4-10s) ===== */
 #phaseFilm{position:fixed;top:0;left:0;width:100%;height:100%;z-index:5;display:none;background:#000}
 #phaseFilm.active{display:block}
 #phaseFilm video{width:100%;height:100%;object-fit:cover}
@@ -35,17 +31,11 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .film-intro-author{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:600}
 .film-intro-stats{display:flex;gap:1rem;margin-top:0.6rem;flex-wrap:wrap}
 .film-intro-stat{font-size:0.75rem;color:rgba(212,175,55,0.8);font-weight:600;display:flex;align-items:center;gap:0.3rem}
-
-/* ===== BOUTON PASSER ===== */
 .skip-btn{position:fixed;bottom:2rem;right:2rem;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:0.5rem 1.2rem;border-radius:25px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s;opacity:0;animation:skipFadeIn 0.5s ease 2s forwards;backdrop-filter:blur(10px);letter-spacing:1px}
 .skip-btn:hover{background:rgba(212,175,55,0.2);border-color:rgba(212,175,55,0.5);color:#d4af37}
 @keyframes skipFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ===== TRANSITION SORTIE ===== */
 .exit-fade{animation:exitFade 1.5s ease forwards}
 @keyframes exitFade{0%{opacity:1}100%{opacity:0}}
-
-/* ===== FALLBACK SI AUCUN FILM ===== */
 .fallback-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,0.3);font-size:0.9rem;text-align:center;z-index:7}
 @media(max-width:768px){
 .intro-logo-wrap{width:75px;height:75px;border-radius:14px}
@@ -57,10 +47,8 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .skip-btn{bottom:1.5rem;right:1rem;padding:0.4rem 1rem;font-size:0.7rem}
 }
 </style>
-</head>
-<body>
+</head><body>
 
-<!-- PHASE 1 : LOGO -->
 <div id="phaseLogo">
 <div class="intro-logo-wrap" id="introLogo">
 <div class="intro-play-icon"></div>
@@ -69,7 +57,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 <div class="intro-tagline" id="introTagline">Le cinéma réinventé par l'IA</div>
 </div>
 
-<!-- PHASE 2 : MEILLEUR FILM -->
 <div id="phaseFilm">
 <video id="introVideo" muted playsinline preload="auto"></video>
 <div class="film-overlay" id="filmOverlay">
@@ -81,33 +68,35 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 <div class="fallback-msg" id="fallbackMsg" style="display:none">Chargement...</div>
 </div>
 
-<!-- BOUTON PASSER -->
 <button class="skip-btn" id="skipBtn" onclick="goToIndex()">PASSER ▶</button>
 
 <script>
-// ========== CONFIG v1.2 RALENTI ==========
 var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-var LOGO_DURATION=4000;   // ✅ Logo 4s
-var FILM_DURATION=6000;   // ✅ Film 6s
-var TOTAL_TIMEOUT=15000;  // ✅ Sécurité 15s
+var LOGO_DURATION=4000;
+var FILM_DURATION=6000;
+var TOTAL_TIMEOUT=15000;
+// ✅ BUG FIX N°3 : Timeout requête Supabase (2s max)
+var FETCH_TIMEOUT=2000;
 
-// ========== CHECK SI DÉJÀ VU ==========
 (function(){
 if(sessionStorage.getItem('aurora_intro_seen')==='true'){
 window.location.replace('/');
-return;}
+return;
+}
 sessionStorage.setItem('aurora_intro_seen','true');
 startIntro();
 })();
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 
-// ========== REQUÊTE CORRIGÉE (sans status, tri par vues) ==========
+// ✅ BUG FIX N°3 : Requête avec timeout + AbortController
 async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50);
+var controller=new AbortController();
+var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);
+var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50).abortSignal(controller.signal);clearTimeout(timeoutId);
 if(r.error||!r.data||r.data.length===0)return null;
 var best=null,bestScore=-1;
 r.data.forEach(function(v){
@@ -119,12 +108,13 @@ var score=(likes*3)+(views*1)+(rating*20)+(comments*5);
 if(score>bestScore){bestScore=score;best=v;}
 });
 return best;
-}catch(e){console.log('[Intro] Error:',e);return null;}
+}catch(e){
+console.log('[Intro] Fetch error or timeout:',e.message||e);
+return null;
+}
 }
 
-// ========== SÉQUENCE INTRO v1.2 ==========
 async function startIntro(){
-// Phase 1 : Logo (apparaît en cascade)
 setTimeout(function(){
 document.getElementById('introLogo').classList.add('visible');
 },100);
@@ -135,17 +125,19 @@ setTimeout(function(){
 document.getElementById('introTagline').classList.add('visible');
 },900);
 
-// Charger le meilleur film pendant le logo
+// ✅ BUG FIX N°3 : La requête a maintenant un timeout de 2s
+// Si elle échoue ou dépasse 2s → getBestFilm() retourne null → skipToIndex()
 var film=await getBestFilm();
 
-// Phase 2 : Film
 setTimeout(function(){
 document.getElementById('phaseLogo').classList.add('fade-out');
 if(film&&film.video_url){
 showFilmPhase(film);
 }else{
+// ✅ Pas de film trouvé ou timeout → redirection gracieuse vers l'index
 skipToIndex();
-}},LOGO_DURATION);
+}
+},LOGO_DURATION);
 }
 
 function showFilmPhase(film){
@@ -153,8 +145,7 @@ var phase=document.getElementById('phaseFilm');
 var video=document.getElementById('introVideo');
 var overlay=document.getElementById('filmOverlay');
 
-document.getElementById('filmTitle').textContent=film.title||'Film AuroraAI';
-document.getElementById('filmAuthor').textContent='par '+(film.author||film.creator_name||'Anonyme');
+document.getElementById('filmTitle').textContent=film.title||'Film AuroraAI';document.getElementById('filmAuthor').textContent='par '+(film.author||film.creator_name||'Anonyme');
 
 var statsHtml='';
 if(film.likes)statsHtml+='<span class="film-intro-stat">❤️ '+fmt(film.likes)+' likes</span>';
@@ -174,7 +165,6 @@ document.getElementById('fallbackMsg').textContent='🎬 '+(film.title||'AuroraA
 setTimeout(function(){overlay.classList.add('visible');},400);
 });
 
-// Transition sortie après 6s de film
 setTimeout(function(){
 goToIndex();
 },FILM_DURATION);
@@ -191,10 +181,10 @@ function skipToIndex(){
 window.location.replace('/');
 }
 
-// Sécurité : si rien ne marche, redirection après 15s
 setTimeout(function(){
 if(!document.body.classList.contains('exit-fade')){
-window.location.replace('/');}
+window.location.replace('/');
+}
 },TOTAL_TIMEOUT);
 </script>
 </body>
