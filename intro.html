@@ -31,6 +31,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .film-intro-author{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:600}
 .film-intro-stats{display:flex;gap:1rem;margin-top:0.6rem;flex-wrap:wrap}
 .film-intro-stat{font-size:0.75rem;color:rgba(212,175,55,0.8);font-weight:600;display:flex;align-items:center;gap:0.3rem}
+/* ✅ BUG FIX N°4 : Bouton passer repositionné haut droite + zone tactile élargie */
 .skip-btn{position:fixed;top:1.5rem;right:1.5rem;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:0.6rem 1.4rem;border-radius:25px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;opacity:0;animation:skipFadeIn 0.5s ease 2s forwards;backdrop-filter:blur(10px);letter-spacing:1px;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center}
 .skip-btn:hover{background:rgba(212,175,55,0.2);border-color:rgba(212,175,55,0.5);color:#d4af37}
 @keyframes skipFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -44,10 +45,11 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .intro-tagline{font-size:0.7rem;letter-spacing:3px}
 .film-overlay{padding:1.5rem}
 .film-intro-title{font-size:1.4rem}
+/* ✅ Mobile : bouton bien visible en haut à droite, jamais caché par la nav bar */
 .skip-btn{top:1rem;right:1rem;padding:0.5rem 1.2rem;font-size:0.75rem}
-}
-</style>
-</head><body>
+}</style>
+</head>
+<body>
 
 <div id="phaseLogo">
 <div class="intro-logo-wrap" id="introLogo">
@@ -68,6 +70,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 <div class="fallback-msg" id="fallbackMsg" style="display:none">Chargement...</div>
 </div>
 
+<!-- ✅ BUG FIX N°4 : Bouton repositionné via CSS (haut droite) -->
 <button class="skip-btn" id="skipBtn" onclick="goToIndex()">PASSER ▶</button>
 
 <script>
@@ -76,7 +79,7 @@ var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 var LOGO_DURATION=4000;
 var FILM_DURATION=6000;
 var TOTAL_TIMEOUT=15000;
-var FETCH_TIMEOUT=4000;
+var FETCH_TIMEOUT=2000;
 
 (function(){
 if(sessionStorage.getItem('aurora_intro_seen')==='true'){
@@ -89,161 +92,96 @@ startIntro();
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 
-// ✅ FIX v3.0 : 2 requêtes séparées au lieu du JOIN qui échoue
 async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var controller=new AbortController();
-var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);
-
-// ÉTAPE 1 : Récupérer les IDs des meilleures vidéos depuis video_statsvar rStats=await sb.from('video_stats')
-.select('id, views, likes, rating')
-.order('views',{ascending:false})
-.limit(10)
-.abortSignal(controller.signal);
-
+var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50).abortSignal(controller.signal);
 clearTimeout(timeoutId);
-
-if(rStats.error||!rStats.data||rStats.data.length===0){
-console.log('[Intro] video_stats error or empty:',rStats.error);
-return null;
-}
-
-// Trouver le meilleur par scoring
-var bestId=null,bestScore=-1,bestStats=null;
-rStats.data.forEach(function(v){
-var score=((v.likes||0)*3)+((v.views||0)*1)+((v.rating||0)*20);
-if(score>bestScore){bestScore=score;bestId=v.id;bestStats=v;}
+if(r.error||!r.data||r.data.length===0)return null;
+var best=null,bestScore=-1;
+r.data.forEach(function(v){
+var likes=v.likes||0;
+var views=v.views||0;
+var rating=v.avg_rating||v.rating||0;
+var comments=v.comments_count||v.comments||0;
+var score=(likes*3)+(views*1)+(rating*20)+(comments*5);
+if(score>bestScore){bestScore=score;best=v;}
 });
-
-if(!bestId){
-console.log('[Intro] No best ID found');
-return null;
-}
-
-// ÉTAPE 2 : Récupérer video_url, title, author depuis videos
-var rVideo=await sb.from('videos')
-.select('id, video_url, title, author')
-.eq('id',bestId)
-.single();
-
-if(rVideo.error||!rVideo.data||!rVideo.data.video_url){
-console.log('[Intro] videos fetch error or no URL:',rVideo.error);
-// Fallback : essayer une autre vidéo
-for(var i=0;i<rStats.data.length;i++){
-var fallbackId=rStats.data[i].id;
-if(fallbackId===bestId)continue;
-var rFallback=await sb.from('videos').select('id, video_url, title, author').eq('id',fallbackId).single();
-if(!rFallback.error&&rFallback.data&&rFallback.data.video_url){
-console.log('[Intro] Fallback film found:',rFallback.data.title);
-return{
-video_url:rFallback.data.video_url,
-title:rFallback.data.title||'Film AuroraAI',
-author:rFallback.data.author||'Anonyme',
-likes:rStats.data[i].likes||0,
-views:rStats.data[i].views||0,
-rating:rStats.data[i].rating||0
-};
-}
-}return null;
-}
-
-console.log('[Intro] Best film:',rVideo.data.title,'score:',bestScore);
-return{
-video_url:rVideo.data.video_url,
-title:rVideo.data.title||'Film AuroraAI',
-author:rVideo.data.author||'Anonyme',
-likes:bestStats.likes||0,
-views:bestStats.views||0,
-rating:bestStats.rating||0
-};
+return best;
 }catch(e){
-console.log('[Intro] Fetch error:',e.message||e);
+console.log('[Intro] Fetch error or timeout:',e.message||e);
 return null;
 }
 }
 
 async function startIntro(){
-// Lancer l'animation du logo immédiatement
-setTimeout(function(){document.getElementById('introLogo').classList.add('visible');},100);
-setTimeout(function(){document.getElementById('introTitle').classList.add('visible');},500);
-setTimeout(function(){document.getElementById('introTagline').classList.add('visible');},900);
+setTimeout(function(){
+document.getElementById('introLogo').classList.add('visible');
+},100);
+setTimeout(function(){
+document.getElementById('introTitle').classList.add('visible');
+},500);
+setTimeout(function(){
+document.getElementById('introTagline').classList.add('visible');
+},900);
 
-// Charger le film PENDANT que le logo s'anime
-var filmPromise=getBestFilm();
+var film=await getBestFilm();
 
-// Attendre au minimum LOGO_DURATION avant de transitionner
-var minWait=new Promise(function(resolve){setTimeout(resolve,LOGO_DURATION);});
-
-// Attendre les deux : temps minimum + film chargé
-var results=await Promise.all([minWait,filmPromise]);
-var film=results[1];
-
-// Transition : cacher le logo
+setTimeout(function(){
 document.getElementById('phaseLogo').classList.add('fade-out');
-
 if(film&&film.video_url){
 showFilmPhase(film);
 }else{
-console.log('[Intro] No valid film, skipping to index');
 skipToIndex();
 }
+},LOGO_DURATION);
 }
 
 function showFilmPhase(film){
 var phase=document.getElementById('phaseFilm');
 var video=document.getElementById('introVideo');
 var overlay=document.getElementById('filmOverlay');
-document.getElementById('filmTitle').textContent=film.title;
-document.getElementById('filmAuthor').textContent='par '+film.author;
 
+document.getElementById('filmTitle').textContent=film.title||'Film AuroraAI';
+document.getElementById('filmAuthor').textContent='par '+(film.author||film.creator_name||'Anonyme');
 var statsHtml='';
 if(film.likes)statsHtml+='<span class="film-intro-stat">❤️ '+fmt(film.likes)+' likes</span>';
 if(film.views)statsHtml+='<span class="film-intro-stat">👁️ '+fmt(film.views)+' vues</span>';
-if(film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+film.rating+'/5</span>';
+if(film.avg_rating||film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+(film.avg_rating||film.rating)+'/5</span>';
 document.getElementById('filmStats').innerHTML=statsHtml;
 
 phase.classList.add('active');
 video.src=film.video_url;
 video.muted=true;
 
-var playPromise=video.play();
-if(playPromise!==undefined){
-playPromise.then(function(){
-console.log('[Intro] Video playing:',film.title);
-setTimeout(function(){overlay.classList.add('visible');},400);
-}).catch(function(err){
-console.log('[Intro] Autoplay blocked:',err.message);
-// Retry après court délai
-setTimeout(function(){
 video.play().then(function(){
 setTimeout(function(){overlay.classList.add('visible');},400);
 }).catch(function(){
-// Autoplay définitivement bloqué → skip propre
-console.log('[Intro] Autoplay definitively blocked, skipping');
-goToIndex();
+document.getElementById('fallbackMsg').style.display='block';
+document.getElementById('fallbackMsg').textContent='🎬 '+(film.title||'AuroraAI');
+setTimeout(function(){overlay.classList.add('visible');},400);
 });
-},100);
-});
-}
 
-setTimeout(function(){goToIndex();},FILM_DURATION);
+setTimeout(function(){
+goToIndex();
+},FILM_DURATION);
 }
 
 function goToIndex(){
-if(document.body.classList.contains('exit-fade'))return;
 document.body.classList.add('exit-fade');
-setTimeout(function(){window.location.replace('/');},1200);
+setTimeout(function(){
+window.location.replace('/');
+},1200);
 }
 
 function skipToIndex(){
-if(document.body.classList.contains('exit-fade'))return;
 window.location.replace('/');
 }
 
 setTimeout(function(){
 if(!document.body.classList.contains('exit-fade')){
-console.log('[Intro] Safety timeout, forcing redirect');window.location.replace('/');
+window.location.replace('/');
 }
 },TOTAL_TIMEOUT);
 </script>
