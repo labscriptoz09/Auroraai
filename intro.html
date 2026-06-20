@@ -76,7 +76,7 @@ var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 var LOGO_DURATION=4000;
 var FILM_DURATION=6000;
 var TOTAL_TIMEOUT=15000;
-var FETCH_TIMEOUT=3000;
+var FETCH_TIMEOUT=4000;
 
 (function(){
 if(sessionStorage.getItem('aurora_intro_seen')==='true'){
@@ -89,50 +89,74 @@ startIntro();
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 
-// ✅ FIX v2.0 : JOIN video_stats + videos pour récupérer video_url, title, author
+// ✅ FIX v3.0 : 2 requêtes séparées au lieu du JOIN qui échoue
 async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var controller=new AbortController();
 var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);
 
-// Requête JOIN : video_stats contient les stats, videos contient video_url/title/authorvar r=await sb.from('video_stats')
-.select('id, views, likes, rating, videos(id, video_url, title, author, category)')
+// ÉTAPE 1 : Récupérer les IDs des meilleures vidéos depuis video_statsvar rStats=await sb.from('video_stats')
+.select('id, views, likes, rating')
 .order('views',{ascending:false})
-.limit(50)
+.limit(10)
 .abortSignal(controller.signal);
 
 clearTimeout(timeoutId);
 
-if(r.error||!r.data||r.data.length===0){
-console.log('[Intro] No data or error:',r.error);
+if(rStats.error||!rStats.data||rStats.data.length===0){
+console.log('[Intro] video_stats error or empty:',rStats.error);
 return null;
 }
 
-// Scoring avec champs vérifiés
-var best=null,bestScore=-1;
-r.data.forEach(function(v){
-var vid=v.videos;
-if(!vid||!vid.video_url)return; // Skip si pas de vidéo liée
-var likes=v.likes||0;
-var views=v.views||0;
-var rating=v.rating||0;
-var score=(likes*3)+(views*1)+(rating*20);
-if(score>bestScore){
-bestScore=score;
-best={
-video_url:vid.video_url,
-title:vid.title||'Film AuroraAI',
-author:vid.author||'Anonyme',
-likes:likes,
-views:views,
-rating:rating
-};
-}
+// Trouver le meilleur par scoring
+var bestId=null,bestScore=-1,bestStats=null;
+rStats.data.forEach(function(v){
+var score=((v.likes||0)*3)+((v.views||0)*1)+((v.rating||0)*20);
+if(score>bestScore){bestScore=score;bestId=v.id;bestStats=v;}
 });
 
-console.log('[Intro] Best film:',best?best.title:'none','score:',bestScore);
-return best;
+if(!bestId){
+console.log('[Intro] No best ID found');
+return null;
+}
+
+// ÉTAPE 2 : Récupérer video_url, title, author depuis videos
+var rVideo=await sb.from('videos')
+.select('id, video_url, title, author')
+.eq('id',bestId)
+.single();
+
+if(rVideo.error||!rVideo.data||!rVideo.data.video_url){
+console.log('[Intro] videos fetch error or no URL:',rVideo.error);
+// Fallback : essayer une autre vidéo
+for(var i=0;i<rStats.data.length;i++){
+var fallbackId=rStats.data[i].id;
+if(fallbackId===bestId)continue;
+var rFallback=await sb.from('videos').select('id, video_url, title, author').eq('id',fallbackId).single();
+if(!rFallback.error&&rFallback.data&&rFallback.data.video_url){
+console.log('[Intro] Fallback film found:',rFallback.data.title);
+return{
+video_url:rFallback.data.video_url,
+title:rFallback.data.title||'Film AuroraAI',
+author:rFallback.data.author||'Anonyme',
+likes:rStats.data[i].likes||0,
+views:rStats.data[i].views||0,
+rating:rStats.data[i].rating||0
+};
+}
+}return null;
+}
+
+console.log('[Intro] Best film:',rVideo.data.title,'score:',bestScore);
+return{
+video_url:rVideo.data.video_url,
+title:rVideo.data.title||'Film AuroraAI',
+author:rVideo.data.author||'Anonyme',
+likes:bestStats.likes||0,
+views:bestStats.views||0,
+rating:bestStats.rating||0
+};
 }catch(e){
 console.log('[Intro] Fetch error:',e.message||e);
 return null;
@@ -140,33 +164,36 @@ return null;
 }
 
 async function startIntro(){
-setTimeout(function(){
-document.getElementById('introLogo').classList.add('visible');
-},100);
-setTimeout(function(){
-document.getElementById('introTitle').classList.add('visible');
-},500);setTimeout(function(){
-document.getElementById('introTagline').classList.add('visible');
-},900);
+// Lancer l'animation du logo immédiatement
+setTimeout(function(){document.getElementById('introLogo').classList.add('visible');},100);
+setTimeout(function(){document.getElementById('introTitle').classList.add('visible');},500);
+setTimeout(function(){document.getElementById('introTagline').classList.add('visible');},900);
 
-var film=await getBestFilm();
+// Charger le film PENDANT que le logo s'anime
+var filmPromise=getBestFilm();
 
-setTimeout(function(){
+// Attendre au minimum LOGO_DURATION avant de transitionner
+var minWait=new Promise(function(resolve){setTimeout(resolve,LOGO_DURATION);});
+
+// Attendre les deux : temps minimum + film chargé
+var results=await Promise.all([minWait,filmPromise]);
+var film=results[1];
+
+// Transition : cacher le logo
 document.getElementById('phaseLogo').classList.add('fade-out');
+
 if(film&&film.video_url){
 showFilmPhase(film);
 }else{
-console.log('[Intro] No valid film found, skipping to index');
+console.log('[Intro] No valid film, skipping to index');
 skipToIndex();
 }
-},LOGO_DURATION);
 }
 
 function showFilmPhase(film){
 var phase=document.getElementById('phaseFilm');
 var video=document.getElementById('introVideo');
 var overlay=document.getElementById('filmOverlay');
-
 document.getElementById('filmTitle').textContent=film.title;
 document.getElementById('filmAuthor').textContent='par '+film.author;
 
@@ -180,40 +207,43 @@ phase.classList.add('active');
 video.src=film.video_url;
 video.muted=true;
 
-video.play().then(function(){
+var playPromise=video.play();
+if(playPromise!==undefined){
+playPromise.then(function(){
 console.log('[Intro] Video playing:',film.title);
 setTimeout(function(){overlay.classList.add('visible');},400);
 }).catch(function(err){
-console.log('[Intro] Video play failed:',err.message);
-// ✅ FIX v2.0 : Si vidéo échoue → fallback SANS overlay (pas d'écran noir avec texte)
-document.getElementById('fallbackMsg').style.display='block';
-document.getElementById('fallbackMsg').textContent='🎬 '+film.title;
-// Pas d'overlay sur écran noir → on attend puis skip
-setTimeout(function(){goToIndex();},3000);
-return;
-});
-
+console.log('[Intro] Autoplay blocked:',err.message);
+// Retry après court délai
 setTimeout(function(){
-goToIndex();},FILM_DURATION);
+video.play().then(function(){
+setTimeout(function(){overlay.classList.add('visible');},400);
+}).catch(function(){
+// Autoplay définitivement bloqué → skip propre
+console.log('[Intro] Autoplay definitively blocked, skipping');
+goToIndex();
+});
+},100);
+});
+}
+
+setTimeout(function(){goToIndex();},FILM_DURATION);
 }
 
 function goToIndex(){
 if(document.body.classList.contains('exit-fade'))return;
 document.body.classList.add('exit-fade');
-setTimeout(function(){
-window.location.replace('/');
-},1200);
+setTimeout(function(){window.location.replace('/');},1200);
 }
 
 function skipToIndex(){
+if(document.body.classList.contains('exit-fade'))return;
 window.location.replace('/');
 }
 
-// Safety net : si rien ne marche, redirect après 15s max
 setTimeout(function(){
 if(!document.body.classList.contains('exit-fade')){
-console.log('[Intro] Total timeout reached, forcing redirect');
-window.location.replace('/');
+console.log('[Intro] Safety timeout, forcing redirect');window.location.replace('/');
 }
 },TOTAL_TIMEOUT);
 </script>
