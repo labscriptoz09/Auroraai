@@ -31,7 +31,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .film-intro-author{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:600}
 .film-intro-stats{display:flex;gap:1rem;margin-top:0.6rem;flex-wrap:wrap}
 .film-intro-stat{font-size:0.75rem;color:rgba(212,175,55,0.8);font-weight:600;display:flex;align-items:center;gap:0.3rem}
-/* ✅ BUG FIX N°4 : Bouton passer repositionné haut droite + zone tactile élargie */
 .skip-btn{position:fixed;top:1.5rem;right:1.5rem;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:0.6rem 1.4rem;border-radius:25px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;opacity:0;animation:skipFadeIn 0.5s ease 2s forwards;backdrop-filter:blur(10px);letter-spacing:1px;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center}
 .skip-btn:hover{background:rgba(212,175,55,0.2);border-color:rgba(212,175,55,0.5);color:#d4af37}
 @keyframes skipFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -45,11 +44,10 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .intro-tagline{font-size:0.7rem;letter-spacing:3px}
 .film-overlay{padding:1.5rem}
 .film-intro-title{font-size:1.4rem}
-/* ✅ Mobile : bouton bien visible en haut à droite, jamais caché par la nav bar */
 .skip-btn{top:1rem;right:1rem;padding:0.5rem 1.2rem;font-size:0.75rem}
-}</style>
-</head>
-<body>
+}
+</style>
+</head><body>
 
 <div id="phaseLogo">
 <div class="intro-logo-wrap" id="introLogo">
@@ -70,7 +68,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 <div class="fallback-msg" id="fallbackMsg" style="display:none">Chargement...</div>
 </div>
 
-<!-- ✅ BUG FIX N°4 : Bouton repositionné via CSS (haut droite) -->
 <button class="skip-btn" id="skipBtn" onclick="goToIndex()">PASSER ▶</button>
 
 <script>
@@ -79,7 +76,7 @@ var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 var LOGO_DURATION=4000;
 var FILM_DURATION=6000;
 var TOTAL_TIMEOUT=15000;
-var FETCH_TIMEOUT=2000;
+var FETCH_TIMEOUT=3000;
 
 (function(){
 if(sessionStorage.getItem('aurora_intro_seen')==='true'){
@@ -92,25 +89,52 @@ startIntro();
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 
+// ✅ FIX v2.0 : JOIN video_stats + videos pour récupérer video_url, title, author
 async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var controller=new AbortController();
-var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50).abortSignal(controller.signal);
+var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);
+
+// Requête JOIN : video_stats contient les stats, videos contient video_url/title/authorvar r=await sb.from('video_stats')
+.select('id, views, likes, rating, videos(id, video_url, title, author, category)')
+.order('views',{ascending:false})
+.limit(50)
+.abortSignal(controller.signal);
+
 clearTimeout(timeoutId);
-if(r.error||!r.data||r.data.length===0)return null;
+
+if(r.error||!r.data||r.data.length===0){
+console.log('[Intro] No data or error:',r.error);
+return null;
+}
+
+// Scoring avec champs vérifiés
 var best=null,bestScore=-1;
 r.data.forEach(function(v){
+var vid=v.videos;
+if(!vid||!vid.video_url)return; // Skip si pas de vidéo liée
 var likes=v.likes||0;
 var views=v.views||0;
-var rating=v.avg_rating||v.rating||0;
-var comments=v.comments_count||v.comments||0;
-var score=(likes*3)+(views*1)+(rating*20)+(comments*5);
-if(score>bestScore){bestScore=score;best=v;}
+var rating=v.rating||0;
+var score=(likes*3)+(views*1)+(rating*20);
+if(score>bestScore){
+bestScore=score;
+best={
+video_url:vid.video_url,
+title:vid.title||'Film AuroraAI',
+author:vid.author||'Anonyme',
+likes:likes,
+views:views,
+rating:rating
+};
+}
 });
+
+console.log('[Intro] Best film:',best?best.title:'none','score:',bestScore);
 return best;
 }catch(e){
-console.log('[Intro] Fetch error or timeout:',e.message||e);
+console.log('[Intro] Fetch error:',e.message||e);
 return null;
 }
 }
@@ -121,8 +145,7 @@ document.getElementById('introLogo').classList.add('visible');
 },100);
 setTimeout(function(){
 document.getElementById('introTitle').classList.add('visible');
-},500);
-setTimeout(function(){
+},500);setTimeout(function(){
 document.getElementById('introTagline').classList.add('visible');
 },900);
 
@@ -133,6 +156,7 @@ document.getElementById('phaseLogo').classList.add('fade-out');
 if(film&&film.video_url){
 showFilmPhase(film);
 }else{
+console.log('[Intro] No valid film found, skipping to index');
 skipToIndex();
 }
 },LOGO_DURATION);
@@ -143,12 +167,13 @@ var phase=document.getElementById('phaseFilm');
 var video=document.getElementById('introVideo');
 var overlay=document.getElementById('filmOverlay');
 
-document.getElementById('filmTitle').textContent=film.title||'Film AuroraAI';
-document.getElementById('filmAuthor').textContent='par '+(film.author||film.creator_name||'Anonyme');
+document.getElementById('filmTitle').textContent=film.title;
+document.getElementById('filmAuthor').textContent='par '+film.author;
+
 var statsHtml='';
 if(film.likes)statsHtml+='<span class="film-intro-stat">❤️ '+fmt(film.likes)+' likes</span>';
 if(film.views)statsHtml+='<span class="film-intro-stat">👁️ '+fmt(film.views)+' vues</span>';
-if(film.avg_rating||film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+(film.avg_rating||film.rating)+'/5</span>';
+if(film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+film.rating+'/5</span>';
 document.getElementById('filmStats').innerHTML=statsHtml;
 
 phase.classList.add('active');
@@ -156,19 +181,24 @@ video.src=film.video_url;
 video.muted=true;
 
 video.play().then(function(){
+console.log('[Intro] Video playing:',film.title);
 setTimeout(function(){overlay.classList.add('visible');},400);
-}).catch(function(){
+}).catch(function(err){
+console.log('[Intro] Video play failed:',err.message);
+// ✅ FIX v2.0 : Si vidéo échoue → fallback SANS overlay (pas d'écran noir avec texte)
 document.getElementById('fallbackMsg').style.display='block';
-document.getElementById('fallbackMsg').textContent='🎬 '+(film.title||'AuroraAI');
-setTimeout(function(){overlay.classList.add('visible');},400);
+document.getElementById('fallbackMsg').textContent='🎬 '+film.title;
+// Pas d'overlay sur écran noir → on attend puis skip
+setTimeout(function(){goToIndex();},3000);
+return;
 });
 
 setTimeout(function(){
-goToIndex();
-},FILM_DURATION);
+goToIndex();},FILM_DURATION);
 }
 
 function goToIndex(){
+if(document.body.classList.contains('exit-fade'))return;
 document.body.classList.add('exit-fade');
 setTimeout(function(){
 window.location.replace('/');
@@ -179,8 +209,10 @@ function skipToIndex(){
 window.location.replace('/');
 }
 
+// Safety net : si rien ne marche, redirect après 15s max
 setTimeout(function(){
 if(!document.body.classList.contains('exit-fade')){
+console.log('[Intro] Total timeout reached, forcing redirect');
 window.location.replace('/');
 }
 },TOTAL_TIMEOUT);
