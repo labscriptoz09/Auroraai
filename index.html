@@ -54,6 +54,20 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .points-badge:hover{background:rgba(212,175,55,0.3)}
 .points-badge.pulse{animation:pointsPulse 0.6s ease}
 @keyframes pointsPulse{0%{transform:scale(1)}50%{transform:scale(1.15);box-shadow:0 0 20px rgba(212,175,55,0.5)}100%{transform:scale(1)}}
+/* ===== v11.6 BADGE HEADER ===== */
+.header-badge-display{display:flex;align-items:center;gap:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:10px;padding:0.4rem 0.7rem;cursor:pointer;transition:all 0.3s;text-decoration:none;max-width:180px}
+.header-badge-display:hover{background:rgba(212,175,55,0.18);border-color:rgba(212,175,55,0.5);transform:translateY(-1px)}
+.header-badge-display.badge-pulse{animation:badgeHeaderPulse 0.8s ease}
+@keyframes badgeHeaderPulse{0%{transform:scale(1);box-shadow:none}30%{transform:scale(1.1);box-shadow:0 0 25px rgba(212,175,55,0.6)}60%{transform:scale(1.05)}100%{transform:scale(1);box-shadow:none}}
+.header-badge-img{width:28px;height:28px;object-fit:contain;border-radius:6px;filter:drop-shadow(0 0 6px rgba(212,175,55,0.4))}
+.header-badge-name{color:#d4af37;font-size:0.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
+.badge-toast-notification{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.7);z-index:600;background:rgba(0,0,0,0.97);border:2px solid #d4af37;border-radius:20px;padding:2rem 2.5rem;display:none;flex-direction:column;align-items:center;gap:0.8rem;text-align:center;box-shadow:0 0 100px rgba(212,175,55,0.5),0 0 40px rgba(212,175,55,0.2);opacity:0;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+.badge-toast-notification.show{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1)}
+.badge-toast-notification img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 25px rgba(212,175,55,0.7));animation:badgeToastFloat 2s ease-in-out infinite}
+@keyframes badgeToastFloat{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-6px) rotate(-2deg)}75%{transform:translateY(-6px) rotate(2deg)}}
+.badge-toast-notification .btl{color:#d4af37;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;font-weight:700}
+.badge-toast-notification .btn{color:#fff;font-size:1.6rem;font-weight:900;letter-spacing:1px;text-shadow:0 0 30px rgba(212,175,55,0.6)}
+.badge-toast-notification .btd{color:rgba(255,255,255,0.5);font-size:0.8rem}
 .menu-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.5rem 0.8rem;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;position:relative;flex-shrink:0;white-space:nowrap;transition:all 0.3s}
 .menu-btn:hover{background:rgba(212,175,55,0.25);box-shadow:0 0 15px rgba(212,175,55,0.2)}
 .fav-badge{position:absolute;top:-8px;right:-8px;background:#d4af37;color:#000;font-size:0.7rem;font-weight:800;width:22px;height:22px;border-radius:50%;display:none;align-items:center;justify-content:center}
@@ -82,8 +96,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .menu-link-text{flex:1}
 .menu-divider{width:100%;max-width:350px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent);margin:0.5rem auto}
 .menu-cats-title{width:100%;max-width:350px;padding:0.8rem 1.5rem 0.5rem;color:rgba(212,175,55,0.5);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase}
-.menu-cats-grid{width:100%;max-width:350px;padding:0 1.5rem 2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem}
-.cat-btn{padding:0.65rem 0.5rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:10px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.4rem}
+.menu-cats-grid{width:100%;max-width:350px;padding:0 1.5rem 2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem}.cat-btn{padding:0.65rem 0.5rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:10px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.4rem}
 .cat-btn:hover{background:rgba(212,175,55,0.12);border-color:rgba(212,175,55,0.3);color:#d4af37;transform:translateY(-1px)}
 .cat-btn.active{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;border-color:#d4af37;font-weight:700;box-shadow:0 4px 15px rgba(212,175,55,0.3)}
 .cat-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
@@ -96,7 +109,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .hero-info{position:absolute;bottom:0;left:0;right:0;padding:2rem 1.5rem 1.5rem;background:linear-gradient(transparent 0%,rgba(0,0,0,.7) 30%,rgba(0,0,0,.97) 100%)}
 .hero-editorial{display:inline-block;padding:.25rem .8rem;background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);border-radius:20px;color:#d4af37;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:.6rem}
 .hero-badge-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap}.hero-cat{background:rgba(212,175,55,.2);padding:.2rem .7rem;border-radius:20px;font-size:.7rem;color:#d4af37;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.hero-rating{color:#d4af37;font-size:.8rem;letter-spacing:1px}.hero-title{color:#fff;font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:.4rem;line-height:1.2;text-shadow:0 3px 15px rgba(0,0,0,.9)}
+.hero-rating{color:#d4af37;font-size:.8rem;letter-spacing:1px}
+.hero-title{color:#fff;font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:.4rem;line-height:1.2;text-shadow:0 3px 15px rgba(0,0,0,.9)}
 .hero-author{color:rgba(255,255,255,.6);font-size:.85rem;margin-bottom:.6rem}
 .hero-desc{color:rgba(255,255,255,.65);font-size:.85rem;line-height:1.5;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .hero-btns{display:flex;gap:.7rem;flex-wrap:wrap}
@@ -131,8 +145,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .video-card h3{color:#d4af37;margin-bottom:.5rem}
 .video-card p{color:rgba(255,255,255,0.7);font-size:.9rem}
 .video-card-stats{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid rgba(212,175,55,0.15)}
-.stat{display:flex;align-items:center;gap:0.3rem;font-size:0.85rem;color:rgba(255,255,255,0.7)}
-.like-btn-card{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);color:#d4af37;padding:0.4rem 0.8rem;border-radius:20px;cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem}
+.stat{display:flex;align-items:center;gap:0.3rem;font-size:0.85rem;color:rgba(255,255,255,0.7)}.like-btn-card{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);color:#d4af37;padding:0.4rem 0.8rem;border-radius:20px;cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem}
 .like-btn-card:hover{background:rgba(212,175,55,0.3)}
 .like-btn-card.liked{background:rgba(212,175,55,0.4);color:#000}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s}
@@ -145,7 +158,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .save-modal-content{text-align:center}
 .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.5rem;cursor:pointer}.modal-close:hover{color:#d4af37}
 .share-modal h3,.save-modal-content h3{color:#d4af37;font-size:1.2rem;margin-bottom:1rem;text-align:center}
-.save-modal-content p{color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:1.5rem;line-height:1.5}.save-modal-content input{width:100%;padding:0.8rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#fff;font-size:0.95rem;margin-bottom:1rem;outline:none;text-align:center}
+.save-modal-content p{color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:1.5rem;line-height:1.5}
+.save-modal-content input{width:100%;padding:0.8rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#fff;font-size:0.95rem;margin-bottom:1rem;outline:none;text-align:center}
 .save-modal-content input:focus{border-color:#d4af37}
 .save-modal-content button{width:100%;padding:0.8rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:1rem;cursor:pointer}
 .share-options{display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem}
@@ -154,7 +168,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .share-option .share-icon{font-size:1.5rem}
 .share-copy{grid-column:span 2;margin-top:0.5rem;padding:0.8rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#d4af37;font-weight:700;cursor:pointer;font-size:0.9rem;text-align:center}
 .share-copy:hover{background:rgba(212,175,55,0.25)}
-/* ===== CINEMATIC PREVIEW v2 (5s + Logo Doux) ===== */
 .cinematic-preview{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;border:1px solid rgba(212,175,55,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.08)}
 .preview-video{width:100%;height:100%;object-fit:cover;display:block}
 .preview-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;z-index:5}
@@ -175,11 +188,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;backg
 .play-icon{width:30px;height:30px}
 .play-icon::before{border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}
 .points-badge{padding:0.3rem 0.5rem;font-size:0.7rem}
+.header-badge-display{padding:0.3rem 0.5rem;max-width:120px}
+.header-badge-img{width:22px;height:22px}
+.header-badge-name{font-size:0.65rem;max-width:60px}
 .menu-btn{padding:0.4rem 0.7rem;font-size:0.8rem}
 header{padding:0.8rem 1rem;gap:0.5rem}
 .filters-bar{padding:0 1rem 1rem}
-.logo-text-cinematic{font-size:1.8rem;letter-spacing:2px}
-.logo-icon-wrapper{width:60px;height:60px;border-radius:12px}
+.logo-text-cinematic{font-size:1.8rem;letter-spacing:2px}.logo-icon-wrapper{width:60px;height:60px;border-radius:12px}
 .play-icon-cinematic{border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:15px solid #d4af37;margin-left:3px}
 .logo-tagline-cinematic{font-size:0.7rem;letter-spacing:3px}
 }
@@ -191,10 +206,16 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
 <div class="search-bar"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="Rechercher..." oninput="APP.handleSearch(this.value)"></div>
-<!-- ✅ MODIFICATION #1 : Badge points → lien /badges.html -->
-<div class="header-right"><a href="/badges.html" class="points-badge" id="pointsBadge" title="Mes Badges">⭐ <span id="pointsDisplay">0</span></a>
+<div class="header-right">
+<!-- ✅ v11.6 : Badge visible à côté des points -->
+<a href="/badges.html" class="header-badge-display" id="headerBadgeDisplay" title="Voir tous mes badges">
+<img class="header-badge-img" id="headerBadgeImg" src="https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg" alt="">
+<span class="header-badge-name" id="headerBadgeName">Pousse</span>
+</a>
+<a href="/badges.html" class="points-badge" id="pointsBadge" title="Mes Badges">⭐ <span id="pointsDisplay">0</span></a>
 <button class="menu-btn" onclick="APP.toggleMenu()">☰ Menu<span class="fav-badge" id="favBadge">0</span></button>
-</div></header>
+</div>
+</header>
 <div class="mobile-menu" id="mobileMenu">
 <div class="menu-header">
 <div class="menu-header-title"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg> AuroraAI</div>
@@ -206,7 +227,6 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 </div>
 <nav class="menu-nav">
 <a href="/" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="menu-link-text">Accueil</span></a>
-<!-- ✅ MODIFICATION #2 : Lien Mes Badges ajouté -->
 <a href="/badges.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="menu-link-text">Mes Badges</span></a>
 <a href="/upload.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="menu-link-text">Publier une vidéo</span></a>
 <a href="#" class="menu-link" onclick="APP.toggleMenu();APP.showFavorites()"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="menu-link-text">Mes Favoris</span></a>
@@ -223,29 +243,23 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <button class="cat-btn" onclick="APP.filterCategory('Romance',this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Romance</button>
 <button class="cat-btn" onclick="APP.filterCategory('Pub',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Pub</button>
 <button class="cat-btn" onclick="APP.filterCategory('Dessin animé',this)"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg> Animé</button>
-<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button>
-</div>
+<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button></div>
 </div>
 <div id="homePage">
 <div id="heroTagline" class="tagline-section" style="padding-top:5.5rem"></div>
 <section class="hero-projector" id="heroProjector">
 <div class="hero-beam"></div>
 <div class="hero-stage">
-<!-- CINEMATIC PREVIEW CONTAINER -->
 <div id="cinematicPreview" class="cinematic-preview">
 <video id="previewVideo" class="preview-video" muted playsinline preload="auto"></video>
 <div class="preview-overlay" id="previewOverlay">
 <div class="preview-logo-reveal" id="previewLogo">
-<div class="logo-icon-wrapper">
-<div class="play-icon-cinematic"></div>
-</div>
+<div class="logo-icon-wrapper"><div class="play-icon-cinematic"></div></div>
 <div class="logo-text-cinematic">AuroraAI</div>
 <div class="logo-tagline-cinematic">Cinéma & Séries IA</div>
 </div>
-</div><div class="preview-progress" id="previewProgress">
-<div class="preview-progress-fill" id="previewProgressFill"></div></div>
+</div><div class="preview-progress" id="previewProgress"><div class="preview-progress-fill" id="previewProgressFill"></div></div>
 </div>
-<!-- HERO FRAME NORMAL (hidden during preview) -->
 <div id="heroFrame" class="hero-frame" style="display:none"><p style="text-align:center;color:rgba(255,255,255,.4);padding:4rem 1rem">Chargement...</p></div>
 </div>
 <div class="hero-nav" id="heroNav"></div>
@@ -278,11 +292,17 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <div class="share-copy" onclick="APP.copySiteLink()">📋 Copier le lien du site</div>
 </div></div>
 <div class="save-modal" id="saveModal" onclick="if(event.target===this)APP.closeSaveModal()">
-<div class="save-modal-content"><button class="modal-close" onclick="APP.closeSaveModal()">✕</button><h3>💾 Sauvegarder mes points</h3>
-<p>Entrez votre email pour sécuriser vos <strong id="savePointsCount">0</strong> points dans le cloud.</p>
+<div class="save-modal-content"><button class="modal-close" onclick="APP.closeSaveModal()">✕</button><h3>💾 Sauvegarder mes points</h3><p>Entrez votre email pour sécuriser vos <strong id="savePointsCount">0</strong> points dans le cloud.</p>
 <input type="email" id="saveEmail" placeholder="votre@email.com">
 <button onclick="APP.savePointsWithEmail()">Sauvegarder</button>
 </div></div>
+<!-- ✅ v11.6 : Toast notification badge débloqué -->
+<div class="badge-toast-notification" id="badgeToastNotif">
+<div class="btl">🏆 Badge Débloqué</div>
+<img id="badgeToastImg" src="" alt="">
+<div class="btn" id="badgeToastName"></div>
+<div class="btd" id="badgeToastDesc"></div>
+</div>
 <footer style="position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)">
 <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
 <a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a>
@@ -291,9 +311,9 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <a href="/faq.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">FAQ</a>
 <a href="/contact.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Contact</a>
 <a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a><a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
-<!-- ✅ MODIFICATION #3 : Lien Badges dans footer -->
-<a href="/badges.html" style="color:rgba(212,175,55,0.4);font-size:0.8rem;text-decoration:none">🏆 Badges</a></div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v11.1 CINEMATIC 5S</p>
+<a href="/badges.html" style="color:rgba(212,175,55,0.4);font-size:0.8rem;text-decoration:none">🏆 Badges</a>
+</div>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v11.6 BADGE VISIBLE</p>
 </footer>
 <div class="toast" id="toast"></div>
 <script src="/plexus.js"></script>
@@ -310,6 +330,87 @@ throw new Error('OFFLINE_MODE');
 }
 }catch(e){if(e.message==='OFFLINE_MODE')return;}
 })();
+
+// ========== v11.6 BADGE SYSTEM (HEADER VISIBLE) ==========
+var BADGES_DATA=[
+{id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
+{id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
+{id:3,name:"Cinéphile",img:"https://i.ibb.co/zVLF58bZ/8f381275-f2d5-4eb7-a221-fcb15c10f529.jpg",check:function(s){return s.views>=50;}},
+{id:4,name:"Fan",img:"https://i.ibb.co/wrKs5PRh/167ab6e1-8a22-4aea-954d-0265fc8aca45.jpg",check:function(s){return s.likesGiven>=50;}},
+{id:5,name:"Commentateur",img:"https://i.ibb.co/vxMy7H4y/d6a5c693-69d0-4bde-ac96-491e9b5f36f3.jpg",check:function(s){return s.comments>=20;}},
+{id:6,name:"Critique",img:"https://i.ibb.co/n42jcCf/4a97b334-4ed1-4bd5-8997-edec135a0294.jpg",check:function(s){return s.ratings>=30;}},
+{id:7,name:"Streak 7j",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},
+{id:8,name:"Créateur",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
+{id:9,name:"Réalisateur",img:"https://i.ibb.co/tMBH8wwg/24796f64-fa2d-443d-9224-b9ff097f3c7d.jpg",check:function(s){return s.videosPublished>=5;}},{id:10,name:"Primé",img:"https://i.ibb.co/999TrqYS/ad6492d7-66a5-42af-b837-0ea65ce71639.jpg",check:function(s){return s.hasRatedVideo;}},
+{id:11,name:"Vu 1K",img:"https://i.ibb.co/hJ7hBGDX/9227fc28-7dd7-49d5-a65e-08cf0635dfe8.jpg",check:function(s){return s.maxVideoViews>=1000;}},
+{id:12,name:"Aimé 100",img:"https://i.ibb.co/LdW4sSQb/44590e7c-ceb4-4d26-9f24-28e26f86216d.jpg",check:function(s){return s.maxVideoLikes>=100;}},
+{id:13,name:"Tipé",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},
+{id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
+{id:15,name:"Ambassadeur",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
+{id:16,name:"Fidèle",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
+{id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
+{id:18,name:"Maître",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
+{id:19,name:"Streak 30j",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.streak>=30;}},
+{id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
+];
+
+function getBadgeStats(){
+var stats={points:userPoints,views:0,likesGiven:0,comments:0,ratings:0,streak:0,videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false};
+for(var i=0;i<localStorage.length;i++){
+var k=localStorage.key(i);
+if(k&&k.indexOf('liked_')===0&&localStorage.getItem(k)==='true')stats.likesGiven++;
+if(k&&k.indexOf('rated_')===0)stats.ratings++;
+if(k&&k.indexOf('viewed_')===0)stats.views++;
+}
+stats.shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
+stats.emailSaved=!!localStorage.getItem('aurora_saved_email');
+try{var sd=JSON.parse(localStorage.getItem('aurora_streak_data')||'{}');stats.streak=sd.current_streak||0;}catch(e){}
+return stats;
+}
+
+function getCurrentBadge(){
+var stats=getBadgeStats();
+var unlocked=[];
+var allExcept=true;
+BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
+if(allExcept&&unlocked.length===19)unlocked.push(20);
+var highest=BADGES_DATA[0];
+for(var i=BADGES_DATA.length-1;i>=0;i--){
+if(unlocked.indexOf(BADGES_DATA[i].id)!==-1){highest=BADGES_DATA[i];break;}
+}
+return{badge:highest,unlocked:unlocked};
+}
+
+function updateHeaderBadge(showNewBadgeToast){
+var result=getCurrentBadge();
+var b=result.badge;
+var imgEl=document.getElementById('headerBadgeImg');
+var nameEl=document.getElementById('headerBadgeName');
+var displayEl=document.getElementById('headerBadgeDisplay');
+if(imgEl)imgEl.src=b.img;
+if(nameEl)nameEl.textContent=b.name;
+if(showNewBadgeToast){
+var prev=JSON.parse(localStorage.getItem('aurora_badges_unlocked')||'[]');var newly=result.unlocked.filter(function(id){return prev.indexOf(id)===-1;});
+if(newly.length>0){
+if(displayEl){displayEl.classList.remove('badge-pulse');void displayEl.offsetWidth;displayEl.classList.add('badge-pulse');}
+newly.forEach(function(id,i){
+var bd=BADGES_DATA.find(function(x){return x.id===id;});
+if(bd)setTimeout(function(){showBadgeNotif(bd);},600*(i+1));
+});
+}
+}
+localStorage.setItem('aurora_badges_unlocked',JSON.stringify(result.unlocked));
+}
+
+function showBadgeNotif(badge){
+var t=document.getElementById('badgeToastNotif');
+if(!t||!badge.img)return;
+document.getElementById('badgeToastImg').src=badge.img;
+document.getElementById('badgeToastName').textContent=badge.name;
+document.getElementById('badgeToastDesc').textContent='';
+t.classList.add('show');
+setTimeout(function(){t.classList.remove('show');},3500);
+}
 
 var APP=(function(){
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
@@ -337,12 +438,14 @@ if(savedEmail){existing=await sb.from('user_points').select('total_points,viewer
 if(!existing||existing.error)existing=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
 var nt=pts;
 if(!existing.error&&existing.data)nt=existing.data.total_points+pts;
-else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:savedEmail||null}]);updBadge(pts);animBadge();showPointReveal(pts,reason,pts);return;}
-await sb.from('user_points').update({total_points:nt,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);
-userPoints=nt;updBadge(nt);animBadge();showPointReveal(pts,reason,nt);
+else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:savedEmail||null}]);updBadge(pts);animBadge();showPointReveal(pts,reason,pts);updateHeaderBadge(true);return;}
+await sb.from('user_points').update({total_points:nt,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);userPoints=nt;updBadge(nt);animBadge();showPointReveal(pts,reason,nt);
+// ✅ v11.6 : Vérifier badge après chaque gain de points
+updateHeaderBadge(true);
 if(creatorVid&&creatorVid!==viewerId){var ce=await sb.from('user_points').select('total_points').eq('viewer_id',creatorVid).single();if(!ce.error&&ce.data)await sb.from('user_points').update({total_points:ce.data.total_points+pts,updated_at:new Date().toISOString()}).eq('viewer_id',creatorVid);else await sb.from('user_points').insert([{viewer_id:creatorVid,total_points:pts}]);}}catch(e){console.log('[Points]',e);}
-}async function checkDailyLogin(){if(!sb)return;try{var today=new Date().toISOString().split('T')[0],r=await sb.from('user_points').select('last_login_date,current_streak').eq('viewer_id',viewerId).single();if(r.error||!r.data)return;if(r.data.last_login_date!==today){await sb.from('user_points').update({last_login_date:today,current_streak:(r.data.current_streak||0)+1,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);addPoints(5,'Connexion quotidienne',null);}}catch(e){}}
-async function loadUserPoints(){if(!sb)return;try{var se=localStorage.getItem('aurora_saved_email'),r=null;if(se)r=await sb.from('user_points').select('total_points').eq('email',se).single();if(!r||r.error)r=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();if(!r.error&&r.data){userPoints=r.data.total_points;updBadge(userPoints);}}catch(e){}}
+}
+async function checkDailyLogin(){if(!sb)return;try{var today=new Date().toISOString().split('T')[0],r=await sb.from('user_points').select('last_login_date,current_streak').eq('viewer_id',viewerId).single();if(r.error||!r.data)return;if(r.data.last_login_date!==today){await sb.from('user_points').update({last_login_date:today,current_streak:(r.data.current_streak||0)+1,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);addPoints(5,'Connexion quotidienne',null);}}catch(e){}}
+async function loadUserPoints(){if(!sb)return;try{var se=localStorage.getItem('aurora_saved_email'),r=null;if(se)r=await sb.from('user_points').select('total_points').eq('email',se).single();if(!r||r.error)r=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();if(!r.error&&r.data){userPoints=r.data.total_points;updBadge(userPoints);updateHeaderBadge(false);}}catch(e){}}
 function updBadge(p){var el=document.getElementById('pointsDisplay');if(el)el.textContent=fmt(p);}
 function animBadge(){var b=document.getElementById('pointsBadge');if(!b)return;b.classList.remove('pulse');void b.offsetWidth;b.classList.add('pulse');}
 
@@ -385,12 +488,15 @@ addPoints(3,'Vidéo aimée',v.viewer_id);
 await sb.from('videos').update({likes:v.likes}).eq('id',vid);
 localStorage.setItem(k,isL?'false':'true');
 toast(isL?'Like retiré':'❤️ Vidéo aimée','success');
+// ✅ v11.6 : Re-vérifier badge après likeupdateHeaderBadge(true);
 }catch(err){toast('❌ Erreur like','error');}
 }else{
 v.likes=isL?Math.max((v.likes||0)-1,0):(v.likes||0)+1;
 localStorage.setItem(k,isL?'false':'true');toast(isL?'Like retiré':'❤️ Vidéo aimée','success');
+updateHeaderBadge(true);
 }
-renderVideos();}
+renderVideos();
+}
 
 function playVideo(video){document.getElementById('playerFrame').src='/player.html?id='+video.id;document.getElementById('playerOverlay').style.display='block';document.body.style.overflow='hidden';var vk='viewed_'+video.id+'_'+new Date().toISOString().split('T')[0];if(!localStorage.getItem(vk)){addPoints(10,'Vidéo regardée',video.viewer_id);localStorage.setItem(vk,'1');}}
 function closePlayer(){document.getElementById('playerFrame').src='';document.getElementById('playerOverlay').style.display='none';document.body.style.overflow='';}
@@ -403,7 +509,7 @@ function copySiteLink(){var sk='shares_today_'+new Date().toISOString().split('T
 
 function openSaveModal(){document.getElementById('savePointsCount').textContent=fmt(userPoints);document.getElementById('saveModal').classList.add('active');document.body.style.overflow='hidden';}
 function closeSaveModal(){document.getElementById('saveModal').classList.remove('active');document.body.style.overflow='';}
-async function savePointsWithEmail(){var email=document.getElementById('saveEmail').value.trim();if(!email||!email.includes('@')){toast('❌ Email invalide','error');return;}if(!sb){toast('❌ Connexion requise','error');return;}try{var ex=await sb.from('user_points').select('id').eq('viewer_id',viewerId).single();if(!ex.error&&ex.data)await sb.from('user_points').update({email:email,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);else await sb.from('user_points').insert([{viewer_id:viewerId,total_points:userPoints,email:email}]);localStorage.setItem('aurora_saved_email',email);toast('✅ Points sauvegardés !','success');closeSaveModal();document.getElementById('saveEmail').value='';}catch(e){toast('❌ '+e.message,'error');}}
+async function savePointsWithEmail(){var email=document.getElementById('saveEmail').value.trim();if(!email||!email.includes('@')){toast('❌ Email invalide','error');return;}if(!sb){toast('❌ Connexion requise','error');return;}try{var ex=await sb.from('user_points').select('id').eq('viewer_id',viewerId).single();if(!ex.error&&ex.data)await sb.from('user_points').update({email:email,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);else await sb.from('user_points').insert([{viewer_id:viewerId,total_points:userPoints,email:email}]);localStorage.setItem('aurora_saved_email',email);toast('✅ Points sauvegardés !','success');closeSaveModal();document.getElementById('saveEmail').value='';updateHeaderBadge(true);}catch(e){toast('❌ '+e.message,'error');}}
 
 function renderVideos(){var f=currentCategory==='all'?videos:videos.filter(function(v){return v.category===currentCategory;});if(searchQuery)f=f.filter(function(v){return v.title.toLowerCase().indexOf(searchQuery)!==-1||v.author.toLowerCase().indexOf(searchQuery)!==-1||(v.description&&v.description.toLowerCase().indexOf(searchQuery)!==-1)||v.category.toLowerCase().indexOf(searchQuery)!==-1;});renderList(f);}
 function renderList(list){var g=document.getElementById('videoGrid');if(!list.length){g.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">'+(searchQuery?'Aucun résultat':'Aucune vidéo')+'</p>';return;}g.innerHTML=list.map(function(v){var lk='liked_'+v.id,isL=localStorage.getItem(lk)==='true',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"'),img=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading="lazy">':'';return'<div class="video-card" onclick=\'APP.playVideo('+vs+')\'>'+img+'<h3>'+esc(v.title)+'</h3><p>'+esc(v.author)+' • 👁️ '+fmt(v.views)+' vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">'+esc(v.category)+(v.rating?' • ⭐ '+v.rating+'/5':'')+'</p><div class="video-card-stats"><span class="stat">👁️ '+fmt(v.views)+'</span><button class="like-btn-card '+(isL?'liked':'')+'" onclick="APP.quickLike(event,'+v.id+')">'+(isL?'❤️ Aimé':'🤍 J\'aime')+' ('+fmt(v.likes)+')</button></div></div>';}).join('');}
@@ -425,21 +531,20 @@ var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===
 nv.innerHTML=d;
 }
 
-// ===== CINEMATIC AUTO-PREVIEW SYSTEM v2 (5s + Logo Doux) =====
 var cinematicPlayed=false;
 function playCinematicPreview(firstVideoUrl){
     if(cinematicPlayed||!firstVideoUrl)return;
     cinematicPlayed=true;
     var container=document.getElementById('cinematicPreview');
     var video=document.getElementById('previewVideo');
-    var overlay=document.getElementById('previewOverlay');
-    var logo=document.getElementById('previewLogo');
+    var overlay=document.getElementById('previewOverlay');    var logo=document.getElementById('previewLogo');
     var progressFill=document.getElementById('previewProgressFill');
     var heroFrame=document.getElementById('heroFrame');
     if(!container||!video)return;    video.src=firstVideoUrl;
     video.muted=true;
     var totalDuration=6300;
-    var videoEndTime=3500;    var logoStartTime=4000;
+    var videoEndTime=3500;
+    var logoStartTime=4000;
     var startTime=null;
     video.play().then(function(){
         startTime=Date.now();
@@ -481,14 +586,14 @@ try{
 if(typeof window.supabase==='undefined'){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ SDK Supabase non chargé</p>';return;}
 sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
 var r=await sb.from('video_stats').select('*').order('created_at',{ascending:false});
-if(r.error){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+r.error.message+'</p>';return;}
-videos=r.data||[];
+if(r.error){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+r.error.message+'</p>';return;}videos=r.data||[];
 renderVideos();renderTopRated();
 if(videos.length>0&&videos[0].video_url){    playCinematicPreview(videos[0].video_url);
 }else{
     renderHero();startHeroAuto();
 }
-updFavBadge();loadUserPoints();checkDailyLogin();sb.channel('views_changes').on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(){
+updFavBadge();loadUserPoints();checkDailyLogin();
+sb.channel('views_changes').on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(){
 (async function(){
 var r2=await sb.from('video_stats').select('*').order('created_at',{ascending:false});
 if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated();}
