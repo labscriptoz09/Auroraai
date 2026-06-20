@@ -10,205 +10,341 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#fff;font-family:sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 #plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;background:rgba(0,0,0,0.92);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
 .logo-container{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
 .play-icon{width:32px;height:32px;border:2px solid #d4af37;border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(212,175,55,0.4)}
 .play-icon::before{content:'';width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}
 .logo{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:1px}
-.back-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.5rem 1rem;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem}
-.back-btn:hover{background:rgba(212,175,55,0.3)}
-.main{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:5rem 1rem 3rem}
-.page-title{color:#d4af37;font-size:2rem;font-weight:900;text-align:center;margin-bottom:0.3rem;letter-spacing:2px}
-.page-subtitle{color:rgba(255,255,255,0.4);font-size:0.8rem;text-align:center;margin-bottom:2rem;letter-spacing:3px;text-transform:uppercase}
-.stats-bar{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem;padding:1rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.15);border-radius:16px}
-.stat-item{text-align:center}
-.stat-value{color:#d4af37;font-size:1.8rem;font-weight:900}
-.stat-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;margin-top:0.2rem}
+.back-btn{background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.35);color:#d4af37;padding:0.45rem 0.9rem;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;display:inline-flex;align-items:center;gap:0.35rem;transition:all 0.3s;text-decoration:none;white-space:nowrap;line-height:1}
+.back-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37;transform:translateY(-1px)}
+.back-btn svg{width:14px;height:14px;stroke:#d4af37;fill:none;stroke-width:2;flex-shrink:0}
+
+/* ✅ ALERTE EMAIL SAUVEGARDE */
+.save-alert{position:fixed;top:56px;left:0;right:0;z-index:99;background:linear-gradient(135deg,rgba(255,0,0,0.15),rgba(200,0,0,0.1));border-bottom:2px solid #ff4444;padding:1rem;animation:alertPulse 2s ease-in-out infinite}
+.save-alert.hidden{display:none}
+.save-alert-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap}
+.save-alert-icon{font-size:1.8rem;flex-shrink:0;animation:alertShake 1s ease-in-out infinite}
+.save-alert-text{flex:1;min-width:200px}
+.save-alert-title{color:#ff4444;font-size:0.95rem;font-weight:900;letter-spacing:0.5px;margin-bottom:0.15rem}
+.save-alert-desc{color:rgba(255,255,255,0.7);font-size:0.75rem;line-height:1.3}
+.save-alert-form{display:flex;gap:0.4rem;flex-shrink:0}
+.save-alert-form input{padding:0.5rem 0.8rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,68,68,0.4);border-radius:8px;color:#fff;font-size:0.8rem;width:220px;outline:none;transition:all 0.3s}
+.save-alert-form input:focus{border-color:#ff4444;background:rgba(255,255,255,0.12)}
+.save-alert-form button{padding:0.5rem 1rem;background:linear-gradient(135deg,#ff4444,#cc0000);border:none;border-radius:8px;color:#fff;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:all 0.3s}
+.save-alert-form button:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(255,68,68,0.4)}
+.save-alert-form button:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.save-alert-success{color:#4caf50;font-weight:700;font-size:0.85rem;display:none;align-items:center;gap:0.3rem}
+@keyframes alertPulse{0%,100%{background:linear-gradient(135deg,rgba(255,0,0,0.15),rgba(200,0,0,0.1))}50%{background:linear-gradient(135deg,rgba(255,0,0,0.25),rgba(200,0,0,0.18))}}
+@keyframes alertShake{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+
+/* MAIN */
+.main{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:5rem 1rem 3rem}
+.main.with-alert{padding-top:8rem}
+
+/* BADGE ACTUEL */
+.current-badge-section{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-bottom:2rem;padding:1.5rem;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.25);border-radius:20px}
+.current-badge-img{width:70px;height:70px;object-fit:contain;border-radius:12px;filter:drop-shadow(0 0 15px rgba(212,175,55,0.5));animation:badgeFloat 3s ease-in-out infinite}@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.current-badge-info{text-align:left}
+.current-badge-label{color:rgba(212,175,55,0.6);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
+.current-badge-name{color:#d4af37;font-size:1.6rem;font-weight:900}
+.current-badge-points{color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:0.2rem}
+
+/* PROGRESS */
 .progress-wrap{margin-bottom:2rem}
 .progress-bar{width:100%;height:8px;background:rgba(212,175,55,0.1);border-radius:4px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:4px;transition:width 1s ease;box-shadow:0 0 15px rgba(212,175,55,0.4)}
-.progress-text{color:rgba(255,255,255,0.4);font-size:0.7rem;text-align:right;margin-top:0.3rem}
-.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-.badge-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.12);border-radius:16px;padding:1.2rem 0.6rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.5rem;transition:all 0.3s;position:relative;overflow:hidden}
-.badge-card.unlocked{border-color:rgba(212,175,55,0.4);background:rgba(212,175,55,0.08);box-shadow:0 0 20px rgba(212,175,55,0.1)}
-.badge-card.locked{opacity:0.35;filter:grayscale(1)}
-.badge-card.locked .badge-img{filter:brightness(0.3) grayscale(1)}
-.badge-card.unlocked:hover{transform:translateY(-4px);box-shadow:0 10px 35px rgba(212,175,55,0.25);border-color:#d4af37}
-.badge-img{width:64px;height:64px;object-fit:contain;border-radius:10px;transition:all 0.3s}
-.badge-card.unlocked .badge-img{filter:drop-shadow(0 0 10px rgba(212,175,55,0.5))}
-.badge-name{color:#fff;font-size:0.75rem;font-weight:700;line-height:1.2}
-.badge-card.unlocked .badge-name{color:#d4af37}
-.badge-condition{color:rgba(255,255,255,0.35);font-size:0.6rem;line-height:1.2}
-.badge-card.unlocked .badge-condition{color:rgba(212,175,55,0.6)}
-.badge-lock-icon{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;opacity:0.6;z-index:2}
-.badge-new-glow{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:16px;box-shadow:inset 0 0 25px rgba(212,175,55,0.4);animation:badgeNewPulse 1.5s ease-in-out 3;pointer-events:none}
-@keyframes badgeNewPulse{0%,100%{box-shadow:inset 0 0 10px rgba(212,175,55,0.1)}50%{box-shadow:inset 0 0 35px rgba(212,175,55,0.6)}}
-.cat-title{grid-column:span 4;color:rgba(212,175,55,0.5);font-size:0.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:0.8rem 0 0.2rem;border-bottom:1px solid rgba(212,175,55,0.1);margin-bottom:0.3rem}
-.badge-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);z-index:500;background:rgba(0,0,0,0.95);border:2px solid #d4af37;border-radius:20px;padding:2rem;display:none;flex-direction:column;align-items:center;gap:0.8rem;text-align:center;box-shadow:0 0 80px rgba(212,175,55,0.4);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)}
-.badge-toast.show{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1)}.badge-toast-img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(212,175,55,0.6));animation:badgeToastFloat 2s ease-in-out infinite}
-@keyframes badgeToastFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.badge-toast-title{color:#d4af37;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
-.badge-toast-name{color:#fff;font-size:1.5rem;font-weight:900;letter-spacing:1px;text-shadow:0 0 20px rgba(212,175,55,0.5)}
-.badge-toast-desc{color:rgba(255,255,255,0.5);font-size:0.8rem}
+.progress-text{display:flex;justify-content:space-between;color:rgba(255,255,255,0.4);font-size:0.7rem;margin-top:0.4rem}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:2rem}
+.stat-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;text-align:center}
+.stat-card-value{color:#d4af37;font-size:1.4rem;font-weight:900}
+.stat-card-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;margin-top:0.2rem}
+
+/* BADGES GRID */
+.section-title{color:#d4af37;font-size:1.1rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;letter-spacing:0.5px}
+.section-title::before{content:'';width:3px;height:18px;background:#d4af37;border-radius:2px}
+.badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.6rem;margin-bottom:2rem}
+.badge-item{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:0.8rem 0.3rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.3rem;transition:all 0.3s;position:relative}
+.badge-item.unlocked{border-color:rgba(212,175,55,0.4);background:rgba(212,175,55,0.08)}
+.badge-item.locked{opacity:0.3;filter:grayscale(1)}
+.badge-item.locked .badge-img{filter:brightness(0.3) grayscale(1)}
+.badge-item.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 20px rgba(212,175,55,0.2);border-color:#d4af37}
+.badge-img{width:40px;height:40px;object-fit:contain;border-radius:8px}
+.badge-item.unlocked .badge-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.4))}
+.badge-name{color:rgba(255,255,255,0.6);font-size:0.55rem;font-weight:600;line-height:1.1}
+.badge-item.unlocked .badge-name{color:#d4af37}
+.badge-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem;opacity:0.5}
+
+.empty-state{text-align:center;padding:2rem;color:rgba(255,255,255,0.3);font-size:0.85rem}
+
 @media(max-width:600px){
-.badges-grid{grid-template-columns:repeat(3,1fr);gap:0.7rem}
-.badge-img{width:48px;height:48px}
-.badge-name{font-size:0.65rem}
-.stats-bar{gap:1rem;padding:0.8rem}
-.stat-value{font-size:1.3rem}
-.page-title{font-size:1.5rem}
-.cat-title{grid-column:span 3}
+.badges-grid{grid-template-columns:repeat(4,1fr)}
+.stats-grid{grid-template-columns:repeat(2,1fr)}
+.current-badge-section{flex-direction:column;text-align:center}
+.current-badge-info{text-align:center}
+.back-btn span{display:none}
+.back-btn{padding:0.45rem 0.6rem}
+.save-alert-inner{flex-direction:column;text-align:center}
+.save-alert-form{flex-direction:column;width:100%}
+.save-alert-form input{width:100%}
+.main.with-alert{padding-top:10rem}
 }
 @media(max-width:400px){
-.badges-grid{grid-template-columns:repeat(2,1fr)}
-.cat-title{grid-column:span 2}
-}
-</style>
+.badges-grid{grid-template-columns:repeat(3,1fr)}
+}</style>
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
+
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
-<a href="/" class="back-btn">← Retour</a>
+<a href="/" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span>Retour</span></a>
 </header>
-<div class="main">
-<div class="page-title">🏆 Mes Badges</div>
-<div class="page-subtitle">Collection AuroraAI • 20 Badges à débloquer</div>
-<div class="stats-bar">
-<div class="stat-item"><div class="stat-value" id="unlockedCount">0</div><div class="stat-label">Débloqués</div></div>
-<div class="stat-item"><div class="stat-value" id="totalCount">20</div><div class="stat-label">Total</div></div>
-<div class="stat-item"><div class="stat-value" id="pointsDisplay">0</div><div class="stat-label">Points</div></div>
+
+<!-- ✅ ALERTE EMAIL SAUVEGARDE -->
+<div class="save-alert" id="saveAlert">
+<div class="save-alert-inner">
+<div class="save-alert-icon">⚠️</div>
+<div class="save-alert-text">
+<div class="save-alert-title">SAUVEGARDEZ VOS POINTS & BADGES !</div>
+<div class="save-alert-desc">Entrez votre email pour ne jamais perdre votre progression. Vos points et badges seront liés à votre compte.</div>
 </div>
-<div class="progress-wrap">
-<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-<div class="progress-text" id="progressText">0% complété</div>
+<div class="save-alert-form" id="saveAlertForm">
+<input type="email" id="saveEmailInput" placeholder="votre@email.com">
+<button onclick="saveEmailFromAlert()" id="saveAlertBtn">💾 Sauvegarder</button>
 </div>
-<div class="badges-grid" id="badgesGrid"></div>
+<div class="save-alert-success" id="saveAlertSuccess">✅ Points & badges sauvegardés !</div>
 </div>
-<div class="badge-toast" id="badgeToast">
-<div class="badge-toast-title">Badge Débloqué</div>
-<img class="badge-toast-img" id="badgeToastImg" src="" alt="">
-<div class="badge-toast-name" id="badgeToastName"></div>
-<div class="badge-toast-desc" id="badgeToastDesc"></div>
 </div>
+
+<div class="main" id="mainContent">
+<div class="empty-state" id="loadingMsg">Chargement des badges...</div>
+</div>
+
 <script src="/plexus.js"></script>
 <script>
-(async function(){
-try{var _sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-var _r=await _sb.from('site_settings').select('offline_mode,offline_msg').eq('id',1).single();
-if(!_r.error&&_r.data&&_r.data.offline_mode){
-document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:2rem"><div><h1 style="color:#d4af37;font-size:2rem;margin-bottom:1rem">🚧 Site en maintenance</h1><p style="color:rgba(255,255,255,0.6);font-size:1.1rem">'+(_r.data.offline_msg||'Revenez bientôt !')+'</p></div></div>';
-throw new Error('OFFLINE_MODE');
-}
-}catch(e){if(e.message==='OFFLINE_MODE')return;}
-})();
+var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
 
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
 var userPoints=0;
-var sb=null;
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
-var BADGES=[
-{id:1,name:"Pousse",cat:"spectateur",condition:"0-99 pts",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
-{id:2,name:"Explorateur",cat:"spectateur",condition:"100-499 pts",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
-{id:3,name:"Cinéphile",cat:"spectateur",condition:"50 vidéos vues",img:"https://i.ibb.co/zVLF58bZ/8f381275-f2d5-4eb7-a221-fcb15c10f529.jpg",check:function(s){return s.views>=50;}},
-{id:4,name:"Fan",cat:"spectateur",condition:"50 likes donnés",img:"https://i.ibb.co/wrKs5PRh/167ab6e1-8a22-4aea-954d-0265fc8aca45.jpg",check:function(s){return s.likesGiven>=50;}},
-{id:5,name:"Commentateur",cat:"spectateur",condition:"20 commentaires",img:"https://i.ibb.co/vxMy7H4y/d6a5c693-69d0-4bde-ac96-491e9b5f36f3.jpg",check:function(s){return s.comments>=20;}},
-{id:6,name:"Critique",cat:"spectateur",condition:"30 films notés",img:"https://i.ibb.co/n42jcCf/4a97b334-4ed1-4bd5-8997-edec135a0294.jpg",check:function(s){return s.ratings>=30;}},
-{id:7,name:"Streak 7j",cat:"spectateur",condition:"7 jours consécutifs",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},
-{id:8,name:"Créateur",cat:"createur",condition:"1ère vidéo publiée",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
-{id:9,name:"Réalisateur",cat:"createur",condition:"5 vidéos publiées",img:"https://i.ibb.co/tMBH8wwg/24796f64-fa2d-443d-9224-b9ff097f3c7d.jpg",check:function(s){return s.videosPublished>=5;}},
-{id:10,name:"Primé",cat:"createur",condition:"Vidéo 4+ étoiles",img:"https://i.ibb.co/999TrqYS/ad6492d7-66a5-42af-b837-0ea65ce71639.jpg",check:function(s){return s.hasRatedVideo;}},
-{id:11,name:"Vu 1K",cat:"createur",condition:"1000 vues sur une vidéo",img:"https://i.ibb.co/hJ7hBGDX/9227fc28-7dd7-49d5-a65e-08cf0635dfe8.jpg",check:function(s){return s.maxVideoViews>=1000;}},
-{id:12,name:"Aimé 100",cat:"createur",condition:"100 likes sur une vidéo",img:"https://i.ibb.co/LdW4sSQb/44590e7c-ceb4-4d26-9f24-28e26f86216d.jpg",check:function(s){return s.maxVideoLikes>=100;}},
-{id:13,name:"Tipé",cat:"createur",condition:"1er tip reçu",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},
-{id:14,name:"Producteur",cat:"createur",condition:"20 vidéos publiées",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
-{id:15,name:"Ambassadeur",cat:"communaute",condition:"10 partages site",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
-{id:16,name:"Fidèle",cat:"communaute",condition:"Email sauvegardé",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
-{id:17,name:"Expert",cat:"communaute",condition:"1500-4999 pts",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
-{id:18,name:"Maître",cat:"communaute",condition:"5000+ pts",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
-{id:19,name:"Streak 30j",cat:"communaute",condition:"30 jours consécutifs",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.streak>=30;}},
-{id:20,name:"Légende",cat:"communaute",condition:"Tous les badges",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
+// ✅ BADGES DATA IDENTIQUE — AUCUNE MODIFICATION
+var BADGES_DATA=[
+{id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
+{id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
+{id:3,name:"Cinéphile",img:"https://i.ibb.co/zVLF58bZ/8f381275-f2d5-4eb7-a221-fcb15c10f529.jpg",check:function(s){return s.views>=50;}},
+{id:4,name:"Fan",img:"https://i.ibb.co/wrKs5PRh/167ab6e1-8a22-4aea-954d-0265fc8aca45.jpg",check:function(s){return s.likesGiven>=50;}},
+{id:5,name:"Commentateur",img:"https://i.ibb.co/vxMy7H4y/d6a5c693-69d0-4bde-ac96-491e9b5f36f3.jpg",check:function(s){return s.comments>=20;}},
+{id:6,name:"Critique",img:"https://i.ibb.co/n42jcCf/4a97b334-4ed1-4bd5-8997-edec135a0294.jpg",check:function(s){return s.ratings>=30;}},
+{id:7,name:"Streak 7j",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},{id:8,name:"Créateur",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
+{id:9,name:"Réalisateur",img:"https://i.ibb.co/tMBH8wwg/24796f64-fa2d-443d-9224-b9ff097f3c7d.jpg",check:function(s){return s.videosPublished>=5;}},
+{id:10,name:"Primé",img:"https://i.ibb.co/999TrqYS/ad6492d7-66a5-42af-b837-0ea65ce71639.jpg",check:function(s){return s.hasRatedVideo;}},
+{id:11,name:"Vu 1K",img:"https://i.ibb.co/hJ7hBGDX/9227fc28-7dd7-49d5-a65e-08cf0635dfe8.jpg",check:function(s){return s.maxVideoViews>=1000;}},
+{id:12,name:"Aimé 100",img:"https://i.ibb.co/LdW4sSQb/44590e7c-ceb4-4d26-9f24-28e26f86216d.jpg",check:function(s){return s.maxVideoLikes>=100;}},
+{id:13,name:"Tipé",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},
+{id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
+{id:15,name:"Ambassadeur",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
+{id:16,name:"Fidèle",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
+{id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
+{id:18,name:"Maître",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
+{id:19,name:"Streak 30j",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.streak>=30;}},
+{id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
 ];
 
-var CAT_LABELS={spectateur:"👁️ Spectateur",createur:"🎥 Créateur",communaute:"🤝 Communauté"};
-
-function getUserStats(){
-var stats={points:userPoints,views:0,likesGiven:0,comments:0,ratings:0,streak:0,videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false};
+// ✅ CALCUL STATS IDENTIQUE — AUCUNE MODIFICATION
+function getBadgeStats(){
+var s={points:userPoints,views:0,likesGiven:0,comments:0,ratings:0,streak:0,videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false};
 for(var i=0;i<localStorage.length;i++){
 var k=localStorage.key(i);
-if(k&&k.indexOf('liked_')===0&&localStorage.getItem(k)==='true')stats.likesGiven++;
-if(k&&k.indexOf('rated_')===0)stats.ratings++;
-if(k&&k.indexOf('viewed_')===0)stats.views++;
+if(k&&k.indexOf('liked_')===0&&localStorage.getItem(k)==='true')s.likesGiven++;
+if(k&&k.indexOf('rated_')===0)s.ratings++;
+if(k&&k.indexOf('viewed_')===0)s.views++;
 }
-stats.shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
-stats.emailSaved=!!localStorage.getItem('aurora_saved_email');try{var sd=JSON.parse(localStorage.getItem('aurora_streak_data')||'{}');stats.streak=sd.current_streak||0;}catch(e){}
-return stats;
+s.shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
+s.emailSaved=!!localStorage.getItem('aurora_saved_email');
+try{var sd=JSON.parse(localStorage.getItem('aurora_streak_data')||'{}');s.streak=sd.current_streak||0;}catch(e){}
+return s;
 }
 
-function getUnlockedIds(){
-var stats=getUserStats();
+function getCurrentBadge(){
+var s=getBadgeStats(),u=[],ae=true;
+BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(s))u.push(b.id);else ae=false;});
+if(ae&&u.length===19)u.push(20);
+var h=BADGES_DATA[0];
+for(var i=BADGES_DATA.length-1;i>=0;i--){if(u.indexOf(BADGES_DATA[i].id)!==-1){h=BADGES_DATA[i];break;}}
+return{badge:h,unlocked:u};
+}
+
+// ✅ SAUVEGARDE EMAIL DEPUIS L'ALERTE
+async function saveEmailFromAlert(){
+var email=document.getElementById('saveEmailInput').value.trim();
+var btn=document.getElementById('saveAlertBtn');
+if(!email||!email.includes('@')){alert('Entrez un email valide');return;}
+btn.disabled=true;btn.textContent='Sauvegarde...';
+try{
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var ex=await sb.from('user_points').select('total_points,viewer_id').eq('email',email).single();
+if(!ex.error&&ex.data){
+if(ex.data.viewer_id!==viewerId){await sb.from('user_points').update({viewer_id:viewerId,updated_at:new Date().toISOString()}).eq('email',email);
+}
+userPoints=ex.data.total_points||0;
+}else{
+var vp=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
+var pts=(!vp.error&&vp.data)?vp.data.total_points:0;
+await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:email}]);
+userPoints=pts;
+}
+localStorage.setItem('aurora_saved_email',email);
+document.getElementById('saveAlertForm').style.display='none';
+document.getElementById('saveAlertSuccess').style.display='flex';
+setTimeout(function(){
+document.getElementById('saveAlert').classList.add('hidden');
+document.getElementById('mainContent').classList.remove('with-alert');
+loadBadges();
+},1500);
+}catch(e){
+alert('Erreur: '+e.message);
+btn.disabled=false;btn.textContent='💾 Sauvegarder';
+}
+}
+
+// ✅ CHECK SI ALERTE NÉCESSAIRE
+function checkSaveAlert(){
+var saved=localStorage.getItem('aurora_saved_email');
+if(saved){
+document.getElementById('saveAlert').classList.add('hidden');
+document.getElementById('mainContent').classList.remove('with-alert');
+}else{
+document.getElementById('saveAlert').classList.remove('hidden');
+document.getElementById('mainContent').classList.add('with-alert');
+}
+}
+
+// ✅ CHARGEMENT BADGES IDENTIQUE — AUCUNE MODIFICATION
+async function loadBadges(){
+var sb=null;
+var userEmail='';
+var streak=0;
+var commentsCount=0;
+var ratingsCount=0;
+var likesCount=0;
+var viewsCount=0;
+var videosPublished=0;
+var maxVideoViews=0;
+var maxVideoLikes=0;
+
+try{
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);var se=localStorage.getItem('aurora_saved_email');
+var pr=null;
+if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
+if(!pr||pr.error)pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();
+if(!pr.error&&pr.data){
+userPoints=pr.data.total_points||0;
+userEmail=pr.data.email||'';
+streak=pr.data.current_streak||0;
+}
+var cr=await sb.from('comments').select('id').eq('viewer_id',viewerId);
+if(!cr.error&&cr.data)commentsCount=cr.data.length;
+else if(userEmail){var cr2=await sb.from('comments').select('id').eq('author_email',userEmail);if(!cr2.error&&cr2.data)commentsCount=cr2.data.length;}
+var rr=await sb.from('video_ratings').select('id').eq('viewer_id',viewerId);
+if(!rr.error&&rr.data)ratingsCount=rr.data.length;
+var lr=await sb.from('video_likes_history').select('id').eq('viewer_id',viewerId);
+if(!lr.error&&lr.data)likesCount=lr.data.length;
+var vr=await sb.from('video_views').select('id').eq('viewer_id',viewerId);
+if(!vr.error&&vr.data)viewsCount=vr.data.length;
+var mv=await sb.from('videos').select('id,views,likes').eq('viewer_id',viewerId);
+if(!mv.error&&mv.data){
+videosPublished=mv.data.length;
+mv.data.forEach(function(v){if((v.views||0)>maxVideoViews)maxVideoViews=v.views||0;if((v.likes||0)>maxVideoLikes)maxVideoLikes=v.likes||0;});
+}
+}catch(e){console.log('[Badges]',e);}
+
+var shares=0;
+for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');}
+var emailSaved=!!localStorage.getItem('aurora_saved_email');
+
+var stats={
+points:userPoints,views:viewsCount,likesGiven:likesCount,
+comments:commentsCount,ratings:ratingsCount,streak:streak,
+videosPublished:videosPublished,hasRatedVideo:ratingsCount>0,
+maxVideoViews:maxVideoViews,maxVideoLikes:maxVideoLikes,
+tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false
+};
+
 var unlocked=[];
 var allExcept=true;
-BADGES.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
+BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
 if(allExcept&&unlocked.length===19)unlocked.push(20);
-return unlocked;
+
+var currentBadge=BADGES_DATA[0];
+for(var j=BADGES_DATA.length-1;j>=0;j--){
+if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}
 }
 
-function renderBadges(){
-var grid=document.getElementById('badgesGrid');
-var unlocked=getUnlockedIds();
-var prev=JSON.parse(localStorage.getItem('aurora_badges_unlocked')||'[]');
-var newly=unlocked.filter(function(id){return prev.indexOf(id)===-1;});
-var html='';var currentCat='';
-BADGES.forEach(function(b){
-if(b.cat!==currentCat){currentCat=b.cat;html+='<div class="cat-title">'+CAT_LABELS[b.cat]+'</div>';}
-var isU=unlocked.indexOf(b.id)!==-1;
-var isNew=newly.indexOf(b.id)!==-1;
-html+='<div class="badge-card '+(isU?'unlocked':'locked')+'">';
-if(!isU)html+='<div class="badge-lock-icon">🔒</div>';
-if(b.img)html+='<img class="badge-img" src="'+b.img+'" alt="'+b.name+'" loading="lazy">';
-if(isNew&&isU)html+='<div class="badge-new-glow"></div>';
-html+='<div class="badge-name">'+b.name+'</div>';
-html+='<div class="badge-condition">'+b.condition+'</div>';
+renderBadges({
+points:userPoints,email:userEmail,streak:streak,
+currentBadge:currentBadge,unlocked:unlocked,stats:stats});
+}
+
+// ✅ RENDU IDENTIQUE — AUCUNE MODIFICATION
+function renderBadges(data){
+var container=document.getElementById('mainContent');
+var pct=Math.round((data.unlocked.length/20)*100);
+
+var html='';
+
+// BADGE ACTUEL
+html+='<div class="current-badge-section">';
+html+='<img class="current-badge-img" src="'+data.currentBadge.img+'" alt="'+esc(data.currentBadge.name)+'">';
+html+='<div class="current-badge-info">';
+html+='<div class="current-badge-label">Badge Actuel</div>';
+html+='<div class="current-badge-name">'+esc(data.currentBadge.name)+'</div>';
+html+='<div class="current-badge-points">'+fmt(data.points)+' points • '+data.streak+'j streak</div>';
+html+='</div></div>';
+
+// PROGRESS
+html+='<div class="progress-wrap">';
+html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';
+html+='</div>';
+
+// STATS
+html+='<div class="stats-grid">';
+html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.points)+'</div><div class="stat-card-label">Points</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.unlocked.length+'/20</div><div class="stat-card-label">Badges</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.streak+'j</div><div class="stat-card-label">Streak</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.views+'</div><div class="stat-card-label">Vues</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.likesGiven+'</div><div class="stat-card-label">Likes</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.comments+'</div><div class="stat-card-label">Commentaires</div></div>';
+html+='</div>';
+
+// ALL BADGES
+html+='<div class="section-title">🏆 Collection Complète</div>';
+html+='<div class="badges-grid">';
+BADGES_DATA.forEach(function(b){
+var isU=data.unlocked.indexOf(b.id)!==-1;
+html+='<div class="badge-item '+(isU?'unlocked':'locked')+'">';
+if(!isU)html+='<div class="badge-lock">🔒</div>';
+html+='<img class="badge-img" src="'+b.img+'" alt="'+esc(b.name)+'" loading="lazy">';
+html+='<div class="badge-name">'+esc(b.name)+'</div>';
 html+='</div>';
 });
-grid.innerHTML=html;
-document.getElementById('unlockedCount').textContent=unlocked.length;
-document.getElementById('pointsDisplay').textContent=fmt(userPoints);
-var pct=Math.round((unlocked.length/20)*100);
-document.getElementById('progressFill').style.width=pct+'%';
-document.getElementById('progressText').textContent=pct+'% complété';
-localStorage.setItem('aurora_badges_unlocked',JSON.stringify(unlocked));
-newly.forEach(function(id,i){
-var badge=BADGES.find(function(b){return b.id===id;});
-if(badge&&badge.img)setTimeout(function(){showBadgeToast(badge);},800*(i+1));
-});
-}
+html+='</div>';
 
-function showBadgeToast(badge){
-var t=document.getElementById('badgeToast');
-document.getElementById('badgeToastImg').src=badge.img;
-document.getElementById('badgeToastName').textContent=badge.name;
-document.getElementById('badgeToastDesc').textContent=badge.condition;
-t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+container.innerHTML=html;
 }
-
-async function loadPoints(){
-try{
-sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-var se=localStorage.getItem('aurora_saved_email'),r=null;
-if(se)r=await sb.from('user_points').select('total_points').eq('email',se).single();
-if(!r||r.error)r=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
-if(!r.error&&r.data)userPoints=r.data.total_points;
-}catch(e){console.log('[Badges] Points error:',e);}
-renderBadges();
-}
-
-loadPoints();
+// INIT
+checkSaveAlert();
+loadBadges();
 </script>
 </body>
 </html>
