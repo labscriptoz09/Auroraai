@@ -47,9 +47,9 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .row-meta{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:0.2rem}
 .row-actions{display:flex;gap:0.3rem;flex-shrink:0;flex-wrap:wrap}
 .btn-sm{padding:0.3rem 0.6rem;border-radius:6px;border:none;cursor:pointer;font-size:0.7rem;font-weight:600}
-.btn-edit{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.3)}.btn-delete{background:rgba(255,77,77,0.2);color:#ff4d4d;border:1px solid rgba(255,77,77,0.3)}
-.btn-view{background:rgba(100,200,255,0.2);color:#64c8ff;border:1px solid rgba(100,200,255,0.3)}
+.btn-edit{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.3)}.btn-delete{background:rgba(255,77,77,0.2);color:#ff4d4d;border:1px solid rgba(255,77,77,0.3)}.btn-view{background:rgba(100,200,255,0.2);color:#64c8ff;border:1px solid rgba(100,200,255,0.3)}
 .btn-danger{background:rgba(255,0,0,0.3);color:#ff4d4d;border:1px solid rgba(255,0,0,0.5)}
+.btn-profile{background:rgba(255,165,0,0.2);color:#FFA500;border:1px solid rgba(255,165,0,0.4)}
 .settings-group{background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;margin-bottom:1rem}
 .settings-group h3{color:#d4af37;font-size:0.95rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(212,175,55,0.1)}
 .setting-row{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.8rem}
@@ -91,12 +91,62 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 .streak-fire{color:#ff9800}
 .offline-warning{background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.3);border-radius:8px;padding:0.5rem 1rem;margin-bottom:1rem;color:#ff4d4d;font-weight:700;font-size:0.85rem;text-align:center;display:none}
 .offline-warning.visible{display:block}
+/* ✅ v4.0 USER SEARCH */
+.user-search-bar{padding:0.8rem 1rem;border-bottom:1px solid rgba(212,175,55,0.1)}
+.user-search-bar input{width:100%;padding:0.6rem 1rem;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;font-size:0.85rem;outline:none}
+.user-search-bar input:focus{border-color:#d4af37}
+/* ✅ v4.0 PROFILE MODAL */
+.user-profile-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:1600;display:none;overflow-y:auto;padding:1rem}.user-profile-modal.active{display:block}
+.up-container{max-width:800px;margin:2rem auto;background:rgba(15,15,20,0.98);border:1px solid rgba(255,165,0,0.25);border-radius:16px;padding:1.5rem;position:relative}
+.up-close{position:absolute;top:0.8rem;right:0.8rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+.up-close:hover{background:rgba(255,77,77,0.2);color:#ff4d4d;border-color:#ff4d4d}
+.up-header{text-align:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,165,0,0.1)}
+.up-avatar{width:60px;height:60px;border:3px solid #FFA500;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem;font-size:1.5rem;box-shadow:0 0 20px rgba(255,165,0,0.3)}
+.up-name{font-size:1.2rem;font-weight:900;color:#fff;margin-bottom:0.15rem}
+.up-id{color:rgba(255,255,255,0.3);font-size:0.7rem;font-family:monospace;margin-bottom:0.2rem}
+.up-email{color:#FFA500;font-size:0.8rem;font-weight:600}
+.up-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1.5rem}
+.up-stat{background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.1);border-radius:8px;padding:0.6rem;text-align:center}
+.up-stat-val{color:#FFA500;font-size:1.2rem;font-weight:900}
+.up-stat-lbl{color:rgba(255,255,255,0.4);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;margin-top:0.1rem}
+.up-section{margin-bottom:1.2rem}
+.up-section-title{color:#FFA500;font-size:0.85rem;font-weight:800;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.3rem}
+.up-section-title::before{content:'';width:3px;height:12px;background:#FFA500;border-radius:2px}
+.up-list{display:flex;flex-direction:column;gap:0.3rem;max-height:200px;overflow-y:auto}
+.up-list-item{padding:0.4rem;background:rgba(255,165,0,0.03);border:1px solid rgba(255,165,0,0.06);border-radius:6px;font-size:0.75rem;color:rgba(255,255,255,0.7)}
+.up-list-meta{color:rgba(255,255,255,0.3);font-size:0.6rem;margin-top:0.1rem}
+/* ✅ v4.0 ADMIN COMMENT */
+.admin-cmt-section{margin-top:1rem;padding:0.8rem;background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.15);border-radius:10px}
+.admin-cmt-section h4{color:#FFA500;font-size:0.8rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.3rem}
+.admin-cmt-form{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.6rem}
+.admin-cmt-form select,.admin-cmt-form textarea{width:100%;padding:0.4rem;background:rgba(255,165,0,0.06);border:1px solid rgba(255,165,0,0.2);border-radius:6px;color:#fff;font-size:0.8rem;font-family:inherit;outline:none}
+.admin-cmt-form textarea{min-height:40px;resize:vertical}
+.admin-cmt-send{padding:0.4rem 0.8rem;background:linear-gradient(135deg,#FFA500,#e08900);border:none;border-radius:6px;color:#000;font-weight:700;font-size:0.8rem;cursor:pointer;align-self:flex-start}
+.admin-cmt-send:hover{box-shadow:0 3px 10px rgba(255,165,0,0.3)}
+.admin-cmt-list{display:flex;flex-direction:column;gap:0.3rem;max-height:150px;overflow-y:auto}
+.admin-cmt-item{padding:0.4rem;background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.2);border-left:3px solid #FFA500;border-radius:0 6px 6px 0}
+.admin-cmt-author{color:#FFA500;font-weight:800;font-size:0.7rem;display:flex;align-items:center;gap:0.2rem}
+.admin-badge-mini{background:rgba(255,165,0,0.2);border:1px solid rgba(255,165,0,0.4);color:#FFA500;font-size:0.5rem;padding:0.05rem 0.25rem;border-radius:3px;font-weight:700;letter-spacing:0.5px}
+.admin-cmt-text{color:rgba(255,255,255,0.8);font-size:0.75rem;margin-top:0.1rem}
+.admin-cmt-date{color:rgba(255,255,255,0.3);font-size:0.55rem;margin-top:0.05rem}
+/* ✅ v4.0 GLOBAL ALERT BANNER */
+.global-alert-banner{position:fixed;top:0;left:0;right:0;z-index:2500;background:linear-gradient(90deg,#cc0000,#ff0000,#cc0000);padding:0.5rem 0;overflow:hidden;display:none;border-bottom:2px solid #ff4444}
+.global-alert-banner.active{display:block}
+.global-alert-text{color:#fff;font-weight:800;font-size:0.85rem;white-space:nowrap;animation:alertScroll 15s linear infinite;padding-left:100%}
+@keyframes alertScroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.global-alert-settings{background:rgba(255,0,0,0.05);border:1px solid rgba(255,0,0,0.2);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.global-alert-settings h3{color:#ff4d4d;font-size:0.95rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(255,0,0,0.1)}
+.alert-toggle{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem}
+.alert-toggle label{font-size:0.8rem;color:rgba(255,255,255,0.6);font-weight:600}
 @keyframes notifSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes notifFade{from{opacity:1}to{opacity:0;transform:translateY(-20px)}}
-@media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}.tabs{gap:0.8rem}}
+@media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}.tabs{gap:0.8rem}.up-stats{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.up-stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body><canvas id="plexusCanvas"></canvas>
+<!-- ✅ v4.0 GLOBAL ALERT BANNER -->
+<div class="global-alert-banner" id="globalAlertBanner"><div class="global-alert-text" id="globalAlertText"></div></div>
 
 <div class="login-screen" id="loginScreen">
 <h1>🔐 AuroraAI Admin</h1>
@@ -111,7 +161,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="dashboard" id="dashboard">
 <div class="offline-warning" id="offlineWarning">🚫 MODE MAINTENANCE ACTIVÉ — Le site est hors ligne pour les visiteurs</div>
 <div class="admin-header">
-<h1>👑 Dashboard Admin v3.2</h1>
+<h1>👑 Dashboard Admin v4.0</h1>
 <button class="logout-btn" onclick="doLogout()">🚪 Déconnexion</button>
 </div>
 
@@ -144,8 +194,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 </div>
 <div class="table-container">
 <div class="table-header"><h3>💬 Derniers Commentaires</h3></div>
-<div id="recentCommentsList"></div>
-</div></div>
+<div id="recentCommentsList"></div></div></div>
 
 <!-- USERS -->
 <div id="tab-users" style="display:none">
@@ -154,8 +203,11 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="stat-card"><div class="number" id="totalPointsAll">0</div><div class="label">Points totaux</div></div>
 <div class="stat-card"><div class="number" id="avgPoints">0</div><div class="label">Moyenne points</div></div>
 <div class="stat-card"><div class="number" id="emailSaved">0</div><div class="label">Emails sauvegardés</div></div>
-</div><div class="table-container">
+</div>
+<div class="table-container">
 <div class="table-header"><h3>👥 Tous les utilisateurs (<span id="usersTotal">0</span>)</h3></div>
+<!-- ✅ v4.0 SEARCH BAR -->
+<div class="user-search-bar"><input type="text" id="userSearchInput" placeholder="🔍 Rechercher par email, viewer_id..." oninput="filterUsersTable()"></div>
 <div id="allUsersList"></div>
 </div>
 </div>
@@ -191,9 +243,18 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div id="cmtHistList"></div>
 </div>
 </div>
-
 <!-- SETTINGS -->
 <div id="tab-settings" style="display:none">
+<!-- ✅ v4.0 GLOBAL ALERT SETTINGS -->
+<div class="global-alert-settings">
+<h3>🚨 Alerte Urgente Globale (Bandeau Rouge)</h3>
+<div class="alert-toggle"><label>Activer le bandeau d'alerte sur tout le site</label>
+<select id="setAlertActive" onchange="toggleAlertPreview()"><option value="false">❌ Désactivé</option><option value="true">✅ Activé</option></select></div>
+<div class="setting-row"><label>Message d'alerte (défile de gauche à droite)</label>
+<textarea id="setAlertMsg" placeholder="🚨 Message urgent visible sur toutes les pages du site..."></textarea></div>
+<button class="save-btn" onclick="saveGlobalAlert()" style="background:linear-gradient(135deg,#ff4d4d,#cc0000);margin-top:0.3rem">🔴 Sauvegarder l'alerte</button>
+<p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.3rem">⚠️ Le bandeau rouge animé sera visible sur TOUTES les pages du site quand activé.</p>
+</div>
 <div class="settings-group"><h3>🚫 Mode Maintenance</h3>
 <div class="setting-row">
 <label>Activer le mode offline</label>
@@ -231,8 +292,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="setting-row"><button class="save-btn" onclick="exportData('comments')">📥 Exporter commentaires JSON</button></div>
 <div class="setting-row"><button class="save-btn" onclick="exportData('user_points')">📥 Exporter utilisateurs JSON</button></div>
 <div class="setting-row"><button class="save-btn" onclick="exportData('video_likes_history')">📥 Exporter likes history JSON</button></div>
-<div class="setting-row"><button class="save-btn" onclick="exportData('comment_history')">📥 Exporter comments history JSON</button></div>
-</div>
+<div class="setting-row"><button class="save-btn" onclick="exportData('comment_history')">📥 Exporter comments history JSON</button></div></div>
 <button class="save-btn" onclick="saveSettings()" style="width:100%;padding:0.8rem;font-size:1rem">💾 Sauvegarder les paramètres</button>
 </div>
 </div>
@@ -246,95 +306,28 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <button class="btn-save" onclick="saveEdit()">Sauvegarder</button></div>
 </div>
 </div>
+
+<!-- ✅ v4.0 USER PROFILE MODAL -->
+<div class="user-profile-modal" id="userProfileModal" onclick="if(event.target===this)closeUserProfile()">
+<div class="up-container" id="upContainer"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script src="/plexus.js"></script>
 <script src="/point-reveal.js"></script>
 <script>
 var sb=null,editingId=null,editingType=null,notifCount=0,realtimeChannel=null;
 var SESSION_KEY='aurora_admin_session';
-// ===== RATE LIMIT CONFIG =====
-var RATE_LIMIT_MAX=5;
-var RATE_LIMIT_WINDOW=5*60*1000;
-var RATE_LIMIT_KEY='aurora_admin_rate_limit';
+var allUsersCache=[];
+var RATE_LIMIT_MAX=5,RATE_LIMIT_WINDOW=5*60*1000,RATE_LIMIT_KEY='aurora_admin_rate_limit';
 
-function getRateLimitState(){
-    try{
-        var raw=localStorage.getItem(RATE_LIMIT_KEY);
-        if(!raw)return{attempts:[],blockedUntil:0};
-        return JSON.parse(raw);
-    }catch(e){return{attempts:[],blockedUntil:0};}
-}
-
-function saveRateLimitState(state){
-    localStorage.setItem(RATE_LIMIT_KEY,JSON.stringify(state));
-}
-
-function cleanOldAttempts(state){
-    var now=Date.now();
-    state.attempts=state.attempts.filter(function(t){return now-t<RATE_LIMIT_WINDOW;});
-    return state;
-}
-
-function checkRateLimit(){
-    var state=getRateLimitState();
-    var now=Date.now();
-    if(state.blockedUntil&&now<state.blockedUntil){
-        var remaining=Math.ceil((state.blockedUntil-now)/1000);
-        return{allowed:false,remaining:remaining,attemptsLeft:0};
-    }
-    state=cleanOldAttempts(state);
-    var attemptsLeft=RATE_LIMIT_MAX-state.attempts.length;
-    if(attemptsLeft<=0){
-        state.blockedUntil=now+RATE_LIMIT_WINDOW;
-        saveRateLimitState(state);
-        return{allowed:false,remaining:300,attemptsLeft:0};
-    }
-    saveRateLimitState(state);
-    return{allowed:true,remaining:0,attemptsLeft:attemptsLeft};
-}
-function recordFailedAttempt(){
-    var state=getRateLimitState();
-    state=cleanOldAttempts(state);
-    state.attempts.push(Date.now());
-    if(state.attempts.length>=RATE_LIMIT_MAX){
-        state.blockedUntil=Date.now()+RATE_LIMIT_WINDOW;
-    }
-    saveRateLimitState(state);
-}
-
-function resetRateLimit(){
-    localStorage.removeItem(RATE_LIMIT_KEY);
-}
-
-function updateRateLimitUI(){
-    var info=document.getElementById('rateLimitInfo');
-    var btn=document.getElementById('loginBtn');
-    var check=checkRateLimit();
-    if(!check.allowed){
-        info.textContent='🔒 Trop de tentatives. Réessayez dans '+check.remaining+'s';
-        info.className='rate-limit-info visible blocked';
-        btn.disabled=true;
-        if(window._rateLimitInterval)clearInterval(window._rateLimitInterval);
-        window._rateLimitInterval=setInterval(function(){
-            var c=checkRateLimit();
-            if(c.allowed){
-                clearInterval(window._rateLimitInterval);
-                info.className='rate-limit-info';
-                btn.disabled=false;
-            }else{
-                info.textContent='🔒 Trop de tentatives. Réessayez dans '+c.remaining+'s';
-            }
-        },1000);
-    }else if(check.attemptsLeft<RATE_LIMIT_MAX){
-        info.textContent='⚠️ '+check.attemptsLeft+'/'+RATE_LIMIT_MAX+' tentatives restantes';
-        info.className='rate-limit-info visible';
-        btn.disabled=false;
-    }else{
-        info.className='rate-limit-info';
-        btn.disabled=false;
-    }
-}
-// ===== FIN RATE LIMIT =====
+function getRateLimitState(){try{var raw=localStorage.getItem(RATE_LIMIT_KEY);if(!raw)return{attempts:[],blockedUntil:0};return JSON.parse(raw);}catch(e){return{attempts:[],blockedUntil:0};}}
+function saveRateLimitState(state){localStorage.setItem(RATE_LIMIT_KEY,JSON.stringify(state));}
+function cleanOldAttempts(state){var now=Date.now();state.attempts=state.attempts.filter(function(t){return now-t<RATE_LIMIT_WINDOW;});return state;}
+function checkRateLimit(){var state=getRateLimitState();var now=Date.now();if(state.blockedUntil&&now<state.blockedUntil){var remaining=Math.ceil((state.blockedUntil-now)/1000);return{allowed:false,remaining:remaining,attemptsLeft:0};}state=cleanOldAttempts(state);var attemptsLeft=RATE_LIMIT_MAX-state.attempts.length;if(attemptsLeft<=0){state.blockedUntil=now+RATE_LIMIT_WINDOW;saveRateLimitState(state);return{allowed:false,remaining:300,attemptsLeft:0};}saveRateLimitState(state);return{allowed:true,remaining:0,attemptsLeft:attemptsLeft};}
+function recordFailedAttempt(){var state=getRateLimitState();state=cleanOldAttempts(state);state.attempts.push(Date.now());if(state.attempts.length>=RATE_LIMIT_MAX){state.blockedUntil=Date.now()+RATE_LIMIT_WINDOW;}saveRateLimitState(state);}
+function resetRateLimit(){localStorage.removeItem(RATE_LIMIT_KEY);}
+function updateRateLimitUI(){var info=document.getElementById('rateLimitInfo');var btn=document.getElementById('loginBtn');var check=checkRateLimit();if(!check.allowed){info.textContent='🔒 Trop de tentatives. Réessayez dans '+check.remaining+'s';info.className='rate-limit-info visible blocked';btn.disabled=true;if(window._rateLimitInterval)clearInterval(window._rateLimitInterval);window._rateLimitInterval=setInterval(function(){var c=checkRateLimit();if(c.allowed){clearInterval(window._rateLimitInterval);info.className='rate-limit-info';btn.disabled=false;}else{info.textContent='🔒 Trop de tentatives. Réessayez dans '+c.remaining+'s';}},1000);}else if(check.attemptsLeft<RATE_LIMIT_MAX){info.textContent='⚠️ '+check.attemptsLeft+'/'+RATE_LIMIT_MAX+' tentatives restantes';info.className='rate-limit-info visible';btn.disabled=false;}else{info.className='rate-limit-info';btn.disabled=false;}}
 
 function showToast(m,isError){var e=document.getElementById('toast');e.textContent=m;e.className='toast show'+(isError?' error':'');setTimeout(function(){e.classList.remove('show');},3000);}
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
@@ -344,183 +337,166 @@ function maskEmail(e){if(!e)return'non renseigné';var p=e.split('@');if(p.lengt
 async function sha256(text){var encoder=new TextEncoder();var data=encoder.encode(text);var hash=await crypto.subtle.digest('SHA-256',data);return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
 function initSB(){if(sb)return;sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');}
 
-// AUTH AVEC RATE LIMIT
-async function doLogin(){
-    var rlCheck=checkRateLimit();
-    if(!rlCheck.allowed){
-        updateRateLimitUI();
-        return;
-    }
-    try{
-        var user=document.getElementById('adminUser').value.trim(),pwd=document.getElementById('adminPassword').value;
-        if(!user||!pwd){
-            document.getElementById('loginError').style.display='block';
-            document.getElementById('loginError').textContent='❌ Remplissez les deux champs';
-            return;
-        }
-        initSB();
-        var hash=await sha256(pwd);
-        var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();
-        if(r.error||!r.data){
-            recordFailedAttempt();
-            updateRateLimitUI();
-            document.getElementById('loginError').style.display='block';
-            document.getElementById('loginError').textContent='❌ Identifiants incorrects';
-            return;
-        }
-        resetRateLimit();
-        updateRateLimitUI();
-        await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);
-        sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('dashboard').classList.add('active');
-        initDashboard();
-    }catch(e){
-        document.getElementById('loginError').style.display='block';
-        document.getElementById('loginError').textContent='❌ Erreur: '+e.message;
-    }
-}
+async function doLogin(){var rlCheck=checkRateLimit();if(!rlCheck.allowed){updateRateLimitUI();return;}try{var user=document.getElementById('adminUser').value.trim(),pwd=document.getElementById('adminPassword').value;if(!user||!pwd){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Remplissez les deux champs';return;}initSB();var hash=await sha256(pwd);var r=await sb.from('admin_users').select('*').eq('username',user).eq('password_hash',hash).single();if(r.error||!r.data){recordFailedAttempt();updateRateLimitUI();document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Identifiants incorrects';return;}resetRateLimit();updateRateLimitUI();await sb.from('admin_users').update({last_login:new Date().toISOString()}).eq('id',r.data.id);sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:r.data.id,username:r.data.username}));document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}catch(e){document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent='❌ Erreur: '+e.message;}}
 function doLogout(){sessionStorage.removeItem(SESSION_KEY);location.reload();}
 function checkAuth(){try{var s=sessionStorage.getItem(SESSION_KEY);if(s){var session=JSON.parse(s);if(session&&session.id){document.getElementById('loginScreen').style.display='none';document.getElementById('dashboard').classList.add('active');initDashboard();}}}catch(e){}}
 
-// TABS
-function switchTab(name,el){
-document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+function switchTab(name,el){document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
 if(el)el.classList.add('active');
 ['overview','users','videos','comments','security','settings'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===name?'block':'none';});
 if(name==='overview'){notifCount=0;var badge=document.getElementById('notifBadge');badge.textContent='0';badge.classList.remove('visible');loadOverview();}
 if(name==='users')loadUsers();
 if(name==='videos')loadAllVideos();if(name==='comments')loadAllComments();
 if(name==='security')loadSecurity();
-if(name==='settings')loadSettings();
+if(name==='settings'){loadSettings();loadGlobalAlert();}
 }
 
-// NOTIFICATIONS
 function addNotification(type,title,desc){notifCount++;var badge=document.getElementById('notifBadge');badge.textContent=notifCount>9?'9+':notifCount;badge.classList.add('visible');var bar=document.getElementById('notifBar');var el=document.createElement('div');el.className='notif-item '+type;var now=new Date();el.innerHTML='<div class="notif-content"><div class="notif-title">'+esc(title)+'</div><div class="notif-desc">'+esc(desc)+'</div><div class="notif-time">'+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+'</div></div><button class="notif-close" onclick="this.parentElement.remove()">✕</button>';bar.appendChild(el);setTimeout(function(){if(el.parentElement){el.style.animation='notifFade 0.3s ease-out forwards';setTimeout(function(){if(el.parentElement)el.remove();},300);}},8000);while(bar.children.length>5)bar.removeChild(bar.firstChild);try{if(navigator.vibrate)navigator.vibrate(100);}catch(e){}}
 
 function startRealtime(){if(!sb||realtimeChannel)return;realtimeChannel=sb.channel('admin-notifs').on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},function(p){addNotification('new-comment','💬 Nouveau commentaire',p.new.author_name+' sur vidéo ID '+p.new.video_id);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'videos'},function(p){addNotification('new-video','🎬 Nouvelle vidéo',p.new.title+' par '+p.new.author);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'video_likes'},function(p){addNotification('new-like','❤️ Nouveau like','Vidéo ID '+p.new.video_id);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'video_views'},function(p){addNotification('new-view','👁️ Nouvelle vue','Vidéo ID '+p.new.video_id);}).subscribe();}
 
-async function initDashboard(){initSB();loadOverview();startRealtime();checkOfflineStatus();}
+async function initDashboard(){initSB();loadOverview();startRealtime();checkOfflineStatus();loadGlobalAlertBanner();}
 
 async function checkOfflineStatus(){try{var r=await sb.from('site_settings').select('offline_mode').eq('id',1).single();if(!r.error&&r.data&&r.data.offline_mode){document.getElementById('offlineWarning').classList.add('visible');}else{document.getElementById('offlineWarning').classList.remove('visible');}}catch(e){}}
 
+// ✅ v4.0 GLOBAL ALERT BANNER
+async function loadGlobalAlertBanner(){try{var r=await sb.from('site_settings').select('alert_active,alert_msg').eq('id',1).single();if(!r.error&&r.data&&r.data.alert_active&&r.data.alert_msg){var banner=document.getElementById('globalAlertBanner');var text=document.getElementById('globalAlertText');text.textContent=r.data.alert_msg;banner.classList.add('active');}else{document.getElementById('globalAlertBanner').classList.remove('active');}}catch(e){}}
+async function loadGlobalAlert(){try{var r=await sb.from('site_settings').select('alert_active,alert_msg').eq('id',1).single();if(!r.error&&r.data){document.getElementById('setAlertActive').value=r.data.alert_active?'true':'false';document.getElementById('setAlertMsg').value=r.data.alert_msg||'';}}catch(e){}}
+async function saveGlobalAlert(){try{var active=document.getElementById('setAlertActive').value==='true';var msg=document.getElementById('setAlertMsg').value.trim();await sb.from('site_settings').update({alert_active:active,alert_msg:msg,updated_at:new Date().toISOString()}).eq('id',1);showToast(active?'🔴 Alerte activée sur tout le site':'✅ Alerte désactivée');loadGlobalAlertBanner();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+function toggleAlertPreview(){var active=document.getElementById('setAlertActive').value==='true';var banner=document.getElementById('globalAlertBanner');var msg=document.getElementById('setAlertMsg').value.trim();if(active&&msg){document.getElementById('globalAlertText').textContent=msg;banner.classList.add('active');}else{banner.classList.remove('active');}}
+
 // OVERVIEW
 async function loadOverview(){try{
-var rv=await sb.from('videos').select('*');
-var rc=await sb.from('comments').select('*');
-var ru=await sb.from('user_points').select('*');
-var rlh=await sb.from('video_likes_history').select('*');
-var rch=await sb.from('comment_history').select('*');
+var rv=await sb.from('videos').select('*');var rc=await sb.from('comments').select('*');var ru=await sb.from('user_points').select('*');var rlh=await sb.from('video_likes_history').select('*');var rch=await sb.from('comment_history').select('*');
 var videos=rv.data||[],comments=rc.data||[],users=ru.data||[],likesH=rlh.data||[],cmtsH=rch.data||[];
 var totalViews=videos.reduce(function(s,v){return s+(parseInt(v.views)||0);},0);
 var totalLikes=videos.reduce(function(s,v){return s+(v.likes||0);},0);var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
-document.getElementById('statVideos').textContent=videos.length;
-document.getElementById('statViews').textContent=fmt(totalViews);
-document.getElementById('statLikes').textContent=fmt(totalLikes);
-document.getElementById('statComments').textContent=comments.length;
-document.getElementById('statUsers').textContent=users.length;
-document.getElementById('statPoints').textContent=fmt(totalPts);
-document.getElementById('statLikesHist').textContent=likesH.length;
-document.getElementById('statCmtHist').textContent=cmtsH.length;
+document.getElementById('statVideos').textContent=videos.length;document.getElementById('statViews').textContent=fmt(totalViews);document.getElementById('statLikes').textContent=fmt(totalLikes);document.getElementById('statComments').textContent=comments.length;document.getElementById('statUsers').textContent=users.length;document.getElementById('statPoints').textContent=fmt(totalPts);document.getElementById('statLikesHist').textContent=likesH.length;document.getElementById('statCmtHist').textContent=cmtsH.length;
 var sorted=videos.slice().sort(function(a,b){return(parseInt(b.views)||0)-(parseInt(a.views)||0);}).slice(0,5);
 document.getElementById('topVideosList').innerHTML=sorted.length?sorted.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';
 var recent=comments.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,5);
 document.getElementById('recentCommentsList').innerHTML=recent.length?recent.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,50))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
 }catch(e){showToast('Erreur stats',true);}}
 
-// USERS
+// ✅ v4.0 USERS WITH SEARCH + PROFILE BUTTON
 async function loadUsers(){try{
 var r=await sb.from('user_points').select('*').order('total_points',{ascending:false});
-var users=r.data||[];
+var users=r.data||[];allUsersCache=users;
 var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
 var emailCount=users.filter(function(u){return u.email&&u.email.length>0;}).length;
-document.getElementById('userCount').textContent=users.length;
-document.getElementById('totalPointsAll').textContent=fmt(totalPts);
-document.getElementById('avgPoints').textContent=users.length?fmt(Math.round(totalPts/users.length)):'0';
-document.getElementById('emailSaved').textContent=emailCount;
-document.getElementById('usersTotal').textContent=users.length;
-document.getElementById('allUsersList').innerHTML=users.length?users.map(function(u){var d=u.updated_at?new Date(u.updated_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Jamais';
-var loginDate=u.last_login_date||'Jamais';
-var streak=u.current_streak||0;
-return'<div class="table-row"><div class="row-info"><div class="row-title"><span class="user-email">'+maskEmail(u.email)+'</span> <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;margin-left:0.3rem">'+u.viewer_id.substring(0,12)+'...</span></div><div class="row-meta"><span class="points-highlight">⭐ '+(u.total_points||0)+' pts</span> • <span class="streak-fire">🔥 '+streak+'j streak</span> • Login: '+loginDate+' • MàJ: '+d+'</div></div><div class="row-actions"><button class="btn-sm btn-edit" onclick="addUserPoints(\''+u.viewer_id+'\','+(u.total_points||0)+')">➕ Points</button><button class="btn-sm btn-delete" onclick="resetUserPoints(\''+u.viewer_id+'\')">🔄 Reset</button><button class="btn-sm btn-danger" onclick="deleteUser(\''+u.viewer_id+'\')">🗑️ Supprimer</button></div></div>';
-}).join(''):'<div class="empty-msg">Aucun utilisateur</div>';
+document.getElementById('userCount').textContent=users.length;document.getElementById('totalPointsAll').textContent=fmt(totalPts);document.getElementById('avgPoints').textContent=users.length?fmt(Math.round(totalPts/users.length)):'0';document.getElementById('emailSaved').textContent=emailCount;document.getElementById('usersTotal').textContent=users.length;
+renderUsersTable(users);
 }catch(e){showToast('Erreur utilisateurs',true);}}
 
-async function addUserPoints(vid,currentPts){
-var amount=prompt('Ajouter des points à cet utilisateur\n\nPoints actuels: '+currentPts+'\n\nCombien ajouter ?','10');
-if(amount===null)return;
-amount=parseInt(amount);
-if(isNaN(amount)||amount<=0){showToast('❌ Montant invalide',true);return;}
-try{
-var newTotal=currentPts+amount;
-await sb.from('user_points').update({total_points:newTotal,updated_at:new Date().toISOString()}).eq('viewer_id',vid);
-showToast('✅ +'+amount+' points ajoutés (total: '+newTotal+')');
-loadUsers();loadOverview();
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
+function renderUsersTable(users){
+document.getElementById('allUsersList').innerHTML=users.length?users.map(function(u){var d=u.updated_at?new Date(u.updated_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Jamais';var loginDate=u.last_login_date||'Jamais';var streak=u.current_streak||0;
+return'<div class="table-row"><div class="row-info"><div class="row-title"><span class="user-email">'+maskEmail(u.email)+'</span> <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;margin-left:0.3rem">'+u.viewer_id.substring(0,12)+'...</span></div><div class="row-meta"><span class="points-highlight">⭐ '+(u.total_points||0)+' pts</span> • <span class="streak-fire">🔥 '+streak+'j streak</span> • Login: '+loginDate+' • MàJ: '+d+'</div></div><div class="row-actions"><button class="btn-sm btn-profile" onclick="openUserProfile(\''+u.viewer_id+'\')">👤 Profil</button><button class="btn-sm btn-edit" onclick="addUserPoints(\''+u.viewer_id+'\','+(u.total_points||0)+')">➕ Points</button><button class="btn-sm btn-delete" onclick="resetUserPoints(\''+u.viewer_id+'\')">🔄 Reset</button><button class="btn-sm btn-danger" onclick="deleteUser(\''+u.viewer_id+'\')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun utilisateur trouvé</div>';
 }
 
+// ✅ v4.0 FILTER USERS
+function filterUsersTable(){
+var q=(document.getElementById('userSearchInput').value||'').toLowerCase().trim();
+if(!q){renderUsersTable(allUsersCache);return;}
+var filtered=allUsersCache.filter(function(u){return(u.email&&u.email.toLowerCase().indexOf(q)!==-1)||(u.viewer_id&&u.viewer_id.toLowerCase().indexOf(q)!==-1);});
+renderUsersTable(filtered);
+}
+
+// ✅ v4.0 OPEN USER PROFILE
+async function openUserProfile(vid){
+var container=document.getElementById('upContainer');
+container.innerHTML='<div class="empty-msg">Chargement du profil...</div>';
+document.getElementById('userProfileModal').classList.add('active');
+try{
+var pu=await sb.from('user_points').select('*').eq('viewer_id',vid).single();
+var pc=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',vid).order('created_at',{ascending:false}).limit(20);
+var pr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_id',vid).order('created_at',{ascending:false}).limit(20);
+var pl=await sb.from('video_likes_history').select('*').eq('viewer_id',vid);
+var pv=await sb.from('video_views').select('*').eq('viewer_id',vid);
+var pvids=await sb.from('videos').select('*').eq('viewer_id',vid).order('created_at',{ascending:false});
+var u=pu.data||{};var comments=pc.data||[];var ratings=pr.data||[];var likesCount=pl.data?pl.data.length:0;var viewsCount=pv.data?pv.data.length:0;var myVideos=pvids.data||[];
+var email=u.email||'';var pts=u.total_points||0;var streak=u.current_streak||0;
+var h='<button class="up-close" onclick="closeUserProfile()">✕</button>';
+h+='<div class="up-header"><div class="up-avatar">👤</div><div class="up-name">'+esc(email?email.split('@')[0]:'Utilisateur')+'</div><div class="up-id">'+esc(vid)+'</div><div class="up-email">'+esc(email||'Aucun email')+'</div></div>';
+h+='<div class="up-stats"><div class="up-stat"><div class="up-stat-val">'+fmt(pts)+'</div><div class="up-stat-lbl">Points</div></div><div class="up-stat"><div class="up-stat-val">'+streak+'j</div><div class="up-stat-lbl">Streak</div></div><div class="up-stat"><div class="up-stat-val">'+viewsCount+'</div><div class="up-stat-lbl">Vues</div></div><div class="up-stat"><div class="up-stat-val">'+likesCount+'</div><div class="up-stat-lbl">Likes</div></div></div>';
+h+='<div class="up-stats"><div class="up-stat"><div class="up-stat-val">'+comments.length+'</div><div class="up-stat-lbl">Commentaires</div></div><div class="up-stat"><div class="up-stat-val">'+ratings.length+'</div><div class="up-stat-lbl">Notes</div></div><div class="up-stat"><div class="up-stat-val">'+myVideos.length+'</div><div class="up-stat-lbl">Vidéos</div></div></div>';
+// Commentaires
+h+='<div class="up-section"><div class="up-section-title">💬 Commentaires ('+comments.length+')</div>';
+if(comments.length===0)h+='<div class="empty-msg" style="padding:0.5rem">Aucun commentaire</div>';
+else{h+='<div class="up-list">';comments.forEach(function(c){var t=c.video_stats?c.video_stats.title:'Film';var d=c.created_at?new Date(c.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';h+='<div class="up-list-item">« '+esc(c.content)+' » sur '+esc(t)+'<div class="up-list-meta">'+d+'</div></div>';});h+='</div>';}
+h+='</div>';
+// Notes
+h+='<div class="up-section"><div class="up-section-title">⭐ Notes ('+ratings.length+')</div>';
+if(ratings.length===0)h+='<div class="empty-msg" style="padding:0.5rem">Aucune note</div>';
+else{h+='<div class="up-list">';ratings.forEach(function(r){var t=r.video_stats?r.video_stats.title:'Film';var st='';for(var i=1;i<=5;i++)st+=i<=r.rating?'★':'☆';h+='<div class="up-list-item">'+esc(t)+' — <span style="color:#FFA500">'+st+'</span></div>';});h+='</div>';}
+h+='</div>';
+// Vidéos publiées
+h+='<div class="up-section"><div class="up-section-title">🎥 Vidéos Publiées ('+myVideos.length+')</div>';
+if(myVideos.length===0)h+='<div class="empty-msg" style="padding:0.5rem">Aucune vidéo</div>';
+else{h+='<div class="up-list">';myVideos.forEach(function(v){h+='<div class="up-list-item">'+esc(v.title)+' — 👁️ '+fmt(v.views||0)+' ❤️ '+fmt(v.likes||0)+'<div class="up-list-meta">'+esc(v.category)+' • '+new Date(v.created_at).toLocaleDateString('fr-FR')+'</div></div>';});h+='</div>';}
+h+='</div>';
+// ✅ v4.0 ADMIN COMMENT SECTION
+h+='<div class="admin-cmt-section"><h4>🟠 Commenter en tant qu\'Admin</h4>';
+h+='<div class="admin-cmt-form"><select id="adminCmtVideo"><option value="">-- Choisir une vidéo --</option>';
+myVideos.forEach(function(v){h+='<option value="'+v.id+'">'+esc(v.title)+'</option>';});
+// Ajouter toutes les vidéos si pas de vidéos publiées
+if(myVideos.length===0){h+='<option value="">Aucune vidéo disponible</option>';}h+='</select><textarea id="adminCmtText" placeholder="Votre message admin..."></textarea><button class="admin-cmt-send" onclick="sendAdminComment(\''+vid+'\')">🟠 Envoyer en tant qu\'Admin</button></div>';
+h+='<div class="admin-cmt-list" id="adminCmtList"><div class="empty-msg" style="padding:0.3rem;font-size:0.7rem">Chargement des commentaires admin...</div></div></div>';
+container.innerHTML=h;
+// Charger les commentaires admin existants
+loadAdminComments(vid);
+}catch(e){container.innerHTML='<div class="empty-msg">Erreur: '+e.message+'</div>';}}
+
+function closeUserProfile(){document.getElementById('userProfileModal').classList.remove('active');}
+
+// ✅ v4.0 SEND ADMIN COMMENT
+async function sendAdminComment(targetVid){
+var videoSelect=document.getElementById('adminCmtVideo');
+var videoId=videoSelect.value;
+var text=(document.getElementById('adminCmtText').value||'').trim();
+if(!videoId){showToast('❌ Sélectionnez une vidéo',true);return;}
+if(!text){showToast('❌ Écrivez un message',true);return;}
+try{
+await sb.from('comments').insert([{video_id:videoId,author_name:'Admin AuroraAI',author_email:null,content:text,viewer_id:'admin_system',is_admin_comment:true,parent_comment_id:null}]);
+document.getElementById('adminCmtText').value='';
+showToast('🟠 Commentaire admin envoyé !');
+loadAdminComments(targetVid);
+}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+
+// ✅ v4.0 LOAD ADMIN COMMENTS
+async function loadAdminComments(vid){
+var list=document.getElementById('adminCmtList');if(!list)return;
+try{
+// Chercher les commentaires admin sur les vidéos de cet utilisateur
+var userVids=await sb.from('videos').select('id').eq('viewer_id',vid);
+var videoIds=userVids.data?userVids.data.map(function(v){return v.id;}):[];
+if(videoIds.length===0){list.innerHTML='<div class="empty-msg" style="padding:0.3rem;font-size:0.7rem">Aucune vidéo pour cet utilisateur</div>';return;}
+var r=await sb.from('comments').select('*').in('video_id',videoIds).eq('is_admin_comment',true).order('created_at',{ascending:false}).limit(20);
+var cmts=r.data||[];
+if(cmts.length===0){list.innerHTML='<div class="empty-msg" style="padding:0.3rem;font-size:0.7rem">Aucun commentaire admin</div>';return;}
+list.innerHTML=cmts.map(function(c){var d=new Date(c.created_at);return'<div class="admin-cmt-item"><div class="admin-cmt-author"><span class="admin-badge-mini">ADMIN</span> '+esc(c.author_name)+'</div><div class="admin-cmt-text">'+esc(c.content)+'</div><div class="admin-cmt-date">Vidéo #'+c.video_id+' • '+d.toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'</div></div>';}).join('');
+}catch(e){list.innerHTML='<div class="empty-msg" style="padding:0.3rem;font-size:0.7rem">Erreur chargement</div>';}}
+
+async function addUserPoints(vid,currentPts){var amount=prompt('Ajouter des points à cet utilisateur\n\nPoints actuels: '+currentPts+'\n\nCombien ajouter ?','10');if(amount===null)return;amount=parseInt(amount);if(isNaN(amount)||amount<=0){showToast('❌ Montant invalide',true);return;}try{var newTotal=currentPts+amount;await sb.from('user_points').update({total_points:newTotal,updated_at:new Date().toISOString()}).eq('viewer_id',vid);showToast('✅ +'+amount+' points ajoutés (total: '+newTotal+')');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 async function resetUserPoints(vid){if(!confirm('Remettre à zéro les points de cet utilisateur ?'))return;try{await sb.from('user_points').update({total_points:0,current_streak:0,updated_at:new Date().toISOString()}).eq('viewer_id',vid);showToast('✅ Points remis à zéro');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
+async function deleteUser(vid){if(!confirm('⚠️ SUPPRIMER DÉFINITIVEMENT cet utilisateur ?\n\nCette action est IRRÉVERSIBLE.'))return;try{await sb.from('user_points').delete().eq('viewer_id',vid);await sb.from('video_likes_history').delete().eq('viewer_id',vid);await sb.from('comment_history').delete().eq('viewer_id',vid);await sb.from('video_likes').delete().eq('viewer_id',vid);showToast('✅ Utilisateur supprimé définitivement');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 
-async function deleteUser(vid){if(!confirm('⚠️ SUPPRIMER DÉFINITIVEMENT cet utilisateur ?\n\nCela effacera :\n- Ses points\n- Son historique likes\n- Son historique commentaires\n- Ses likes actifs\n\nCette action est IRRÉVERSIBLE.'))return;
-try{
-await sb.from('user_points').delete().eq('viewer_id',vid);
-await sb.from('video_likes_history').delete().eq('viewer_id',vid);
-await sb.from('comment_history').delete().eq('viewer_id',vid);
-await sb.from('video_likes').delete().eq('viewer_id',vid);
-showToast('✅ Utilisateur supprimé définitivement');
-loadUsers();loadOverview();
-}catch(e){showToast('❌ Erreur: '+e.message,true);}
-}
-
-// VIDEOS
 async function loadAllVideos(){try{var r=await sb.from('videos').select('*').order('created_at',{ascending:false});var videos=r.data||[];document.getElementById('videoCount').textContent=videos.length;document.getElementById('allVideosList').innerHTML=videos.length?videos.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • '+esc(v.category)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button><button class="btn-sm btn-edit" onclick="editVideo(\''+v.id+'\')">✏️</button><button class="btn-sm btn-delete" onclick="deleteVideo(\''+v.id+'\')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';}catch(e){showToast('Erreur vidéos',true);}}
+async function loadAllComments(){try{var r=await sb.from('comments').select('*').order('created_at',{ascending:false});var comments=r.data||[];document.getElementById('commentCount').textContent=comments.length;document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);var isAdmin=c.is_admin_comment===true;var adminStyle=isAdmin?'border-left:3px solid #FFA500;background:rgba(255,165,0,0.05)':'';var adminBadge=isAdmin?'<span style="background:rgba(255,165,0,0.2);border:1px solid rgba(255,165,0,0.4);color:#FFA500;font-size:0.55rem;padding:0.05rem 0.25rem;border-radius:3px;font-weight:700;margin-left:0.3rem">ADMIN</span>':'';return'<div class="table-row" style="'+adminStyle+'"><div class="row-info"><div class="row-title">'+esc(c.author_name)+adminBadge+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';}catch(e){showToast('Erreur commentaires',true);}}
 
-// COMMENTS
-async function loadAllComments(){try{var r=await sb.from('comments').select('*').order('created_at',{ascending:false});var comments=r.data||[];document.getElementById('commentCount').textContent=comments.length;document.getElementById('allCommentsList').innerHTML=comments.length?comments.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,80))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';}catch(e){showToast('Erreur commentaires',true);}}
-
-// SECURITY
-async function loadSecurity(){try{
-var rlh=await sb.from('video_likes_history').select('*').order('first_liked_at',{ascending:false});
-var rch=await sb.from('comment_history').select('*').order('commented_at',{ascending:false});
-var likesH=rlh.data||[],cmtsH=rch.data||[];
-document.getElementById('likesHistCount').textContent=likesH.length;
-document.getElementById('cmtHistCount').textContent=cmtsH.length;
-var checksHtml='';
-checksHtml+='<div class="alert-card safe"><h4>✅ Table video_likes_history</h4><p>'+likesH.length+' enregistrements uniques. Anti-spam likes ACTIF.</p></div>';
-checksHtml+='<div class="alert-card safe"><h4>✅ Table comment_history</h4><p>'+cmtsH.length+' enregistrements uniques. Anti-spam commentaires ACTIF.</p></div>';
-var likeMap={};var dupLikes=0;likesH.forEach(function(l){var key=l.video_id+'_'+l.viewer_id;if(likeMap[key])dupLikes++;likeMap[key]=true;});if(dupLikes>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupLikes+' doublons détectés dans likes_history</h4><p>Vérifiez la contrainte UNIQUE.</p></div>';
-else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans likes_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';
-var cmtMap={};var dupCmts=0;cmtsH.forEach(function(c){var key=c.video_id+'_'+c.viewer_id;if(cmtMap[key])dupCmts++;cmtMap[key]=true;});
-if(dupCmts>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupCmts+' doublons détectés dans comment_history</h4><p>Vérifiez la contrainte UNIQUE.</p></div>';
-else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans comment_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';
-document.getElementById('securityChecks').innerHTML=checksHtml;
-document.getElementById('likesHistList').innerHTML=likesH.length?likesH.slice(0,50).map(function(l){var d=new Date(l.first_liked_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+l.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+l.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier like: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';
-document.getElementById('cmtHistList').innerHTML=cmtsH.length?cmtsH.slice(0,50).map(function(c){var d=new Date(c.commented_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+c.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+c.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier commentaire: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';
-}catch(e){showToast('Erreur sécurité',true);}}
+async function loadSecurity(){try{var rlh=await sb.from('video_likes_history').select('*').order('first_liked_at',{ascending:false});var rch=await sb.from('comment_history').select('*').order('commented_at',{ascending:false});var likesH=rlh.data||[],cmtsH=rch.data||[];document.getElementById('likesHistCount').textContent=likesH.length;document.getElementById('cmtHistCount').textContent=cmtsH.length;var checksHtml='';checksHtml+='<div class="alert-card safe"><h4>✅ Table video_likes_history</h4><p>'+likesH.length+' enregistrements uniques. Anti-spam likes ACTIF.</p></div>';checksHtml+='<div class="alert-card safe"><h4>✅ Table comment_history</h4><p>'+cmtsH.length+' enregistrements uniques. Anti-spam commentaires ACTIF.</p></div>';var likeMap={};var dupLikes=0;likesH.forEach(function(l){var key=l.video_id+'_'+l.viewer_id;if(likeMap[key])dupLikes++;likeMap[key]=true;});if(dupLikes>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupLikes+' doublons détectés dans likes_history</h4><p>Vérifiez la contrainte UNIQUE.</p></div>';else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans likes_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';var cmtMap={};var dupCmts=0;cmtsH.forEach(function(c){var key=c.video_id+'_'+c.viewer_id;if(cmtMap[key])dupCmts++;cmtMap[key]=true;});if(dupCmts>0)checksHtml+='<div class="alert-card danger"><h4>⚠️ '+dupCmts+' doublons détectés dans comment_history</h4><p>Vérifiez la contrainte UNIQUE.</p></div>';else checksHtml+='<div class="alert-card safe"><h4>✅ Aucun doublon dans comment_history</h4><p>Contrainte UNIQUE fonctionnelle.</p></div>';document.getElementById('securityChecks').innerHTML=checksHtml;document.getElementById('likesHistList').innerHTML=likesH.length?likesH.slice(0,50).map(function(l){var d=new Date(l.first_liked_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+l.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+l.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier like: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';document.getElementById('cmtHistList').innerHTML=cmtsH.length?cmtsH.slice(0,50).map(function(c){var d=new Date(c.commented_at);return'<div class="table-row"><div class="row-info"><div class="row-title">Vidéo #'+c.video_id+' <span style="color:rgba(255,255,255,0.3);font-size:0.65rem">'+c.viewer_id.substring(0,12)+'...</span></div><div class="row-meta">Premier commentaire: '+d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div></div>';}).join(''):'<div class="empty-msg">Aucun historique</div>';}catch(e){showToast('Erreur sécurité',true);}}
 
 function openVideo(id){window.open('/player.html?id='+id,'_blank');}
-
 async function deleteVideo(id){if(!confirm('Supprimer cette vidéo et toutes ses données associées ?'))return;try{await sb.from('comments').delete().eq('video_id',id);await sb.from('video_likes').delete().eq('video_id',id);await sb.from('video_views').delete().eq('video_id',id);await sb.from('video_likes_history').delete().eq('video_id',id);await sb.from('comment_history').delete().eq('video_id',id);await sb.from('videos').delete().eq('id',id);showToast('✅ Vidéo supprimée');loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
-
 async function deleteComment(id){if(!confirm('Supprimer ce commentaire ?'))return;try{await sb.from('comments').delete().eq('id',id);showToast('✅ Commentaire supprimé');loadAllComments();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
-
-async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('id',id).single();if(r.error||!r.data)return;var v=r.data;editingId=id;editingType='video';document.getElementById('editTitle').textContent='Modifier la vidéo';document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';document.getElementById('editModal').classList.add('active');}catch(e){showToast('Erreur chargement',true);}}
-
-async function saveEdit(){if(editingType==='video'){var title=document.getElementById('editField1').value.trim(),author=document.getElementById('editField2').value.trim(),category=document.getElementById('editField3').value,description=document.getElementById('editField4').value.trim();if(!title||!author){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:title,author:author,category:category,description:description}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
+async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('id',id).single();if(r.error||!r.data)return;var v=r.data;editingId=id;editingType='video';document.getElementById('editTitle').textContent='Modifier la vidéo';document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';document.getElementById('editModal').classList.add('active');}catch(e){showToast('Erreur chargement',true);}}async function saveEdit(){if(editingType==='video'){var title=document.getElementById('editField1').value.trim(),author=document.getElementById('editField2').value.trim(),category=document.getElementById('editField3').value,description=document.getElementById('editField4').value.trim();if(!title||!author){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:title,author:author,category:category,description:description}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');editingId=null;editingType=null;}
 
-// SETTINGS
 async function loadSettings(){try{initSB();var r=await sb.from('site_settings').select('*').eq('id',1).single();if(r.error||!r.data)return;var s=r.data;document.getElementById('setSiteName').value=s.site_name||'';document.getElementById('setSiteDesc').value=s.site_desc||'';document.getElementById('setSiteUrl').value=s.site_url||'';document.getElementById('setColor').value=s.color||'#d4af37';document.getElementById('setBadgeText').value=s.badge_text||'';document.getElementById('setHeroTitle').value=s.hero_title||'';document.getElementById('setOfflineMode').value=s.offline_mode?'true':'false';document.getElementById('setOfflineMsg').value=s.offline_msg||'Le site est en maintenance. Revenez bientôt !';}catch(e){showToast('Erreur paramètres',true);}}
-
 async function saveSettings(){try{initSB();await sb.from('site_settings').update({site_name:document.getElementById('setSiteName').value,site_desc:document.getElementById('setSiteDesc').value,site_url:document.getElementById('setSiteUrl').value,color:document.getElementById('setColor').value,badge_text:document.getElementById('setBadgeText').value,hero_title:document.getElementById('setHeroTitle').value,offline_mode:document.getElementById('setOfflineMode').value==='true',offline_msg:document.getElementById('setOfflineMsg').value,updated_at:new Date().toISOString()}).eq('id',1);showToast('✅ Paramètres sauvegardés');checkOfflineStatus();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
-
 async function changePassword(){var np=document.getElementById('setNewPassword').value,cp=document.getElementById('setConfirmPassword').value;if(!np){showToast('❌ Entrez un mot de passe',true);return;}if(np!==cp){showToast('❌ Mots de passe différents',true);return;}if(np.length<4){showToast('❌ Minimum 4 caractères',true);return;}try{var session=JSON.parse(sessionStorage.getItem(SESSION_KEY));var hash=await sha256(np);await sb.from('admin_users').update({password_hash:hash}).eq('id',session.id);document.getElementById('setNewPassword').value='';document.getElementById('setConfirmPassword').value='';showToast('✅ Mot de passe changé');}catch(e){showToast('❌ Erreur: '+e.message,true);}}
-
 async function exportData(table){try{initSB();var r=await sb.from(table).select('*');if(r.error)throw r.error;var blob=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='aurora_'+table+'_'+new Date().toISOString().slice(0,10)+'.json';a.click();showToast('📥 Export '+table+' terminé');}catch(e){showToast('❌ Erreur export: '+e.message,true);}}
 
-// Initialiser le rate limit UI au chargement
-updateRateLimitUI();
-checkAuth();
+updateRateLimitUI();checkAuth();
 </script>
 </body>
 </html>
