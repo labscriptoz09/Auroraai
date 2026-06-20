@@ -156,7 +156,7 @@ body{background:#0a0a0a;color:#fff;font-family:sans-serif;min-height:100vh}
 <div class="dashboard" id="dashboard">
 <div class="offline-warning" id="offlineWarning">🚫 MODE MAINTENANCE ACTIVÉ — Le site est hors ligne pour les visiteurs</div>
 <div class="admin-header">
-<h1>👑 Dashboard Admin v4.1</h1>
+<h1>👑 Dashboard Admin v4.2</h1>
 <button class="logout-btn" onclick="doLogout()">🚪 Déconnexion</button>
 </div>
 
@@ -332,7 +332,7 @@ async function loadGlobalAlert(){try{var r=await sb.from('site_settings').select
 async function saveGlobalAlert(){try{var active=document.getElementById('setAlertActive').value==='true';var msg=document.getElementById('setAlertMsg').value.trim();await sb.from('site_settings').update({alert_active:active,alert_msg:msg,updated_at:new Date().toISOString()}).eq('id',1);showToast(active?'🔴 Alerte activée sur tout le site':'✅ Alerte désactivée');loadGlobalAlertBanner();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 function toggleAlertPreview(){var active=document.getElementById('setAlertActive').value==='true';var msg=document.getElementById('setAlertMsg').value.trim();if(active&&msg){document.getElementById('globalAlertText').textContent=msg;document.getElementById('globalAlertBanner').classList.add('active');}else document.getElementById('globalAlertBanner').classList.remove('active');}
 
-// ✅ v4.1 OVERVIEW — VUES DEPUIS video_stats
+// ✅ v4.2 OVERVIEW — VUES TOTALES DEPUIS video_stats SANS DOUBLON + TOP 5 FIABLE
 async function loadOverview(){try{
 var rv=await sb.from('videos').select('*');
 var rvs=await sb.from('video_stats').select('id,views,likes,rating');
@@ -341,11 +341,20 @@ var ru=await sb.from('user_points').select('*');
 var rlh=await sb.from('video_likes_history').select('*');
 var rch=await sb.from('comment_history').select('*');
 var videos=rv.data||[],vsData=rvs.data||[],comments=rc.data||[],users=ru.data||[],likesH=rlh.data||[],cmtsH=rch.data||[];
-// Construire map video_statsvar vsMap={};vsData.forEach(function(s){vsMap[s.id]=s;});
-// Fusionner vues/likes depuis video_stats
-videos=videos.map(function(v){var s=vsMap[v.id];if(s){v.views=s.views||0;v.likes=s.likes||0;v.rating=s.rating||v.rating||0;}return v;});
-var totalViews=videos.reduce(function(s,v){return s+(parseInt(v.views)||0);},0);
-var totalLikes=videos.reduce(function(s,v){return s+(v.likes||0);},0);
+// Construire map video_stats
+var vsMap={};vsData.forEach(function(s){vsMap[s.id]=s;});
+
+// ✅ v4.2 TOTAL VUES depuis video_stats sans doublon
+var totalViews=0,totalLikes=0;
+var seenIds={};
+vsData.forEach(function(s){
+    if(!seenIds[s.id]){
+        seenIds[s.id]=true;
+        totalViews+=parseInt(s.views)||0;
+        totalLikes+=parseInt(s.likes)||0;
+    }
+});
+
 var totalPts=users.reduce(function(s,u){return s+(u.total_points||0);},0);
 document.getElementById('statVideos').textContent=videos.length;
 document.getElementById('statViews').textContent=fmt(totalViews);
@@ -355,8 +364,16 @@ document.getElementById('statUsers').textContent=users.length;
 document.getElementById('statPoints').textContent=fmt(totalPts);
 document.getElementById('statLikesHist').textContent=likesH.length;
 document.getElementById('statCmtHist').textContent=cmtsH.length;
-var sorted=videos.slice().sort(function(a,b){return(parseInt(b.views)||0)-(parseInt(a.views)||0);}).slice(0,5);
-document.getElementById('topVideosList').innerHTML=sorted.length?sorted.map(function(v){return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(v.title)+'</div><div class="row-meta">'+esc(v.author)+' • 👁️ '+fmt(v.views)+' • ❤️ '+fmt(v.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+v.id+'\')">▶️</button></div></div>';}).join(''):'<div class="empty-msg">Aucune vidéo</div>';
+
+// ✅ v4.2 TOP 5 depuis video_stats trié par vues réelles
+var topSorted=vsData.slice().sort(function(a,b){return(parseInt(b.views)||0)-(parseInt(a.views)||0);}).slice(0,5);
+document.getElementById('topVideosList').innerHTML=topSorted.length?topSorted.map(function(s){
+    var v=videos.find(function(x){return x.id===s.id;});
+    var title=v?esc(v.title):'Vidéo #'+s.id;
+    var author=v?esc(v.author):'Inconnu';
+    return'<div class="table-row"><div class="row-info"><div class="row-title">'+title+'</div><div class="row-meta">'+author+' • 👁️ '+fmt(s.views)+' • ❤️ '+fmt(s.likes)+'</div></div><div class="row-actions"><button class="btn-sm btn-view" onclick="openVideo(\''+s.id+'\')">▶️</button></div></div>';
+}).join(''):'<div class="empty-msg">Aucune vidéo</div>';
+
 var recent=comments.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,5);
 document.getElementById('recentCommentsList').innerHTML=recent.length?recent.map(function(c){var d=new Date(c.created_at);return'<div class="table-row"><div class="row-info"><div class="row-title">'+esc(c.author_name)+' <span style="color:rgba(255,255,255,0.4);font-size:0.7rem">'+maskEmail(c.author_email)+'</span></div><div class="row-meta" style="margin-top:0.2rem;color:rgba(255,255,255,0.6)">💬 '+esc(c.content.substring(0,50))+'</div><div class="row-meta">Video ID: '+c.video_id+' • 🕐 '+d.toLocaleDateString('fr-FR')+'</div></div><div class="row-actions"><button class="btn-sm btn-delete" onclick="deleteComment('+c.id+')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun commentaire</div>';
 }catch(e){showToast('Erreur stats',true);}}
@@ -366,7 +383,6 @@ async function loadUsers(){try{var r=await sb.from('user_points').select('*').or
 function renderUsersTable(users){document.getElementById('allUsersList').innerHTML=users.length?users.map(function(u){var d=u.updated_at?new Date(u.updated_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Jamais';var loginDate=u.last_login_date||'Jamais';var streak=u.current_streak||0;return'<div class="table-row"><div class="row-info"><div class="row-title"><span class="user-email">'+maskEmail(u.email)+'</span> <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;margin-left:0.3rem">'+u.viewer_id.substring(0,12)+'...</span></div><div class="row-meta"><span class="points-highlight">⭐ '+(u.total_points||0)+' pts</span> • <span class="streak-fire">🔥 '+streak+'j streak</span> • Login: '+loginDate+' • MàJ: '+d+'</div></div><div class="row-actions"><button class="btn-sm btn-profile" onclick="openUserProfile(\''+u.viewer_id+'\')">👤 Profil</button><button class="btn-sm btn-edit" onclick="addUserPoints(\''+u.viewer_id+'\','+(u.total_points||0)+')">➕ Points</button><button class="btn-sm btn-delete" onclick="resetUserPoints(\''+u.viewer_id+'\')">🔄 Reset</button><button class="btn-sm btn-danger" onclick="deleteUser(\''+u.viewer_id+'\')">🗑️</button></div></div>';}).join(''):'<div class="empty-msg">Aucun utilisateur trouvé</div>';}
 function filterUsersTable(){var q=(document.getElementById('userSearchInput').value||'').toLowerCase().trim();if(!q){renderUsersTable(allUsersCache);return;}var filtered=allUsersCache.filter(function(u){return(u.email&&u.email.toLowerCase().indexOf(q)!==-1)||(u.viewer_id&&u.viewer_id.toLowerCase().indexOf(q)!==-1);});renderUsersTable(filtered);}
 
-// ✅ v4.1 USER PROFILE — VUES DEPUIS video_views
 async function openUserProfile(vid){var container=document.getElementById('upContainer');container.innerHTML='<div class="empty-msg">Chargement du profil...</div>';document.getElementById('userProfileModal').classList.add('active');try{
 var pu=await sb.from('user_points').select('*').eq('viewer_id',vid).single();
 var pc=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',vid).order('created_at',{ascending:false}).limit(20);
@@ -374,8 +390,7 @@ var pr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_
 var pl=await sb.from('video_likes_history').select('*').eq('viewer_id',vid);
 var pv=await sb.from('video_views').select('*').eq('viewer_id',vid);
 var pvids=await sb.from('videos').select('*').eq('viewer_id',vid).order('created_at',{ascending:false});
-var u=pu.data||{},comments=pc.data||[],ratings=pr.data||[],likesCount=pl.data?pl.data.length:0,viewsCount=pv.data?pv.data.length:0,myVideos=pvids.data||[];
-var email=u.email||'',pts=u.total_points||0,streak=u.current_streak||0;
+var u=pu.data||{},comments=pc.data||[],ratings=pr.data||[],likesCount=pl.data?pl.data.length:0,viewsCount=pv.data?pv.data.length:0,myVideos=pvids.data||[];var email=u.email||'',pts=u.total_points||0,streak=u.current_streak||0;
 var h='<button class="up-close" onclick="closeUserProfile()">✕</button>';
 h+='<div class="up-header"><div class="up-avatar">👤</div><div class="up-name">'+esc(email?email.split('@')[0]:'Utilisateur')+'</div><div class="up-id">'+esc(vid)+'</div><div class="up-email">'+esc(email||'Aucun email')+'</div></div>';
 h+='<div class="up-stats"><div class="up-stat"><div class="up-stat-val">'+fmt(pts)+'</div><div class="up-stat-lbl">Points</div></div><div class="up-stat"><div class="up-stat-val">'+streak+'j</div><div class="up-stat-lbl">Streak</div></div><div class="up-stat"><div class="up-stat-val">'+viewsCount+'</div><div class="up-stat-lbl">Vues</div></div><div class="up-stat"><div class="up-stat-val">'+likesCount+'</div><div class="up-stat-lbl">Likes</div></div></div>';
@@ -390,7 +405,8 @@ else{h+='<div class="up-list">';ratings.forEach(function(r){var t=r.video_stats?
 h+='</div>';
 h+='<div class="up-section"><div class="up-section-title">🎥 Vidéos Publiées ('+myVideos.length+')</div>';
 if(myVideos.length===0)h+='<div class="empty-msg" style="padding:0.5rem">Aucune vidéo</div>';
-else{h+='<div class="up-list">';myVideos.forEach(function(v){h+='<div class="up-list-item">'+esc(v.title)+' — 👁️ '+fmt(v.views||0)+' ❤️ '+fmt(v.likes||0)+'<div class="up-list-meta">'+esc(v.category)+' • '+new Date(v.created_at).toLocaleDateString('fr-FR')+'</div></div>';});h+='</div>';}h+='</div>';
+else{h+='<div class="up-list">';myVideos.forEach(function(v){h+='<div class="up-list-item">'+esc(v.title)+' — 👁️ '+fmt(v.views||0)+' ❤️ '+fmt(v.likes||0)+'<div class="up-list-meta">'+esc(v.category)+' • '+new Date(v.created_at).toLocaleDateString('fr-FR')+'</div></div>';});h+='</div>';}
+h+='</div>';
 h+='<div class="admin-cmt-section"><h4>🟠 Commenter en tant qu\'Admin</h4><div class="admin-cmt-form"><select id="adminCmtVideo"><option value="">-- Choisir une vidéo --</option>';
 myVideos.forEach(function(v){h+='<option value="'+v.id+'">'+esc(v.title)+'</option>';});
 if(myVideos.length===0)h+='<option value="">Aucune vidéo disponible</option>';
@@ -406,7 +422,7 @@ async function addUserPoints(vid,currentPts){var amount=prompt('Ajouter des poin
 async function resetUserPoints(vid){if(!confirm('Remettre à zéro les points ?'))return;try{await sb.from('user_points').update({total_points:0,current_streak:0,updated_at:new Date().toISOString()}).eq('viewer_id',vid);showToast('✅ Points remis à zéro');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 async function deleteUser(vid){if(!confirm('⚠️ SUPPRIMER DÉFINITIVEMENT cet utilisateur ?'))return;try{await sb.from('user_points').delete().eq('viewer_id',vid);await sb.from('video_likes_history').delete().eq('viewer_id',vid);await sb.from('comment_history').delete().eq('viewer_id',vid);await sb.from('video_likes').delete().eq('viewer_id',vid);showToast('✅ Utilisateur supprimé');loadUsers();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 
-// ✅ v4.1 ALL VIDEOS — VUES/LIKES DEPUIS video_stats
+// ✅ v4.2 ALL VIDEOS — VUES/LIKES DEPUIS video_stats
 async function loadAllVideos(){try{
 var r=await sb.from('videos').select('*').order('created_at',{ascending:false});
 var videos=r.data||[];
@@ -423,8 +439,7 @@ async function loadSecurity(){try{var rlh=await sb.from('video_likes_history').s
 function openVideo(id){window.open('/player.html?id='+id,'_blank');}
 async function deleteVideo(id){if(!confirm('Supprimer cette vidéo ?'))return;try{await sb.from('comments').delete().eq('video_id',id);await sb.from('video_likes').delete().eq('video_id',id);await sb.from('video_views').delete().eq('video_id',id);await sb.from('video_likes_history').delete().eq('video_id',id);await sb.from('comment_history').delete().eq('video_id',id);await sb.from('videos').delete().eq('id',id);showToast('✅ Vidéo supprimée');loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
 async function deleteComment(id){if(!confirm('Supprimer ce commentaire ?'))return;try{await sb.from('comments').delete().eq('id',id);showToast('✅ Commentaire supprimé');loadAllComments();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}
-async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('id',id).single();if(r.error||!r.data)return;var v=r.data;editingId=id;editingType='video';document.getElementById('editTitle').textContent='Modifier la vidéo';document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';document.getElementById('editModal').classList.add('active');}catch(e){showToast('Erreur chargement',true);}}
-async function saveEdit(){if(editingType==='video'){var t=document.getElementById('editField1').value.trim(),a=document.getElementById('editField2').value.trim(),c=document.getElementById('editField3').value,d=document.getElementById('editField4').value.trim();if(!t||!a){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:t,author:a,category:c,description:d}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
+async function editVideo(id){try{var r=await sb.from('videos').select('*').eq('id',id).single();if(r.error||!r.data)return;var v=r.data;editingId=id;editingType='video';document.getElementById('editTitle').textContent='Modifier la vidéo';document.getElementById('editFields').innerHTML='<div class="setting-row"><label>Titre</label><input type="text" id="editField1" value="'+esc(v.title)+'"></div><div class="setting-row"><label>Auteur</label><input type="text" id="editField2" value="'+esc(v.author)+'"></div><div class="setting-row"><label>Catégorie</label><select id="editField3"><option'+(v.category==='Sci-Fi'?' selected':'')+'>Sci-Fi</option><option'+(v.category==='Onirique'?' selected':'')+'>Onirique</option><option'+(v.category==='Thriller'?' selected':'')+'>Thriller</option><option'+(v.category==='Romance'?' selected':'')+'>Romance</option><option'+(v.category==='Pub'?' selected':'')+'>Pub</option><option'+(v.category==='Dessin animé'?' selected':'')+'>Dessin animé</option><option'+(v.category==='Divers'?' selected':'')+'>Divers</option></select></div><div class="setting-row"><label>Description</label><textarea id="editField4">'+esc(v.description||'')+'</textarea></div>';document.getElementById('editModal').classList.add('active');}catch(e){showToast('Erreur chargement',true);}}async function saveEdit(){if(editingType==='video'){var t=document.getElementById('editField1').value.trim(),a=document.getElementById('editField2').value.trim(),c=document.getElementById('editField3').value,d=document.getElementById('editField4').value.trim();if(!t||!a){showToast('❌ Champs obligatoires',true);return;}try{await sb.from('videos').update({title:t,author:a,category:c,description:d}).eq('id',editingId);showToast('✅ Vidéo modifiée');closeEditModal();loadAllVideos();loadOverview();}catch(e){showToast('❌ Erreur: '+e.message,true);}}}
 function closeEditModal(){document.getElementById('editModal').classList.remove('active');editingId=null;editingType=null;}
 
 async function loadSettings(){try{initSB();var r=await sb.from('site_settings').select('*').eq('id',1).single();if(r.error||!r.data)return;var s=r.data;document.getElementById('setSiteName').value=s.site_name||'';document.getElementById('setSiteDesc').value=s.site_desc||'';document.getElementById('setSiteUrl').value=s.site_url||'';document.getElementById('setColor').value=s.color||'#d4af37';document.getElementById('setBadgeText').value=s.badge_text||'';document.getElementById('setHeroTitle').value=s.hero_title||'';document.getElementById('setOfflineMode').value=s.offline_mode?'true':'false';document.getElementById('setOfflineMsg').value=s.offline_msg||'';}catch(e){showToast('Erreur paramètres',true);}}
