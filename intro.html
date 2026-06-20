@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuroraAI.watch — Intro</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;width:100vw;height:100vh}
+
+/* ===== PHASE 1 : LOGO (0-3s) ===== */
+#phaseLogo{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;transition:opacity 0.6s ease}
+#phaseLogo.fade-out{opacity:0;pointer-events:none}
+.intro-logo-wrap{width:100px;height:100px;border:3px solid #d4af37;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(212,175,55,0.5),0 0 120px rgba(212,175,55,0.2);animation:logoIntroPulse 1.8s ease-in-out infinite;opacity:0;transform:scale(0.6);transition:all 1s cubic-bezier(0.25,0.46,0.45,0.94)}
+.intro-logo-wrap.visible{opacity:1;transform:scale(1)}
+@keyframes logoIntroPulse{0%,100%{box-shadow:0 0 40px rgba(212,175,55,0.4),0 0 80px rgba(212,175,55,0.15);transform:scale(1)}50%{box-shadow:0 0 70px rgba(212,175,55,0.8),0 0 140px rgba(212,175,55,0.35);transform:scale(1.06)}}
+.intro-play-icon{width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:24px solid #d4af37;margin-left:5px;filter:drop-shadow(0 0 12px rgba(212,175,55,0.8))}
+.intro-title{font-size:2.8rem;font-weight:900;color:#fff;letter-spacing:4px;margin-top:1.2rem;text-shadow:0 0 40px rgba(212,175,55,0.6),0 0 80px rgba(212,175,55,0.3);opacity:0;transform:translateY(15px);transition:all 0.8s ease 0.4s}
+.intro-title.visible{opacity:1;transform:translateY(0)}
+.intro-tagline{font-size:0.85rem;color:rgba(212,175,55,0.8);letter-spacing:5px;text-transform:uppercase;font-weight:600;margin-top:0.4rem;opacity:0;transform:translateY(10px);transition:all 0.8s ease 0.7s}
+.intro-tagline.visible{opacity:1;transform:translateY(0)}
+
+/* ===== PHASE 2 : FILM (3-7s) ===== */
+#phaseFilm{position:fixed;top:0;left:0;width:100%;height:100%;z-index:5;display:none;background:#000}
+#phaseFilm.active{display:block}
+#phaseFilm video{width:100%;height:100%;object-fit:cover}
+.film-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(0deg,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.3) 40%,rgba(0,0,0,0.1) 60%,rgba(0,0,0,0.4) 100%);z-index:6;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem;opacity:0;transition:opacity 0.8s ease}
+.film-overlay.visible{opacity:1}
+.film-badge-label{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(212,175,55,0.2);border:1px solid rgba(212,175,55,0.5);border-radius:20px;padding:0.3rem 0.9rem;font-size:0.7rem;font-weight:700;color:#d4af37;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem;width:fit-content;backdrop-filter:blur(10px)}
+.film-intro-title{font-size:clamp(1.5rem,5vw,2.5rem);font-weight:900;color:#fff;line-height:1.2;text-shadow:0 4px 20px rgba(0,0,0,0.9);margin-bottom:0.3rem}
+.film-intro-author{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:600}
+.film-intro-stats{display:flex;gap:1rem;margin-top:0.6rem;flex-wrap:wrap}
+.film-intro-stat{font-size:0.75rem;color:rgba(212,175,55,0.8);font-weight:600;display:flex;align-items:center;gap:0.3rem}
+
+/* ===== BOUTON PASSER ===== */
+.skip-btn{position:fixed;bottom:2rem;right:2rem;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:0.5rem 1.2rem;border-radius:25px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s;opacity:0;animation:skipFadeIn 0.5s ease 2s forwards;backdrop-filter:blur(10px);letter-spacing:1px}
+.skip-btn:hover{background:rgba(212,175,55,0.2);border-color:rgba(212,175,55,0.5);color:#d4af37}
+@keyframes skipFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== TRANSITION SORTIE ===== */
+.exit-fade{animation:exitFade 1s ease forwards}
+@keyframes exitFade{0%{opacity:1}100%{opacity:0}}
+
+/* ===== FALLBACK SI AUCUN FILM ===== */
+.fallback-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,0.3);font-size:0.9rem;text-align:center;z-index:7}
+@media(max-width:768px){
+.intro-logo-wrap{width:75px;height:75px;border-radius:14px}
+.intro-play-icon{border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid #d4af37;margin-left:4px}
+.intro-title{font-size:1.8rem;letter-spacing:2px}
+.intro-tagline{font-size:0.7rem;letter-spacing:3px}
+.film-overlay{padding:1.5rem}
+.film-intro-title{font-size:1.4rem}
+.skip-btn{bottom:1.5rem;right:1rem;padding:0.4rem 1rem;font-size:0.7rem}
+}
+</style>
+</head>
+<body>
+
+<!-- PHASE 1 : LOGO -->
+<div id="phaseLogo">
+<div class="intro-logo-wrap" id="introLogo">
+<div class="intro-play-icon"></div>
+</div>
+<div class="intro-title" id="introTitle">AURORA AI</div>
+<div class="intro-tagline" id="introTagline">Le cinéma réinventé par l'IA</div>
+</div>
+
+<!-- PHASE 2 : MEILLEUR FILM -->
+<div id="phaseFilm">
+<video id="introVideo" muted playsinline preload="auto"></video>
+<div class="film-overlay" id="filmOverlay">
+<div class="film-badge-label">🔥 Film tendance du moment</div>
+<div class="film-intro-title" id="filmTitle"></div>
+<div class="film-intro-author" id="filmAuthor"></div>
+<div class="film-intro-stats" id="filmStats"></div>
+</div>
+<div class="fallback-msg" id="fallbackMsg" style="display:none">Chargement...</div>
+</div>
+
+<!-- BOUTON PASSER -->
+<button class="skip-btn" id="skipBtn" onclick="goToIndex()">PASSER ▶</button>
+
+<script>
+// ========== CONFIG ==========
+var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
+var TOTAL_DURATION=8000;
+var LOGO_DURATION=3000;
+var FILM_START=3000;
+var FILM_DURATION=4000;
+var TRANSITION_START=7000;
+
+// ========== CHECK SI DÉJÀ VU ==========
+(function(){
+if(sessionStorage.getItem('aurora_intro_seen')==='true'){window.location.replace('/');
+return;
+}
+sessionStorage.setItem('aurora_intro_seen','true');
+startIntro();
+})();
+
+function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
+
+// ========== SÉLECTION MEILLEUR FILM (SCORE COMBINÉ) ==========
+async function getBestFilm(){
+try{
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var r=await sb.from('video_stats').select('*').eq('status','approved').order('created_at',{ascending:false}).limit(50);
+if(r.error||!r.data||r.data.length===0)return null;
+var best=null,bestScore=-1;
+r.data.forEach(function(v){
+var likes=v.likes||0;
+var views=v.views||0;
+var rating=v.avg_rating||v.rating||0;
+var comments=v.comments_count||v.comments||0;
+var score=(likes*3)+(views*1)+(rating*20)+(comments*5);
+if(score>bestScore){bestScore=score;best=v;}
+});
+return best;
+}catch(e){console.log('[Intro] Error:',e);return null;}
+}
+
+// ========== SÉQUENCE INTRO ==========
+async function startIntro(){
+// Phase 1 : Logo
+setTimeout(function(){
+document.getElementById('introLogo').classList.add('visible');
+},100);
+setTimeout(function(){
+document.getElementById('introTitle').classList.add('visible');
+},400);
+setTimeout(function(){
+document.getElementById('introTagline').classList.add('visible');
+},700);
+
+// Charger le meilleur film pendant le logo
+var film=await getBestFilm();
+
+// Phase 2 : Film
+setTimeout(function(){
+document.getElementById('phaseLogo').classList.add('fade-out');
+if(film&&film.video_url){
+showFilmPhase(film);
+}else{skipToIndex();
+}
+},LOGO_DURATION);
+}
+
+function showFilmPhase(film){
+var phase=document.getElementById('phaseFilm');
+var video=document.getElementById('introVideo');
+var overlay=document.getElementById('filmOverlay');
+
+document.getElementById('filmTitle').textContent=film.title||'Film AuroraAI';
+document.getElementById('filmAuthor').textContent='par '+(film.author||film.creator_name||'Anonyme');
+
+var statsHtml='';
+if(film.likes)statsHtml+='<span class="film-intro-stat">❤️ '+fmt(film.likes)+' likes</span>';
+if(film.views)statsHtml+='<span class="film-intro-stat">👁️ '+fmt(film.views)+' vues</span>';
+if(film.avg_rating||film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+(film.avg_rating||film.rating)+'/5</span>';
+document.getElementById('filmStats').innerHTML=statsHtml;
+
+phase.classList.add('active');
+video.src=film.video_url;
+video.muted=true;
+
+video.play().then(function(){
+setTimeout(function(){overlay.classList.add('visible');},300);
+}).catch(function(){
+document.getElementById('fallbackMsg').style.display='block';
+document.getElementById('fallbackMsg').textContent='🎬 '+film.title;
+setTimeout(function(){overlay.classList.add('visible');},300);
+});
+
+// Transition sortie
+setTimeout(function(){
+goToIndex();
+},FILM_DURATION);
+}
+
+function goToIndex(){
+document.body.classList.add('exit-fade');
+setTimeout(function(){
+window.location.replace('/');
+},800);
+}
+
+function skipToIndex(){
+window.location.replace('/');
+}
+
+// Sécurité : si rien ne marche, redirection après 10s
+setTimeout(function(){if(!document.body.classList.contains('exit-fade')){
+window.location.replace('/');
+}
+},10000);
+</script>
+</body>
+</html>
