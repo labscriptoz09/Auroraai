@@ -31,7 +31,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .film-intro-author{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:600}
 .film-intro-stats{display:flex;gap:1rem;margin-top:0.6rem;flex-wrap:wrap}
 .film-intro-stat{font-size:0.75rem;color:rgba(212,175,55,0.8);font-weight:600;display:flex;align-items:center;gap:0.3rem}
-/* ✅ BUG FIX N°4 : Bouton passer repositionné haut droite + zone tactile élargie */
 .skip-btn{position:fixed;top:1.5rem;right:1.5rem;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:0.6rem 1.4rem;border-radius:25px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;opacity:0;animation:skipFadeIn 0.5s ease 2s forwards;backdrop-filter:blur(10px);letter-spacing:1px;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center}
 .skip-btn:hover{background:rgba(212,175,55,0.2);border-color:rgba(212,175,55,0.5);color:#d4af37}
 @keyframes skipFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -45,11 +44,10 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 .intro-tagline{font-size:0.7rem;letter-spacing:3px}
 .film-overlay{padding:1.5rem}
 .film-intro-title{font-size:1.4rem}
-/* ✅ Mobile : bouton bien visible en haut à droite, jamais caché par la nav bar */
 .skip-btn{top:1rem;right:1rem;padding:0.5rem 1.2rem;font-size:0.75rem}
-}</style>
-</head>
-<body>
+}
+</style>
+</head><body>
 
 <div id="phaseLogo">
 <div class="intro-logo-wrap" id="introLogo">
@@ -70,7 +68,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 <div class="fallback-msg" id="fallbackMsg" style="display:none">Chargement...</div>
 </div>
 
-<!-- ✅ BUG FIX N°4 : Bouton repositionné via CSS (haut droite) -->
 <button class="skip-btn" id="skipBtn" onclick="goToIndex()">PASSER ▶</button>
 
 <script>
@@ -96,10 +93,10 @@ async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var controller=new AbortController();
-var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50).abortSignal(controller.signal);
+var timeoutId=setTimeout(function(){controller.abort();},FETCH_TIMEOUT);
+var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50).abortSignal(controller.signal);
 clearTimeout(timeoutId);
-if(r.error||!r.data||r.data.length===0)return null;
-var best=null,bestScore=-1;
+if(r.error||!r.data||r.data.length===0)return null;var best=null,bestScore=-1;
 r.data.forEach(function(v){
 var likes=v.likes||0;
 var views=v.views||0;
@@ -148,8 +145,7 @@ document.getElementById('filmAuthor').textContent='par '+(film.author||film.crea
 var statsHtml='';
 if(film.likes)statsHtml+='<span class="film-intro-stat">❤️ '+fmt(film.likes)+' likes</span>';
 if(film.views)statsHtml+='<span class="film-intro-stat">👁️ '+fmt(film.views)+' vues</span>';
-if(film.avg_rating||film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+(film.avg_rating||film.rating)+'/5</span>';
-document.getElementById('filmStats').innerHTML=statsHtml;
+if(film.avg_rating||film.rating)statsHtml+='<span class="film-intro-stat">⭐ '+(film.avg_rating||film.rating)+'/5</span>';document.getElementById('filmStats').innerHTML=statsHtml;
 
 phase.classList.add('active');
 video.src=film.video_url;
