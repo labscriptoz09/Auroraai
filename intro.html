@@ -88,28 +88,25 @@ body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;over
 // ========== CONFIG ==========
 var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-var TOTAL_DURATION=8000;
 var LOGO_DURATION=3000;
-var FILM_START=3000;
 var FILM_DURATION=4000;
-var TRANSITION_START=7000;
 
 // ========== CHECK SI DÉJÀ VU ==========
 (function(){
-if(sessionStorage.getItem('aurora_intro_seen')==='true'){window.location.replace('/');
+if(sessionStorage.getItem('aurora_intro_seen')==='true'){
+window.location.replace('/');
 return;
-}
-sessionStorage.setItem('aurora_intro_seen','true');
+}sessionStorage.setItem('aurora_intro_seen','true');
 startIntro();
 })();
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 
-// ========== SÉLECTION MEILLEUR FILM (SCORE COMBINÉ) ==========
+// ========== ✅ v1.1 REQUÊTE CORRIGÉE (sans status, tri par vues) ==========
 async function getBestFilm(){
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var r=await sb.from('video_stats').select('*').eq('status','approved').order('created_at',{ascending:false}).limit(50);
+var r=await sb.from('video_stats').select('*').order('views',{ascending:false}).limit(50);
 if(r.error||!r.data||r.data.length===0)return null;
 var best=null,bestScore=-1;
 r.data.forEach(function(v){
@@ -145,10 +142,10 @@ setTimeout(function(){
 document.getElementById('phaseLogo').classList.add('fade-out');
 if(film&&film.video_url){
 showFilmPhase(film);
-}else{skipToIndex();
+}else{
+skipToIndex();
 }
-},LOGO_DURATION);
-}
+},LOGO_DURATION);}
 
 function showFilmPhase(film){
 var phase=document.getElementById('phaseFilm');
@@ -172,7 +169,7 @@ video.play().then(function(){
 setTimeout(function(){overlay.classList.add('visible');},300);
 }).catch(function(){
 document.getElementById('fallbackMsg').style.display='block';
-document.getElementById('fallbackMsg').textContent='🎬 '+film.title;
+document.getElementById('fallbackMsg').textContent='🎬 '+(film.title||'AuroraAI');
 setTimeout(function(){overlay.classList.add('visible');},300);
 });
 
@@ -194,10 +191,10 @@ window.location.replace('/');
 }
 
 // Sécurité : si rien ne marche, redirection après 10s
-setTimeout(function(){if(!document.body.classList.contains('exit-fade')){
+setTimeout(function(){
+if(!document.body.classList.contains('exit-fade')){
 window.location.replace('/');
-}
-},10000);
+}},10000);
 </script>
 </body>
 </html>
