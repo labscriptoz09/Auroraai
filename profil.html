@@ -64,7 +64,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .progress-bar{width:100%;height:6px;background:rgba(212,175,55,0.1);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:3px;transition:width 1s ease;box-shadow:0 0 10px rgba(212,175,55,0.4)}
 .progress-text{display:flex;justify-content:space-between;color:rgba(255,255,255,0.4);font-size:0.65rem;margin-top:0.3rem}
-/* ✅ NOUVEAU : Grille vidéos publiées */
 .my-videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem}
 .my-video-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;overflow:hidden;transition:all 0.3s;cursor:pointer}
 .my-video-card:hover{border-color:rgba(212,175,55,0.4);transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.3)}
@@ -96,8 +95,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
 <a href="/" class="back-btn">
 <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-<span>Retour</span></a>
-</header>
+<span>Retour</span>
+</a></header>
 <div class="main" id="profileContent">
 <div class="empty-state" id="loadingMsg">Chargement du profil...</div>
 </div>
@@ -135,23 +134,20 @@ var BADGES_DATA=[
 {id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
 ];
 
-// ========== ✅ v2.0 LOAD PROFILE 100% SUPABASE ==========
 async function loadProfile(){
 var sb=null;
 var userEmail='';
 var streak=0;
-var commentsCount=0;
-var ratingsCount=0;
+var commentsList=[];
+var ratingsList=[];
 var likesCount=0;
 var viewsCount=0;
 var videosPublished=[];
-var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');var commentsList=[];
-var ratingsList=[];
+var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');
 
-try{
-sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// 1. Points + email + streak DEPUIS SUPABASE
+// 1. Points + email + streak
 var se=localStorage.getItem('aurora_saved_email');
 var pr=null;
 if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
@@ -162,63 +158,68 @@ userEmail=pr.data.email||'';
 streak=pr.data.current_streak||0;
 }
 
-// 2. Commentaires DEPUIS SUPABASE (count + liste)
+// 2. Commentaires (avec fallback email)
 var cr=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
-if(!cr.error&&cr.data){commentsList=cr.data;commentsCount=cr.data.length;}
-// Si pas de viewer_id dans comments, essayer par email
-if(commentsCount===0&&userEmail){
+if(!cr.error&&cr.data&&cr.data.length>0){commentsList=cr.data;}
+else if(userEmail){
 var cr2=await sb.from('comments').select('*,video_stats(title)').eq('author_email',userEmail).order('created_at',{ascending:false}).limit(10);
-if(!cr2.error&&cr2.data){commentsList=cr2.data;commentsCount=cr2.data.length;}
+if(!cr2.error&&cr2.data)commentsList=cr2.data;
 }
 
-// 3. Notes DEPUIS SUPABASE (count + liste)
+// 3. Notes
 var rr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
-if(!rr.error&&rr.data){ratingsList=rr.data;ratingsCount=rr.data.length;}
+if(!rr.error&&rr.data)ratingsList=rr.data;
 
-// 4. Likes donnés DEPUIS SUPABASE (count)
+// 4. Likes donnés (personnels)
 var lr=await sb.from('video_likes_history').select('id').eq('viewer_id',viewerId);
 if(!lr.error&&lr.data)likesCount=lr.data.length;
 
-// 5. Vues DEPUIS SUPABASE (count)
+// 5. Vues personnelles
 var vr=await sb.from('video_views').select('id').eq('viewer_id',viewerId);
 if(!vr.error&&vr.data)viewsCount=vr.data.length;
 
-// 6. ✅ NOUVEAU : Vidéos publiées DEPUIS SUPABASE
+// 6. ✅ Vidéos publiées PAR CET UTILISATEUR
 var myVids=await sb.from('videos').select('*').eq('viewer_id',viewerId).order('created_at',{ascending:false});
 if(!myVids.error&&myVids.data)videosPublished=myVids.data;
 
 }catch(e){console.log('[Profil] Error:',e);}
 
-// Partages depuis localStorage (seule donnée locale)
+// Partages depuis localStorage
 var shares=0;
 for(var i=0;i<localStorage.length;i++){
 var k=localStorage.key(i);
 if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');
-}var emailSaved=!!localStorage.getItem('aurora_saved_email');
+}
+var emailSaved=!!localStorage.getItem('aurora_saved_email');
 
-// Calculer badges avec DONNÉES SUPABASE
+// ✅ CALCUL STATS CRÉATEUR (totaux sur tes vidéos)
+var creatorTotalViews=0;
+var creatorTotalLikes=0;var maxVideoViews=0;
+var maxVideoLikes=0;
+videosPublished.forEach(function(v){
+creatorTotalViews+=(v.views||0);
+creatorTotalLikes+=(v.likes||0);
+if((v.views||0)>maxVideoViews)maxVideoViews=v.views||0;
+if((v.likes||0)>maxVideoLikes)maxVideoLikes=v.likes||0;
+});
+
+// Badges avec DONNÉES CORRECTES
 var stats={
 points:userPoints,
 views:viewsCount,
 likesGiven:likesCount,
-comments:commentsCount,
-ratings:ratingsCount,
+comments:commentsList.length,
+ratings:ratingsList.length,
 streak:streak,
 videosPublished:videosPublished.length,
-hasRatedVideo:ratingsCount>0,
-maxVideoViews:0,
-maxVideoLikes:0,
+hasRatedVideo:ratingsList.length>0,
+maxVideoViews:maxVideoViews,
+maxVideoLikes:maxVideoLikes,
 tipsReceived:0,
 shares:shares,
 emailSaved:emailSaved,
 allOtherBadges:false
 };
-
-// Vérifier max views/likes sur les vidéos publiées
-videosPublished.forEach(function(v){
-if((v.views||0)>stats.maxVideoViews)stats.maxVideoViews=v.views||0;
-if((v.likes||0)>stats.maxVideoLikes)stats.maxVideoLikes=v.likes||0;
-});
 
 var unlocked=[];
 var allExcept=true;
@@ -242,8 +243,8 @@ memberSince=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
 }
 }catch(e){}
 if(!memberSince)memberSince='Juin 2026';
-
-renderProfile({points:userPoints,
+renderProfile({
+points:userPoints,
 email:userEmail,
 streak:streak,
 currentBadge:currentBadge,
@@ -255,7 +256,9 @@ viewsCount:viewsCount,
 favorites:favorites,
 shares:shares,
 memberSince:memberSince,
-videosPublished:videosPublished
+videosPublished:videosPublished,
+creatorTotalViews:creatorTotalViews,
+creatorTotalLikes:creatorTotalLikes
 });
 }
 
@@ -289,10 +292,10 @@ html+='</div></div>';
 // PROGRESS
 html+='<div class="progress-wrap">';
 html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
-html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';
-html+='</div>';
+html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';html+='</div>';
 
-// ALL BADGEShtml+='<div class="section">';
+// ALL BADGES
+html+='<div class="section">';
 html+='<div class="section-title">🏆 Collection de Badges</div>';
 html+='<div class="badges-grid">';
 BADGES_DATA.forEach(function(b){
@@ -305,19 +308,28 @@ html+='</div>';
 });
 html+='</div></div>';
 
-// STATS (DONNÉES SUPABASE)
+// ✅ STATS PERSONNELLES (ce que TOI tu as fait)
 html+='<div class="section">';
-html+='<div class="section-title">📊 Statistiques</div>';
+html+='<div class="section-title">👤 Mon Activité</div>';
 html+='<div class="stats-grid">';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.viewsCount+'</div><div class="stat-card-label">Vidéos vues</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.likesCount+'</div><div class="stat-card-label">Likes donnés</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.comments.length+'</div><div class="stat-card-label">Commentaires</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.ratings.length+'</div><div class="stat-card-label">Films notés</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.favorites.length+'</div><div class="stat-card-label">Favoris</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.videosPublished.length+'</div><div class="stat-card-label">Vidéos publiées</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.shares+'</div><div class="stat-card-label">Partages</div></div>';
 html+='</div></div>';
 
-// ✅ NOUVEAU : MES VIDÉOS PUBLIÉES
+// ✅ STATS CRÉATEUR (impact de TES vidéos sur la communauté)
+html+='<div class="section">';
+html+='<div class="section-title">🎬 Impact Créateur</div>';
+html+='<div class="stats-grid">';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.videosPublished.length+'</div><div class="stat-card-label">Vidéos publiées</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.creatorTotalViews)+'</div><div class="stat-card-label">Vues totales</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.creatorTotalLikes)+'</div><div class="stat-card-label">Likes reçus</div></div>';
+html+='</div></div>';
+
+// MES VIDÉOS PUBLIÉES
 html+='<div class="section">';
 html+='<div class="section-title">🎥 Mes Vidéos Publiées</div>';
 if(data.videosPublished.length===0){
@@ -329,8 +341,7 @@ var thumb=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading
 html+='<div class="my-video-card" onclick="window.location.href=\'/player.html?id='+v.id+'\'">';
 html+='<div class="my-video-thumb">'+thumb+'</div>';
 html+='<div class="my-video-info">';
-html+='<div class="my-video-title">'+esc(v.title||'Sans titre')+'</div>';
-html+='<div class="my-video-stats"><span>👁️ '+fmt(v.views||0)+'</span><span>❤️ '+fmt(v.likes||0)+'</span>'+(v.rating?'<span>⭐ '+v.rating+'</span>':'')+'</div>';
+html+='<div class="my-video-title">'+esc(v.title||'Sans titre')+'</div>';html+='<div class="my-video-stats"><span>👁️ '+fmt(v.views||0)+'</span><span>❤️ '+fmt(v.likes||0)+'</span>'+(v.rating?'<span>⭐ '+v.rating+'</span>':'')+'</div>';
 html+='</div></div>';
 });
 html+='</div>';
@@ -341,7 +352,8 @@ html+='</div>';
 html+='<div class="section">';
 html+='<div class="section-title">💬 Commentaires Récents</div>';
 if(data.comments.length===0){
-html+='<div class="empty-state">Aucun commentaire pour le moment</div>';}else{
+html+='<div class="empty-state">Aucun commentaire pour le moment</div>';
+}else{
 html+='<div class="activity-list">';
 data.comments.slice(0,10).forEach(function(c){
 var title=c.video_stats?c.video_stats.title:'Film';
@@ -378,8 +390,7 @@ html+='<div class="activity-meta">'+(date?date:'')+'</div>';
 html+='</div>';
 html+='<div class="activity-points">+5 ⭐</div>';
 html+='</div>';
-});
-html+='</div>';
+});html+='</div>';
 }
 html+='</div>';
 
