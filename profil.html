@@ -64,6 +64,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .progress-bar{width:100%;height:6px;background:rgba(212,175,55,0.1);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:3px;transition:width 1s ease;box-shadow:0 0 10px rgba(212,175,55,0.4)}
 .progress-text{display:flex;justify-content:space-between;color:rgba(255,255,255,0.4);font-size:0.65rem;margin-top:0.3rem}
+/* ✅ NOUVEAU : Grille vidéos publiées */
+.my-videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem}
+.my-video-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;overflow:hidden;transition:all 0.3s;cursor:pointer}
+.my-video-card:hover{border-color:rgba(212,175,55,0.4);transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+.my-video-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.03));display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:rgba(212,175,55,0.3)}
+.my-video-thumb img{width:100%;height:100%;object-fit:cover}
+.my-video-info{padding:0.6rem}
+.my-video-title{color:#fff;font-size:0.8rem;font-weight:700;margin-bottom:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my-video-stats{display:flex;gap:0.6rem;font-size:0.65rem;color:rgba(255,255,255,0.4)}
 @media(max-width:600px){
 .badges-grid{grid-template-columns:repeat(4,1fr)}
 .stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -73,9 +82,11 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .current-badge-info{text-align:center}
 .back-btn span{display:none}
 .back-btn{padding:0.45rem 0.6rem}
+.my-videos-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:400px){
 .badges-grid{grid-template-columns:repeat(3,1fr)}
+.my-videos-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -85,26 +96,22 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
 <a href="/" class="back-btn">
 <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-<span>Retour</span>
-</a>
+<span>Retour</span></a>
 </header>
 <div class="main" id="profileContent">
 <div class="empty-state" id="loadingMsg">Chargement du profil...</div>
 </div>
 <script src="/plexus.js"></script>
 <script>
-// ========== CONFIG ==========
 var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
 
-// ✅ BUG FIX N°1 : userPoints GLOBAL (pas local dans loadProfile)
+var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
 var userPoints=0;
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
-// ========== BADGES DATA (IDENTIQUE INDEX/PLAYER) ==========
 var BADGES_DATA=[
 {id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
 {id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
@@ -128,93 +135,127 @@ var BADGES_DATA=[
 {id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
 ];
 
-// ========== LOAD PROFILE ==========
+// ========== ✅ v2.0 LOAD PROFILE 100% SUPABASE ==========
 async function loadProfile(){
 var sb=null;
-// ✅ userPoints est maintenant GLOBAL, pas local
 var userEmail='';
 var streak=0;
-var comments=[];
-var ratings=[];
+var commentsCount=0;
+var ratingsCount=0;
 var likesCount=0;
 var viewsCount=0;
-var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');
+var videosPublished=[];
+var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');var commentsList=[];
+var ratingsList=[];
 
 try{
 sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// Points + email + streak → met à jour la variable GLOBALE userPoints
+// 1. Points + email + streak DEPUIS SUPABASE
 var se=localStorage.getItem('aurora_saved_email');
-var pr=null;if(se){pr=await sb.from('user_points').select('*').eq('email',se).single();}
-if(!pr||pr.error){pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();}
+var pr=null;
+if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
+if(!pr||pr.error)pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();
 if(!pr.error&&pr.data){
 userPoints=pr.data.total_points||0;
 userEmail=pr.data.email||'';
 streak=pr.data.current_streak||0;
 }
 
-// Commentaires
-var cr=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(20);
-if(!cr.error&&cr.data)comments=cr.data;
+// 2. Commentaires DEPUIS SUPABASE (count + liste)
+var cr=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
+if(!cr.error&&cr.data){commentsList=cr.data;commentsCount=cr.data.length;}
+// Si pas de viewer_id dans comments, essayer par email
+if(commentsCount===0&&userEmail){
+var cr2=await sb.from('comments').select('*,video_stats(title)').eq('author_email',userEmail).order('created_at',{ascending:false}).limit(10);
+if(!cr2.error&&cr2.data){commentsList=cr2.data;commentsCount=cr2.data.length;}
+}
 
-// Notes
-var rr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(20);
-if(!rr.error&&rr.data)ratings=rr.data;
+// 3. Notes DEPUIS SUPABASE (count + liste)
+var rr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
+if(!rr.error&&rr.data){ratingsList=rr.data;ratingsCount=rr.data.length;}
 
-// Likes count
+// 4. Likes donnés DEPUIS SUPABASE (count)
 var lr=await sb.from('video_likes_history').select('id').eq('viewer_id',viewerId);
 if(!lr.error&&lr.data)likesCount=lr.data.length;
 
+// 5. Vues DEPUIS SUPABASE (count)
+var vr=await sb.from('video_views').select('id').eq('viewer_id',viewerId);
+if(!vr.error&&vr.data)viewsCount=vr.data.length;
+
+// 6. ✅ NOUVEAU : Vidéos publiées DEPUIS SUPABASE
+var myVids=await sb.from('videos').select('*').eq('viewer_id',viewerId).order('created_at',{ascending:false});
+if(!myVids.error&&myVids.data)videosPublished=myVids.data;
+
 }catch(e){console.log('[Profil] Error:',e);}
 
-// Local stats
+// Partages depuis localStorage (seule donnée locale)
+var shares=0;
 for(var i=0;i<localStorage.length;i++){
 var k=localStorage.key(i);
-if(k&&k.indexOf('viewed_')===0)viewsCount++;
-}
-var shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
-var emailSaved=!!localStorage.getItem('aurora_saved_email');
+if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');
+}var emailSaved=!!localStorage.getItem('aurora_saved_email');
 
-// ✅ Calculer badges avec userPoints GLOBAL (maintenant correct)
-var stats={points:userPoints,views:viewsCount,likesGiven:likesCount,comments:comments.length,ratings:ratings.length,streak:streak,videosPublished:0,hasRatedVideo:ratings.length>0,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false};
+// Calculer badges avec DONNÉES SUPABASE
+var stats={
+points:userPoints,
+views:viewsCount,
+likesGiven:likesCount,
+comments:commentsCount,
+ratings:ratingsCount,
+streak:streak,
+videosPublished:videosPublished.length,
+hasRatedVideo:ratingsCount>0,
+maxVideoViews:0,
+maxVideoLikes:0,
+tipsReceived:0,
+shares:shares,
+emailSaved:emailSaved,
+allOtherBadges:false
+};
+
+// Vérifier max views/likes sur les vidéos publiées
+videosPublished.forEach(function(v){
+if((v.views||0)>stats.maxVideoViews)stats.maxVideoViews=v.views||0;
+if((v.likes||0)>stats.maxVideoLikes)stats.maxVideoLikes=v.likes||0;
+});
+
 var unlocked=[];
 var allExcept=true;
 BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
 if(allExcept&&unlocked.length===19)unlocked.push(20);
 
-// Badge actuel (le plus élevé)
 var currentBadge=BADGES_DATA[0];
 for(var j=BADGES_DATA.length-1;j>=0;j--){
 if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}
 }
 
-// Membre depuis
 var memberSince='';
 try{
 var vidParts=viewerId.split('_');
 if(vidParts.length>=2){
 var ts=parseInt(vidParts[1]);
-if(ts>1700000000000){var d=new Date(ts);
+if(ts>1700000000000){
+var d=new Date(ts);
 memberSince=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
 }
 }
 }catch(e){}
 if(!memberSince)memberSince='Juin 2026';
 
-// RENDER
-renderProfile({
-points:userPoints,
+renderProfile({points:userPoints,
 email:userEmail,
 streak:streak,
 currentBadge:currentBadge,
 unlocked:unlocked,
-comments:comments,
-ratings:ratings,
+comments:commentsList,
+ratings:ratingsList,
 likesCount:likesCount,
 viewsCount:viewsCount,
 favorites:favorites,
 shares:shares,
-memberSince:memberSince
+memberSince:memberSince,
+videosPublished:videosPublished
 });
 }
 
@@ -244,14 +285,14 @@ html+='<div class="current-badge-info">';
 html+='<div class="current-badge-label">Badge Actuel</div>';
 html+='<div class="current-badge-name">'+esc(data.currentBadge.name)+'</div>';
 html+='</div></div>';
+
 // PROGRESS
 html+='<div class="progress-wrap">';
 html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
 html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';
 html+='</div>';
 
-// ALL BADGES
-html+='<div class="section">';
+// ALL BADGEShtml+='<div class="section">';
 html+='<div class="section-title">🏆 Collection de Badges</div>';
 html+='<div class="badges-grid">';
 BADGES_DATA.forEach(function(b){
@@ -264,7 +305,7 @@ html+='</div>';
 });
 html+='</div></div>';
 
-// STATS
+// STATS (DONNÉES SUPABASE)
 html+='<div class="section">';
 html+='<div class="section-title">📊 Statistiques</div>';
 html+='<div class="stats-grid">';
@@ -273,15 +314,34 @@ html+='<div class="stat-card"><div class="stat-card-value">'+data.likesCount+'</
 html+='<div class="stat-card"><div class="stat-card-value">'+data.comments.length+'</div><div class="stat-card-label">Commentaires</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.ratings.length+'</div><div class="stat-card-label">Films notés</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.favorites.length+'</div><div class="stat-card-label">Favoris</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.shares+'</div><div class="stat-card-label">Partages</div></div>';
+html+='<div class="stat-card"><div class="stat-card-value">'+data.videosPublished.length+'</div><div class="stat-card-label">Vidéos publiées</div></div>';
 html+='</div></div>';
+
+// ✅ NOUVEAU : MES VIDÉOS PUBLIÉES
+html+='<div class="section">';
+html+='<div class="section-title">🎥 Mes Vidéos Publiées</div>';
+if(data.videosPublished.length===0){
+html+='<div class="empty-state">Aucune vidéo publiée pour le moment<br><a href="/upload.html" style="color:#d4af37;text-decoration:none;font-weight:700">Publier votre premier film IA →</a></div>';
+}else{
+html+='<div class="my-videos-grid">';
+data.videosPublished.forEach(function(v){
+var thumb=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading="lazy">':'🎬';
+html+='<div class="my-video-card" onclick="window.location.href=\'/player.html?id='+v.id+'\'">';
+html+='<div class="my-video-thumb">'+thumb+'</div>';
+html+='<div class="my-video-info">';
+html+='<div class="my-video-title">'+esc(v.title||'Sans titre')+'</div>';
+html+='<div class="my-video-stats"><span>👁️ '+fmt(v.views||0)+'</span><span>❤️ '+fmt(v.likes||0)+'</span>'+(v.rating?'<span>⭐ '+v.rating+'</span>':'')+'</div>';
+html+='</div></div>';
+});
+html+='</div>';
+}
+html+='</div>';
 
 // COMMENTAIRES RÉCENTS
 html+='<div class="section">';
 html+='<div class="section-title">💬 Commentaires Récents</div>';
 if(data.comments.length===0){
-html+='<div class="empty-state">Aucun commentaire pour le moment</div>';
-}else{
+html+='<div class="empty-state">Aucun commentaire pour le moment</div>';}else{
 html+='<div class="activity-list">';
 data.comments.slice(0,10).forEach(function(c){
 var title=c.video_stats?c.video_stats.title:'Film';
@@ -292,7 +352,8 @@ html+='<div class="activity-content">';
 html+='<div class="activity-text">« '+esc(c.content)+' »</div>';
 html+='<div class="activity-meta">sur '+esc(title)+(date?' • '+date:'')+'</div>';
 html+='</div>';
-html+='<div class="activity-points">+5 ⭐</div>';html+='</div>';
+html+='<div class="activity-points">+5 ⭐</div>';
+html+='</div>';
 });
 html+='</div>';
 }
