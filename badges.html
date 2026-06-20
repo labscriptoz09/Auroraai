@@ -13,7 +13,6 @@
 body{background:#000;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 #plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
-/* HEADER */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;background:rgba(0,0,0,0.92);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center}
 .logo-container{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
 .play-icon{width:32px;height:32px;border:2px solid #d4af37;border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(212,175,55,0.4)}
@@ -23,49 +22,45 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .back-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37;transform:translateY(-1px)}
 .back-btn svg{width:14px;height:14px;stroke:#d4af37;fill:none;stroke-width:2;flex-shrink:0}
 
-/* ✅ ALERTE EMAIL SAUVEGARDE */
-.save-alert{position:fixed;top:56px;left:0;right:0;z-index:99;background:linear-gradient(135deg,rgba(255,0,0,0.15),rgba(200,0,0,0.1));border-bottom:2px solid #ff4444;padding:1rem;animation:alertPulse 2s ease-in-out infinite}
-.save-alert.hidden{display:none}
-.save-alert-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap}
-.save-alert-icon{font-size:1.8rem;flex-shrink:0;animation:alertShake 1s ease-in-out infinite}
-.save-alert-text{flex:1;min-width:200px}
-.save-alert-title{color:#ff4444;font-size:0.95rem;font-weight:900;letter-spacing:0.5px;margin-bottom:0.15rem}
-.save-alert-desc{color:rgba(255,255,255,0.7);font-size:0.75rem;line-height:1.3}
-.save-alert-form{display:flex;gap:0.4rem;flex-shrink:0}
-.save-alert-form input{padding:0.5rem 0.8rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,68,68,0.4);border-radius:8px;color:#fff;font-size:0.8rem;width:220px;outline:none;transition:all 0.3s}
-.save-alert-form input:focus{border-color:#ff4444;background:rgba(255,255,255,0.12)}
-.save-alert-form button{padding:0.5rem 1rem;background:linear-gradient(135deg,#ff4444,#cc0000);border:none;border-radius:8px;color:#fff;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:all 0.3s}
-.save-alert-form button:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(255,68,68,0.4)}
-.save-alert-form button:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
-.save-alert-success{color:#4caf50;font-weight:700;font-size:0.85rem;display:none;align-items:center;gap:0.3rem}
-@keyframes alertPulse{0%,100%{background:linear-gradient(135deg,rgba(255,0,0,0.15),rgba(200,0,0,0.1))}50%{background:linear-gradient(135deg,rgba(255,0,0,0.25),rgba(200,0,0,0.18))}}
-@keyframes alertShake{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+/* ✅ BANDEAU SAUVEGARDE RAFFINÉ */
+.save-banner{position:fixed;top:56px;left:0;right:0;z-index:99;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,0.25);padding:0.9rem 1rem;animation:bannerFadeIn 0.6s ease-out}
+.save-banner.hidden{display:none}
+.save-banner-inner{max-width:650px;margin:0 auto;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap}
+.save-banner-icon{font-size:1.4rem;flex-shrink:0;opacity:0.9}
+.save-banner-text{flex:1;min-width:180px}
+.save-banner-title{color:#d4af37;font-size:0.85rem;font-weight:700;letter-spacing:0.3px;margin-bottom:0.1rem}
+.save-banner-desc{color:rgba(255,255,255,0.5);font-size:0.7rem;line-height:1.3}
+.save-banner-form{display:flex;gap:0.4rem;flex-shrink:0;align-items:center}
+.save-banner-form input{padding:0.45rem 0.7rem;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#fff;font-size:0.8rem;width:220px;outline:none;transition:all 0.3s}
+.save-banner-form input:focus{border-color:rgba(212,175,55,0.5);background:rgba(212,175,55,0.1)}
+.save-banner-form input::placeholder{color:rgba(255,255,255,0.25)}
+.save-banner-form button{padding:0.45rem 0.9rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:8px;color:#000;font-weight:700;font-size:0.75rem;cursor:pointer;white-space:nowrap;transition:all 0.3s;letter-spacing:0.3px}
+.save-banner-form button:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(212,175,55,0.3)}
+.save-banner-form button:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.save-banner-success{color:#d4af37;font-weight:600;font-size:0.8rem;display:none;align-items:center;gap:0.3rem;animation:successFade 0.4s ease-out}
+@keyframes bannerFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes successFade{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
 
-/* MAIN */
 .main{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:5rem 1rem 3rem}
-.main.with-alert{padding-top:8rem}
+.main.with-banner{padding-top:7.5rem}
 
-/* BADGE ACTUEL */
 .current-badge-section{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-bottom:2rem;padding:1.5rem;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.25);border-radius:20px}
-.current-badge-img{width:70px;height:70px;object-fit:contain;border-radius:12px;filter:drop-shadow(0 0 15px rgba(212,175,55,0.5));animation:badgeFloat 3s ease-in-out infinite}@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.current-badge-info{text-align:left}
-.current-badge-label{color:rgba(212,175,55,0.6);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
+.current-badge-img{width:70px;height:70px;object-fit:contain;border-radius:12px;filter:drop-shadow(0 0 15px rgba(212,175,55,0.5));animation:badgeFloat 3s ease-in-out infinite}
+@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.current-badge-info{text-align:left}.current-badge-label{color:rgba(212,175,55,0.6);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;font-weight:700}
 .current-badge-name{color:#d4af37;font-size:1.6rem;font-weight:900}
 .current-badge-points{color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:0.2rem}
 
-/* PROGRESS */
 .progress-wrap{margin-bottom:2rem}
 .progress-bar{width:100%;height:8px;background:rgba(212,175,55,0.1);border-radius:4px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);border-radius:4px;transition:width 1s ease;box-shadow:0 0 15px rgba(212,175,55,0.4)}
 .progress-text{display:flex;justify-content:space-between;color:rgba(255,255,255,0.4);font-size:0.7rem;margin-top:0.4rem}
 
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:2rem}
 .stat-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;text-align:center}
 .stat-card-value{color:#d4af37;font-size:1.4rem;font-weight:900}
 .stat-card-label{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;margin-top:0.2rem}
 
-/* BADGES GRID */
 .section-title{color:#d4af37;font-size:1.1rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;letter-spacing:0.5px}
 .section-title::before{content:'';width:3px;height:18px;background:#d4af37;border-radius:2px}
 .badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.6rem;margin-bottom:2rem}
@@ -89,36 +84,36 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .current-badge-info{text-align:center}
 .back-btn span{display:none}
 .back-btn{padding:0.45rem 0.6rem}
-.save-alert-inner{flex-direction:column;text-align:center}
-.save-alert-form{flex-direction:column;width:100%}
-.save-alert-form input{width:100%}
-.main.with-alert{padding-top:10rem}
+.save-banner-inner{flex-direction:column;text-align:center;gap:0.6rem}
+.save-banner-form{flex-direction:column;width:100%}
+.save-banner-form input{width:100%}
+.main.with-banner{padding-top:9.5rem}
 }
 @media(max-width:400px){
 .badges-grid{grid-template-columns:repeat(3,1fr)}
-}</style>
+}
+</style>
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
-
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
 <a href="/" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span>Retour</span></a>
 </header>
 
-<!-- ✅ ALERTE EMAIL SAUVEGARDE -->
-<div class="save-alert" id="saveAlert">
-<div class="save-alert-inner">
-<div class="save-alert-icon">⚠️</div>
-<div class="save-alert-text">
-<div class="save-alert-title">SAUVEGARDEZ VOS POINTS & BADGES !</div>
-<div class="save-alert-desc">Entrez votre email pour ne jamais perdre votre progression. Vos points et badges seront liés à votre compte.</div>
+<!-- ✅ BANDEAU SAUVEGARDE RAFFINÉ -->
+<div class="save-banner" id="saveBanner">
+<div class="save-banner-inner">
+<div class="save-banner-icon">💾</div>
+<div class="save-banner-text">
+<div class="save-banner-title">Sauvegardez votre progression</div>
+<div class="save-banner-desc">Liez vos points et badges à votre email pour les retrouver sur tous vos appareils.</div>
 </div>
-<div class="save-alert-form" id="saveAlertForm">
+<div class="save-banner-form" id="saveBannerForm">
 <input type="email" id="saveEmailInput" placeholder="votre@email.com">
-<button onclick="saveEmailFromAlert()" id="saveAlertBtn">💾 Sauvegarder</button>
+<button onclick="saveEmailFromBanner()" id="saveBannerBtn">Sauvegarder ✨</button>
 </div>
-<div class="save-alert-success" id="saveAlertSuccess">✅ Points & badges sauvegardés !</div>
+<div class="save-banner-success" id="saveBannerSuccess">✅ Progression sauvegardée !</div>
 </div>
 </div>
 
@@ -137,7 +132,6 @@ var userPoints=0;
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
-// ✅ BADGES DATA IDENTIQUE — AUCUNE MODIFICATION
 var BADGES_DATA=[
 {id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
 {id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
@@ -145,13 +139,13 @@ var BADGES_DATA=[
 {id:4,name:"Fan",img:"https://i.ibb.co/wrKs5PRh/167ab6e1-8a22-4aea-954d-0265fc8aca45.jpg",check:function(s){return s.likesGiven>=50;}},
 {id:5,name:"Commentateur",img:"https://i.ibb.co/vxMy7H4y/d6a5c693-69d0-4bde-ac96-491e9b5f36f3.jpg",check:function(s){return s.comments>=20;}},
 {id:6,name:"Critique",img:"https://i.ibb.co/n42jcCf/4a97b334-4ed1-4bd5-8997-edec135a0294.jpg",check:function(s){return s.ratings>=30;}},
-{id:7,name:"Streak 7j",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},{id:8,name:"Créateur",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
+{id:7,name:"Streak 7j",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},
+{id:8,name:"Créateur",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
 {id:9,name:"Réalisateur",img:"https://i.ibb.co/tMBH8wwg/24796f64-fa2d-443d-9224-b9ff097f3c7d.jpg",check:function(s){return s.videosPublished>=5;}},
 {id:10,name:"Primé",img:"https://i.ibb.co/999TrqYS/ad6492d7-66a5-42af-b837-0ea65ce71639.jpg",check:function(s){return s.hasRatedVideo;}},
 {id:11,name:"Vu 1K",img:"https://i.ibb.co/hJ7hBGDX/9227fc28-7dd7-49d5-a65e-08cf0635dfe8.jpg",check:function(s){return s.maxVideoViews>=1000;}},
 {id:12,name:"Aimé 100",img:"https://i.ibb.co/LdW4sSQb/44590e7c-ceb4-4d26-9f24-28e26f86216d.jpg",check:function(s){return s.maxVideoLikes>=100;}},
-{id:13,name:"Tipé",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},
-{id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
+{id:13,name:"Tipé",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},{id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
 {id:15,name:"Ambassadeur",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
 {id:16,name:"Fidèle",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
 {id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
@@ -160,7 +154,6 @@ var BADGES_DATA=[
 {id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
 ];
 
-// ✅ CALCUL STATS IDENTIQUE — AUCUNE MODIFICATION
 function getBadgeStats(){
 var s={points:userPoints,views:0,likesGiven:0,comments:0,ratings:0,streak:0,videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false};
 for(var i=0;i<localStorage.length;i++){
@@ -184,74 +177,58 @@ for(var i=BADGES_DATA.length-1;i>=0;i--){if(u.indexOf(BADGES_DATA[i].id)!==-1){h
 return{badge:h,unlocked:u};
 }
 
-// ✅ SAUVEGARDE EMAIL DEPUIS L'ALERTE
-async function saveEmailFromAlert(){
+async function saveEmailFromBanner(){
 var email=document.getElementById('saveEmailInput').value.trim();
-var btn=document.getElementById('saveAlertBtn');
+var btn=document.getElementById('saveBannerBtn');
 if(!email||!email.includes('@')){alert('Entrez un email valide');return;}
 btn.disabled=true;btn.textContent='Sauvegarde...';
 try{
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var ex=await sb.from('user_points').select('total_points,viewer_id').eq('email',email).single();
 if(!ex.error&&ex.data){
-if(ex.data.viewer_id!==viewerId){await sb.from('user_points').update({viewer_id:viewerId,updated_at:new Date().toISOString()}).eq('email',email);
+if(ex.data.viewer_id!==viewerId){
+await sb.from('user_points').update({viewer_id:viewerId,updated_at:new Date().toISOString()}).eq('email',email);
 }
 userPoints=ex.data.total_points||0;
 }else{
 var vp=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
 var pts=(!vp.error&&vp.data)?vp.data.total_points:0;
 await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:email}]);
-userPoints=pts;
-}
+userPoints=pts;}
 localStorage.setItem('aurora_saved_email',email);
-document.getElementById('saveAlertForm').style.display='none';
-document.getElementById('saveAlertSuccess').style.display='flex';
+document.getElementById('saveBannerForm').style.display='none';
+document.getElementById('saveBannerSuccess').style.display='flex';
 setTimeout(function(){
-document.getElementById('saveAlert').classList.add('hidden');
-document.getElementById('mainContent').classList.remove('with-alert');
+document.getElementById('saveBanner').classList.add('hidden');
+document.getElementById('mainContent').classList.remove('with-banner');
 loadBadges();
 },1500);
 }catch(e){
 alert('Erreur: '+e.message);
-btn.disabled=false;btn.textContent='💾 Sauvegarder';
+btn.disabled=false;btn.textContent='Sauvegarder ✨';
 }
 }
 
-// ✅ CHECK SI ALERTE NÉCESSAIRE
-function checkSaveAlert(){
+function checkSaveBanner(){
 var saved=localStorage.getItem('aurora_saved_email');
 if(saved){
-document.getElementById('saveAlert').classList.add('hidden');
-document.getElementById('mainContent').classList.remove('with-alert');
+document.getElementById('saveBanner').classList.add('hidden');
+document.getElementById('mainContent').classList.remove('with-banner');
 }else{
-document.getElementById('saveAlert').classList.remove('hidden');
-document.getElementById('mainContent').classList.add('with-alert');
+document.getElementById('saveBanner').classList.remove('hidden');
+document.getElementById('mainContent').classList.add('with-banner');
 }
 }
 
-// ✅ CHARGEMENT BADGES IDENTIQUE — AUCUNE MODIFICATION
 async function loadBadges(){
-var sb=null;
-var userEmail='';
-var streak=0;
-var commentsCount=0;
-var ratingsCount=0;
-var likesCount=0;
-var viewsCount=0;
-var videosPublished=0;
-var maxVideoViews=0;
-var maxVideoLikes=0;
-
+var sb=null,userEmail='',streak=0,commentsCount=0,ratingsCount=0,likesCount=0,viewsCount=0,videosPublished=0,maxVideoViews=0,maxVideoLikes=0;
 try{
-sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);var se=localStorage.getItem('aurora_saved_email');
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var se=localStorage.getItem('aurora_saved_email');
 var pr=null;
 if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
 if(!pr||pr.error)pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();
-if(!pr.error&&pr.data){
-userPoints=pr.data.total_points||0;
-userEmail=pr.data.email||'';
-streak=pr.data.current_streak||0;
-}
+if(!pr.error&&pr.data){userPoints=pr.data.total_points||0;userEmail=pr.data.email||'';streak=pr.data.current_streak||0;}
 var cr=await sb.from('comments').select('id').eq('viewer_id',viewerId);
 if(!cr.error&&cr.data)commentsCount=cr.data.length;
 else if(userEmail){var cr2=await sb.from('comments').select('id').eq('author_email',userEmail);if(!cr2.error&&cr2.data)commentsCount=cr2.data.length;}
@@ -262,62 +239,30 @@ if(!lr.error&&lr.data)likesCount=lr.data.length;
 var vr=await sb.from('video_views').select('id').eq('viewer_id',viewerId);
 if(!vr.error&&vr.data)viewsCount=vr.data.length;
 var mv=await sb.from('videos').select('id,views,likes').eq('viewer_id',viewerId);
-if(!mv.error&&mv.data){
-videosPublished=mv.data.length;
-mv.data.forEach(function(v){if((v.views||0)>maxVideoViews)maxVideoViews=v.views||0;if((v.likes||0)>maxVideoLikes)maxVideoLikes=v.likes||0;});
-}
+if(!mv.error&&mv.data){videosPublished=mv.data.length;mv.data.forEach(function(v){if((v.views||0)>maxVideoViews)maxVideoViews=v.views||0;if((v.likes||0)>maxVideoLikes)maxVideoLikes=v.likes||0;});}
 }catch(e){console.log('[Badges]',e);}
-
-var shares=0;
-for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');}
+var shares=0;for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');}
 var emailSaved=!!localStorage.getItem('aurora_saved_email');
-
-var stats={
-points:userPoints,views:viewsCount,likesGiven:likesCount,
-comments:commentsCount,ratings:ratingsCount,streak:streak,
-videosPublished:videosPublished,hasRatedVideo:ratingsCount>0,
-maxVideoViews:maxVideoViews,maxVideoLikes:maxVideoLikes,
-tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false
-};
-
-var unlocked=[];
-var allExcept=true;
+var stats={points:userPoints,views:viewsCount,likesGiven:likesCount,comments:commentsCount,ratings:ratingsCount,streak:streak,videosPublished:videosPublished,hasRatedVideo:ratingsCount>0,maxVideoViews:maxVideoViews,maxVideoLikes:maxVideoLikes,tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false};var unlocked=[],allExcept=true;
 BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
 if(allExcept&&unlocked.length===19)unlocked.push(20);
-
 var currentBadge=BADGES_DATA[0];
-for(var j=BADGES_DATA.length-1;j>=0;j--){
-if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}
+for(var j=BADGES_DATA.length-1;j>=0;j--){if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}}
+renderBadges({points:userPoints,email:userEmail,streak:streak,currentBadge:currentBadge,unlocked:unlocked,stats:stats});
 }
 
-renderBadges({
-points:userPoints,email:userEmail,streak:streak,
-currentBadge:currentBadge,unlocked:unlocked,stats:stats});
-}
-
-// ✅ RENDU IDENTIQUE — AUCUNE MODIFICATION
 function renderBadges(data){
 var container=document.getElementById('mainContent');
 var pct=Math.round((data.unlocked.length/20)*100);
-
 var html='';
-
-// BADGE ACTUEL
 html+='<div class="current-badge-section">';
 html+='<img class="current-badge-img" src="'+data.currentBadge.img+'" alt="'+esc(data.currentBadge.name)+'">';
-html+='<div class="current-badge-info">';
-html+='<div class="current-badge-label">Badge Actuel</div>';
+html+='<div class="current-badge-info"><div class="current-badge-label">Badge Actuel</div>';
 html+='<div class="current-badge-name">'+esc(data.currentBadge.name)+'</div>';
 html+='<div class="current-badge-points">'+fmt(data.points)+' points • '+data.streak+'j streak</div>';
 html+='</div></div>';
-
-// PROGRESS
-html+='<div class="progress-wrap">';
-html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
-html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';
-html+='</div>';
-
-// STATS
+html+='<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div></div>';
 html+='<div class="stats-grid">';
 html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.points)+'</div><div class="stat-card-label">Points</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.unlocked.length+'/20</div><div class="stat-card-label">Badges</div></div>';
@@ -326,24 +271,19 @@ html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.views+'<
 html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.likesGiven+'</div><div class="stat-card-label">Likes</div></div>';
 html+='<div class="stat-card"><div class="stat-card-value">'+data.stats.comments+'</div><div class="stat-card-label">Commentaires</div></div>';
 html+='</div>';
-
-// ALL BADGES
-html+='<div class="section-title">🏆 Collection Complète</div>';
-html+='<div class="badges-grid">';
+html+='<div class="section-title">🏆 Collection Complète</div><div class="badges-grid">';
 BADGES_DATA.forEach(function(b){
 var isU=data.unlocked.indexOf(b.id)!==-1;
 html+='<div class="badge-item '+(isU?'unlocked':'locked')+'">';
 if(!isU)html+='<div class="badge-lock">🔒</div>';
 html+='<img class="badge-img" src="'+b.img+'" alt="'+esc(b.name)+'" loading="lazy">';
-html+='<div class="badge-name">'+esc(b.name)+'</div>';
-html+='</div>';
+html+='<div class="badge-name">'+esc(b.name)+'</div></div>';
 });
 html+='</div>';
-
 container.innerHTML=html;
 }
-// INIT
-checkSaveAlert();
+
+checkSaveBanner();
 loadBadges();
 </script>
 </body>
