@@ -47,14 +47,25 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 .badge-item.unlocked .badge-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.4))}
 .badge-name{color:rgba(255,255,255,0.6);font-size:0.55rem;font-weight:600;line-height:1.1}
 .badge-item.unlocked .badge-name{color:#d4af37}
-.badge-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem;opacity:0.5}.activity-list{display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto}
-.activity-item{padding:0.7rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.08);border-radius:10px;display:flex;align-items:center;gap:0.7rem;transition:all 0.3s}
+.badge-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem;opacity:0.5}.activity-list{display:flex;flex-direction:column;gap:0.5rem;max-height:400px;overflow-y:auto}
+.activity-item{padding:0.7rem;background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.08);border-radius:10px;display:flex;align-items:flex-start;gap:0.7rem;transition:all 0.3s}
 .activity-item:hover{background:rgba(212,175,55,0.08);border-color:rgba(212,175,55,0.2)}
-.activity-icon{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,0.1);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
+.activity-icon{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,0.1);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;margin-top:0.1rem}
 .activity-content{flex:1;min-width:0}
-.activity-text{color:rgba(255,255,255,0.8);font-size:0.8rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.activity-meta{color:rgba(255,255,255,0.3);font-size:0.65rem;margin-top:0.1rem}
-.activity-points{color:#d4af37;font-size:0.7rem;font-weight:700;flex-shrink:0}
+.activity-text{color:rgba(255,255,255,0.8);font-size:0.8rem;line-height:1.3}
+.activity-meta{color:rgba(255,255,255,0.3);font-size:0.65rem;margin-top:0.15rem}
+.activity-points{color:#d4af37;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:0.2rem}
+.reply-btn{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);color:#d4af37;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.65rem;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:0.3rem;display:inline-block}
+.reply-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37}
+.reply-form{display:none;margin-top:0.4rem;padding:0.5rem;background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.1);border-radius:8px}
+.reply-form.active{display:block}
+.reply-form textarea{width:100%;padding:0.4rem;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:6px;color:#fff;font-size:0.75rem;min-height:40px;resize:vertical;font-family:inherit;margin-bottom:0.3rem}
+.reply-form textarea:focus{outline:none;border-color:#d4af37}
+.reply-form-actions{display:flex;gap:0.3rem;justify-content:flex-end}
+.reply-send{background:linear-gradient(135deg,#d4af37,#b8941f);border:none;color:#000;padding:0.25rem 0.7rem;border-radius:6px;font-size:0.7rem;font-weight:700;cursor:pointer}
+.reply-cancel{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:0.25rem 0.7rem;border-radius:6px;font-size:0.7rem;cursor:pointer}
+.creator-reply{background:rgba(212,175,55,0.12)!important;border-left:3px solid #d4af37!important;padding:0.4rem;border-radius:0 6px 6px 0;margin-top:0.3rem;font-size:0.7rem;color:#d4af37}
+.creator-reply strong{color:#d4af37}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem}
 .stat-card{background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:1rem;text-align:center}
 .stat-card-value{color:#d4af37;font-size:1.4rem;font-weight:900}
@@ -85,18 +96,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 }
 @media(max-width:400px){
 .badges-grid{grid-template-columns:repeat(3,1fr)}
-.my-videos-grid{grid-template-columns:1fr}
-}
+.my-videos-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
-<a href="/" class="back-btn">
-<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-<span>Retour</span>
-</a></header>
+<a href="/" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg><span>Retour</span></a>
+</header>
 <div class="main" id="profileContent">
 <div class="empty-state" id="loadingMsg">Chargement du profil...</div>
 </div>
@@ -104,10 +112,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0.8rem 1rem;backg
 <script>
 var SUPABASE_URL='https://knecqgspkalwepdwwpud.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww';
-
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
 var userPoints=0;
-
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
@@ -135,313 +141,103 @@ var BADGES_DATA=[
 ];
 
 async function loadProfile(){
-var sb=null;
-var userEmail='';
-var streak=0;
-var commentsList=[];
-var ratingsList=[];
-var likesCount=0;
-var viewsCount=0;
-var videosPublished=[];
-var favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');
-
-try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-// 1. Points + email + streak DEPUIS SUPABASE
-var se=localStorage.getItem('aurora_saved_email');
-var pr=null;
-if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
+var sb=null,userEmail='',streak=0,myCommentsList=[],receivedCommentsList=[],ratingsList=[];
+var likesCount=0,viewsCount=0,videosPublished=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]');
+try{
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var se=localStorage.getItem('aurora_saved_email'),pr=null;if(se)pr=await sb.from('user_points').select('*').eq('email',se).single();
 if(!pr||pr.error)pr=await sb.from('user_points').select('*').eq('viewer_id',viewerId).single();
-if(!pr.error&&pr.data){
-userPoints=pr.data.total_points||0;
-userEmail=pr.data.email||'';
-streak=pr.data.current_streak||0;
-}
-
-// 2. Commentaires DEPUIS SUPABASE
+if(!pr.error&&pr.data){userPoints=pr.data.total_points||0;userEmail=pr.data.email||'';streak=pr.data.current_streak||0;}
 var cr=await sb.from('comments').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
-if(!cr.error&&cr.data&&cr.data.length>0){commentsList=cr.data;}
-else if(userEmail){
-var cr2=await sb.from('comments').select('*,video_stats(title)').eq('author_email',userEmail).order('created_at',{ascending:false}).limit(10);
-if(!cr2.error&&cr2.data)commentsList=cr2.data;
-}
-
-// 3. Notes DEPUIS SUPABASE
+if(!cr.error&&cr.data&&cr.data.length>0)myCommentsList=cr.data;
+else if(userEmail){var cr2=await sb.from('comments').select('*,video_stats(title)').eq('author_email',userEmail).order('created_at',{ascending:false}).limit(10);if(!cr2.error&&cr2.data)myCommentsList=cr2.data;}
 var rr=await sb.from('video_ratings').select('*,video_stats(title)').eq('viewer_id',viewerId).order('created_at',{ascending:false}).limit(10);
 if(!rr.error&&rr.data)ratingsList=rr.data;
-
-// 4. Likes donnés DEPUIS SUPABASE
 var lr=await sb.from('video_likes_history').select('id').eq('viewer_id',viewerId);
 if(!lr.error&&lr.data)likesCount=lr.data.length;
-
-// 5. Vues personnelles DEPUIS SUPABASE
 var vr=await sb.from('video_views').select('id').eq('viewer_id',viewerId);
 if(!vr.error&&vr.data)viewsCount=vr.data.length;
-
-// 6. ✅ v2.2 RECHERCHE VIDÉOS PUBLIÉES — TRIPLE REQUÊTE
-// Méthode A : par viewer_id
-var myVidsA=await sb.from('videos').select('*').eq('viewer_id',viewerId).order('created_at',{ascending:false});
-if(!myVidsA.error&&myVidsA.data&&myVidsA.data.length>0){
-videosPublished=myVidsA.data;
-}
-
-// Méthode B : si 0 résultat, chercher par email dans user_points pour trouver l'ancien viewer_id
-if(videosPublished.length===0&&userEmail){
-var oldUser=await sb.from('user_points').select('viewer_id').eq('email',userEmail).single();
-if(!oldUser.error&&oldUser.data&&oldUser.data.viewer_id!==viewerId){
-var myVidsB=await sb.from('videos').select('*').eq('viewer_id',oldUser.data.viewer_id).order('created_at',{ascending:false});
-if(!myVidsB.error&&myVidsB.data&&myVidsB.data.length>0){
-videosPublished=myVidsB.data;
-}
-}
-}
-// Méthode C : si toujours 0, chercher par nom d'auteur "Demo1" ou email username
-if(videosPublished.length===0){
-var authorName=userEmail?userEmail.split('@')[0]:'';
-if(authorName){
-var myVidsC=await sb.from('videos').select('*').ilike('author',authorName).order('created_at',{ascending:false});
-if(!myVidsC.error&&myVidsC.data&&myVidsC.data.length>0){
-videosPublished=myVidsC.data;
-}
-}
-}
-
-// 7. ✅ v2.2 STATS LIVE DEPUIS video_stats POUR CHAQUE VIDÉO
-// Les vues/likes dans la table videos peuvent être désynchronisées
-// On récupère les VRAIS chiffres depuis video_stats
+// Triple recherche vidéos publiées
+var myVids=await sb.from('videos').select('*').eq('viewer_id',viewerId).order('created_at',{ascending:false});
+if(!myVids.error&&myVids.data&&myVids.data.length>0)videosPublished=myVids.data;
+if(videosPublished.length===0&&userEmail){var ou=await sb.from('user_points').select('viewer_id').eq('email',userEmail).single();if(!ou.error&&ou.data&&ou.data.viewer_id!==viewerId){var mv2=await sb.from('videos').select('*').eq('viewer_id',ou.data.viewer_id).order('created_at',{ascending:false});if(!mv2.error&&mv2.data&&mv2.data.length>0)videosPublished=mv2.data;}}
+if(videosPublished.length===0&&userEmail){var an=userEmail.split('@')[0];if(an){var mv3=await sb.from('videos').select('*').ilike('author',an).order('created_at',{ascending:false});if(!mv3.error&&mv3.data&&mv3.data.length>0)videosPublished=mv3.data;}}
+// Stats live depuis video_stats
 if(videosPublished.length>0){
-var videoIds=videosPublished.map(function(v){return v.id;});
-var liveStats=await sb.from('video_stats').select('id,views,likes,rating').in('id',videoIds);
-if(!liveStats.error&&liveStats.data){
-var statsMap={};
-liveStats.data.forEach(function(s){statsMap[s.id]=s;});
-videosPublished=videosPublished.map(function(v){
-var live=statsMap[v.id];
-if(live){
-v.views=live.views||0;
-v.likes=live.likes||0;
-v.rating=live.rating||v.rating||0;
+var vids=videosPublished.map(function(v){return v.id;});
+var ls=await sb.from('video_stats').select('id,views,likes,rating').in('id',vids);
+if(!ls.error&&ls.data){var sm={};ls.data.forEach(function(s){sm[s.id]=s;});videosPublished=videosPublished.map(function(v){var l=sm[v.id];if(l){v.views=l.views||0;v.likes=l.likes||0;v.rating=l.rating||v.rating||0;}return v;});}
+// Commentaires reçus sur mes vidéos
+var rc=await sb.from('comments').select('*').in('video_id',vids).order('created_at',{ascending:false}).limit(20);
+if(!rc.error&&rc.data)receivedCommentsList=rc.data;
 }
-return v;
-});
-}
-}
-
-}catch(e){console.log('[Profil] Error:',e);}
-
-// Partages depuis localStorage
-var shares=0;
-for(var i=0;i<localStorage.length;i++){
-var k=localStorage.key(i);
-if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');
-}
+}catch(e){console.log('[Profil]',e);}
+var shares=0;for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('shares_today_')===0)shares+=parseInt(localStorage.getItem(k)||'0');}
 var emailSaved=!!localStorage.getItem('aurora_saved_email');
-
-// ✅ CALCUL STATS CRÉATEUR AVEC DONNÉES LIVE
-var creatorTotalViews=0;
-var creatorTotalLikes=0;
-var maxVideoViews=0;
-var maxVideoLikes=0;
-videosPublished.forEach(function(v){
-creatorTotalViews+=(v.views||0);creatorTotalLikes+=(v.likes||0);
-if((v.views||0)>maxVideoViews)maxVideoViews=v.views||0;
-if((v.likes||0)>maxVideoLikes)maxVideoLikes=v.likes||0;
-});
-
-// Badges avec DONNÉES CORRECTES
-var stats={
-points:userPoints,
-views:viewsCount,
-likesGiven:likesCount,
-comments:commentsList.length,
-ratings:ratingsList.length,
-streak:streak,
-videosPublished:videosPublished.length,
-hasRatedVideo:ratingsList.length>0,
-maxVideoViews:maxVideoViews,
-maxVideoLikes:maxVideoLikes,
-tipsReceived:0,
-shares:shares,
-emailSaved:emailSaved,
-allOtherBadges:false
-};
-
-var unlocked=[];
-var allExcept=true;
-BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
-if(allExcept&&unlocked.length===19)unlocked.push(20);
-
-var currentBadge=BADGES_DATA[0];
-for(var j=BADGES_DATA.length-1;j>=0;j--){
-if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}
+var ctv=0,ctl=0,mvv=0,mvl=0;
+videosPublished.forEach(function(v){ctv+=(v.views||0);ctl+=(v.likes||0);if((v.views||0)>mvv)mvv=v.views||0;if((v.likes||0)>mvl)mvl=v.likes||0;});
+var stats={points:userPoints,views:viewsCount,likesGiven:likesCount,comments:myCommentsList.length,ratings:ratingsList.length,streak:streak,videosPublished:videosPublished.length,hasRatedVideo:ratingsList.length>0,maxVideoViews:mvv,maxVideoLikes:mvl,tipsReceived:0,shares:shares,emailSaved:emailSaved,allOtherBadges:false};
+var unlocked=[],allE=true;
+BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allE=false;});
+if(allE&&unlocked.length===19)unlocked.push(20);
+var currentBadge=BADGES_DATA[0];for(var j=BADGES_DATA.length-1;j>=0;j--){if(unlocked.indexOf(BADGES_DATA[j].id)!==-1){currentBadge=BADGES_DATA[j];break;}}
+var ms='';try{var vp=viewerId.split('_');if(vp.length>=2){var ts=parseInt(vp[1]);if(ts>1700000000000)ms=new Date(ts).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});}}catch(e){}if(!ms)ms='Juin 2026';
+renderProfile({points:userPoints,email:userEmail,streak:streak,currentBadge:currentBadge,unlocked:unlocked,myComments:myCommentsList,receivedComments:receivedCommentsList,ratings:ratingsList,likesCount:likesCount,viewsCount:viewsCount,favorites:favorites,shares:shares,memberSince:ms,videosPublished:videosPublished,creatorTotalViews:ctv,creatorTotalLikes:ctl});
 }
 
-var memberSince='';
+async function replyToComment(commentId,videoId){
+var form=document.getElementById('reply-form-'+commentId);
+var ta=form.querySelector('textarea'),text=ta.value.trim();
+if(!text){alert('Écrivez une réponse');return;}
+var btn=form.querySelector('.reply-send');btn.textContent='Envoi...';btn.disabled=true;
 try{
-var vidParts=viewerId.split('_');
-if(vidParts.length>=2){
-var ts=parseInt(vidParts[1]);
-if(ts>1700000000000){
-var d=new Date(ts);
-memberSince=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var un=localStorage.getItem('aurora_saved_email')?localStorage.getItem('aurora_saved_email').split('@')[0]:'Créateur';
+var r=await sb.from('comments').insert([{video_id:videoId,author_name:un,author_email:localStorage.getItem('aurora_saved_email')||null,content:text,viewer_id:viewerId,parent_comment_id:commentId,is_creator_reply:true}]);
+if(r.error)throw r.error;ta.value='';form.classList.remove('active');btn.textContent='Envoyer';btn.disabled=false;
+var item=form.parentElement,div=document.createElement('div');
+div.className='creator-reply';div.id='reply-existing-'+commentId;
+div.innerHTML='<strong>🎬 '+esc(un)+' (Créateur)</strong> : '+esc(text);
+item.appendChild(div);
+}catch(e){alert('Erreur: '+e.message);btn.textContent='Envoyer';btn.disabled=false;}
 }
+function toggleReplyForm(id){var f=document.getElementById('reply-form-'+id);if(f)f.classList.toggle('active');}
+
+function renderProfile(d){
+var c=document.getElementById('profileContent'),pct=Math.round((d.unlocked.length/20)*100),dn=d.email?d.email.split('@')[0]:'Utilisateur',h='';
+h+='<div class="profile-header"><div class="profile-avatar">👤</div><div class="profile-name">'+esc(dn)+'</div>';
+if(d.email)h+='<div class="profile-email">'+esc(d.email)+'</div>';
+h+='<div class="profile-stats-row"><div class="profile-stat"><div class="profile-stat-value">'+fmt(d.points)+'</div><div class="profile-stat-label">Points</div></div><div class="profile-stat"><div class="profile-stat-value">'+d.unlocked.length+'/20</div><div class="profile-stat-label">Badges</div></div><div class="profile-stat"><div class="profile-stat-value">'+d.streak+'j</div><div class="profile-stat-label">Streak</div></div><div class="profile-stat"><div class="profile-stat-value">'+d.memberSince+'</div><div class="profile-stat-label">Membre depuis</div></div></div></div>';
+h+='<div class="current-badge-section"><img class="current-badge-img" src="'+d.currentBadge.img+'" alt="'+esc(d.currentBadge.name)+'"><div class="current-badge-info"><div class="current-badge-label">Badge Actuel</div><div class="current-badge-name">'+esc(d.currentBadge.name)+'</div></div></div>';
+h+='<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="progress-text"><span>'+pct+'% complété</span><span>'+d.unlocked.length+'/20 badges</span></div></div>';
+h+='<div class="section"><div class="section-title">🏆 Collection de Badges</div><div class="badges-grid">';
+BADGES_DATA.forEach(function(b){var u=d.unlocked.indexOf(b.id)!==-1;h+='<div class="badge-item '+(u?'unlocked':'locked')+'">';if(!u)h+='<div class="badge-lock">🔒</div>';h+='<img class="badge-img" src="'+b.img+'" alt="'+esc(b.name)+'" loading="lazy"><div class="badge-name">'+esc(b.name)+'</div></div>';});
+h+='</div></div>';
+h+='<div class="section"><div class="section-title">👤 Mon Activité</div><div class="stats-grid"><div class="stat-card"><div class="stat-card-value">'+d.viewsCount+'</div><div class="stat-card-label">Vidéos vues</div></div><div class="stat-card"><div class="stat-card-value">'+d.likesCount+'</div><div class="stat-card-label">Likes donnés</div></div><div class="stat-card"><div class="stat-card-value">'+d.myComments.length+'</div><div class="stat-card-label">Commentaires</div></div><div class="stat-card"><div class="stat-card-value">'+d.ratings.length+'</div><div class="stat-card-label">Films notés</div></div><div class="stat-card"><div class="stat-card-value">'+d.favorites.length+'</div><div class="stat-card-label">Favoris</div></div><div class="stat-card"><div class="stat-card-value">'+d.shares+'</div><div class="stat-card-label">Partages</div></div></div></div>';
+h+='<div class="section"><div class="section-title">🎬 Impact Créateur</div><div class="stats-grid"><div class="stat-card"><div class="stat-card-value">'+d.videosPublished.length+'</div><div class="stat-card-label">Vidéos publiées</div></div><div class="stat-card"><div class="stat-card-value">'+fmt(d.creatorTotalViews)+'</div><div class="stat-card-label">Vues totales</div></div><div class="stat-card"><div class="stat-card-value">'+fmt(d.creatorTotalLikes)+'</div><div class="stat-card-label">Likes reçus</div></div></div></div>';
+h+='<div class="section"><div class="section-title">🎥 Mes Vidéos Publiées</div>';
+if(d.videosPublished.length===0)h+='<div class="empty-state">Aucune vidéo publiée<br><a href="/upload.html" style="color:#d4af37;text-decoration:none;font-weight:700">Publier votre premier film IA →</a></div>';
+else{h+='<div class="my-videos-grid">';d.videosPublished.forEach(function(v){var th=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading="lazy">':'🎬';h+='<div class="my-video-card" onclick="window.location.href=\'/player.html?id='+v.id+'\'"><div class="my-video-thumb">'+th+'</div><div class="my-video-info"><div class="my-video-title">'+esc(v.title||'Sans titre')+'</div><div class="my-video-stats"><span>👁️ '+fmt(v.views||0)+'</span><span>❤️ '+fmt(v.likes||0)+'</span>'+(v.rating?'<span>⭐ '+v.rating+'</span>':'')+'</div></div></div>';});h+='</div>';}
+h+='</div>';
+// Commentaires reçus avec bouton répondre
+h+='<div class="section"><div class="section-title">💬 Commentaires sur mes vidéos ('+d.receivedComments.length+')</div>';
+if(d.receivedComments.length===0)h+='<div class="empty-state">Aucun commentaire reçu</div>';
+else{h+='<div class="activity-list">';d.receivedComments.forEach(function(cm){var dt=cm.created_at?new Date(cm.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';var ic=cm.is_creator_reply===true||(cm.author_name&&cm.author_name.indexOf('(Créateur')!==-1);
+if(ic){var cn=(cm.author_name||'').replace(' (Créateur)','');h+='<div class="activity-item" style="background:rgba(212,175,55,0.1);border-color:rgba(212,175,55,0.3);border-left:3px solid #d4af37"><div class="activity-icon">🎬</div><div class="activity-content"><div class="activity-text"><strong style="color:#d4af37">'+esc(cn)+' (Créateur)</strong> : '+esc(cm.content)+'</div><div class="activity-meta">'+dt+'</div></div></div>';}
+else{h+='<div class="activity-item"><div class="activity-icon">💬</div><div class="activity-content"><div class="activity-text"><strong>'+esc(cm.author_name||'Anonyme')+'</strong> : '+esc(cm.content)+'</div><div class="activity-meta">'+dt+'</div><button class="reply-btn" onclick="toggleReplyForm(\''+cm.id+'\')">↩️ Répondre</button><div class="reply-form" id="reply-form-'+cm.id+'"><textarea placeholder="Répondez en tant que créateur..."></textarea><div class="reply-form-actions"><button class="reply-cancel" onclick="toggleReplyForm(\''+cm.id+'\')">Annuler</button><button class="reply-send" onclick="replyToComment(\''+cm.id+'\',\''+cm.video_id+'\')">Envoyer</button></div></div><div id="reply-existing-'+cm.id+'"></div></div></div>';}});h+='</div>';}
+h+='</div>';
+// Mes commentaires
+h+='<div class="section"><div class="section-title">✍️ Mes Commentaires</div>';
+if(d.myComments.length===0)h+='<div class="empty-state">Aucun commentaire écrit</div>';
+else{h+='<div class="activity-list">';d.myComments.slice(0,10).forEach(function(cm){var t=cm.video_stats?cm.video_stats.title:'Film',dt=cm.created_at?new Date(cm.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';h+='<div class="activity-item"><div class="activity-icon">✍️</div><div class="activity-content"><div class="activity-text">« '+esc(cm.content)+' »</div><div class="activity-meta">sur '+esc(t)+(dt?' • '+dt:'')+'</div></div><div class="activity-points">+5 ⭐</div></div>';});h+='</div>';}
+h+='</div>';
+// Notes
+h+='<div class="section"><div class="section-title">⭐ Notes Récentes</div>';
+if(d.ratings.length===0)h+='<div class="empty-state">Aucune note</div>';
+else{h+='<div class="activity-list">';d.ratings.slice(0,10).forEach(function(r){var t=r.video_stats?r.video_stats.title:'Film',st='',dt=r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';for(var i=1;i<=5;i++)st+=i<=r.rating?'★':'☆';h+='<div class="activity-item"><div class="activity-icon">⭐</div><div class="activity-content"><div class="activity-text">'+esc(t)+' — <span style="color:#d4af37">'+st+'</span></div><div class="activity-meta">'+dt+'</div></div><div class="activity-points">+5 ⭐</div></div>';});h+='</div>';}
+h+='</div>';
+c.innerHTML=h;
 }
-}catch(e){}
-if(!memberSince)memberSince='Juin 2026';
-
-renderProfile({
-points:userPoints,
-email:userEmail,
-streak:streak,currentBadge:currentBadge,
-unlocked:unlocked,
-comments:commentsList,
-ratings:ratingsList,
-likesCount:likesCount,
-viewsCount:viewsCount,
-favorites:favorites,
-shares:shares,
-memberSince:memberSince,
-videosPublished:videosPublished,
-creatorTotalViews:creatorTotalViews,
-creatorTotalLikes:creatorTotalLikes
-});
-}
-
-function renderProfile(data){
-var container=document.getElementById('profileContent');
-var pct=Math.round((data.unlocked.length/20)*100);
-var displayName=data.email?data.email.split('@')[0]:'Utilisateur';
-
-var html='';
-
-// PROFILE HEADER
-html+='<div class="profile-header">';
-html+='<div class="profile-avatar">👤</div>';
-html+='<div class="profile-name">'+esc(displayName)+'</div>';
-if(data.email)html+='<div class="profile-email">'+esc(data.email)+'</div>';
-html+='<div class="profile-stats-row">';
-html+='<div class="profile-stat"><div class="profile-stat-value">'+fmt(data.points)+'</div><div class="profile-stat-label">Points</div></div>';
-html+='<div class="profile-stat"><div class="profile-stat-value">'+data.unlocked.length+'/20</div><div class="profile-stat-label">Badges</div></div>';
-html+='<div class="profile-stat"><div class="profile-stat-value">'+data.streak+'j</div><div class="profile-stat-label">Streak</div></div>';
-html+='<div class="profile-stat"><div class="profile-stat-value">'+data.memberSince+'</div><div class="profile-stat-label">Membre depuis</div></div>';
-html+='</div></div>';
-
-// CURRENT BADGE
-html+='<div class="current-badge-section">';
-html+='<img class="current-badge-img" src="'+data.currentBadge.img+'" alt="'+esc(data.currentBadge.name)+'">';
-html+='<div class="current-badge-info">';
-html+='<div class="current-badge-label">Badge Actuel</div>';
-html+='<div class="current-badge-name">'+esc(data.currentBadge.name)+'</div>';
-html+='</div></div>';
-
-// PROGRESS
-html+='<div class="progress-wrap">';
-html+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
-html+='<div class="progress-text"><span>'+pct+'% complété</span><span>'+data.unlocked.length+'/20 badges</span></div>';
-html+='</div>';
-
-// ALL BADGES
-html+='<div class="section">';html+='<div class="section-title">🏆 Collection de Badges</div>';
-html+='<div class="badges-grid">';
-BADGES_DATA.forEach(function(b){
-var isU=data.unlocked.indexOf(b.id)!==-1;
-html+='<div class="badge-item '+(isU?'unlocked':'locked')+'">';
-if(!isU)html+='<div class="badge-lock">🔒</div>';
-html+='<img class="badge-img" src="'+b.img+'" alt="'+esc(b.name)+'" loading="lazy">';
-html+='<div class="badge-name">'+esc(b.name)+'</div>';
-html+='</div>';
-});
-html+='</div></div>';
-
-// STATS PERSONNELLES
-html+='<div class="section">';
-html+='<div class="section-title">👤 Mon Activité</div>';
-html+='<div class="stats-grid">';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.viewsCount+'</div><div class="stat-card-label">Vidéos vues</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.likesCount+'</div><div class="stat-card-label">Likes donnés</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.comments.length+'</div><div class="stat-card-label">Commentaires</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.ratings.length+'</div><div class="stat-card-label">Films notés</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.favorites.length+'</div><div class="stat-card-label">Favoris</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.shares+'</div><div class="stat-card-label">Partages</div></div>';
-html+='</div></div>';
-
-// ✅ STATS CRÉATEUR LIVE
-html+='<div class="section">';
-html+='<div class="section-title">🎬 Impact Créateur</div>';
-html+='<div class="stats-grid">';
-html+='<div class="stat-card"><div class="stat-card-value">'+data.videosPublished.length+'</div><div class="stat-card-label">Vidéos publiées</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.creatorTotalViews)+'</div><div class="stat-card-label">Vues totales</div></div>';
-html+='<div class="stat-card"><div class="stat-card-value">'+fmt(data.creatorTotalLikes)+'</div><div class="stat-card-label">Likes reçus</div></div>';
-html+='</div></div>';
-
-// MES VIDÉOS PUBLIÉES (AVEC STATS LIVE)
-html+='<div class="section">';
-html+='<div class="section-title">🎥 Mes Vidéos Publiées</div>';
-if(data.videosPublished.length===0){
-html+='<div class="empty-state">Aucune vidéo publiée pour le moment<br><a href="/upload.html" style="color:#d4af37;text-decoration:none;font-weight:700">Publier votre premier film IA →</a></div>';
-}else{
-html+='<div class="my-videos-grid">';
-data.videosPublished.forEach(function(v){
-var thumb=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading="lazy">':'🎬';
-html+='<div class="my-video-card" onclick="window.location.href=\'/player.html?id='+v.id+'\'">';
-html+='<div class="my-video-thumb">'+thumb+'</div>';
-html+='<div class="my-video-info">';
-html+='<div class="my-video-title">'+esc(v.title||'Sans titre')+'</div>';
-html+='<div class="my-video-stats"><span>👁️ '+fmt(v.views||0)+'</span><span>❤️ '+fmt(v.likes||0)+'</span>'+(v.rating?'<span>⭐ '+v.rating+'</span>':'')+'</div>';
-html+='</div></div>';
-});
-html+='</div>';}
-html+='</div>';
-
-// COMMENTAIRES RÉCENTS
-html+='<div class="section">';
-html+='<div class="section-title">💬 Commentaires Récents</div>';
-if(data.comments.length===0){
-html+='<div class="empty-state">Aucun commentaire pour le moment</div>';
-}else{
-html+='<div class="activity-list">';
-data.comments.slice(0,10).forEach(function(c){
-var title=c.video_stats?c.video_stats.title:'Film';
-var date=c.created_at?new Date(c.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-html+='<div class="activity-item">';
-html+='<div class="activity-icon">💬</div>';
-html+='<div class="activity-content">';
-html+='<div class="activity-text">« '+esc(c.content)+' »</div>';
-html+='<div class="activity-meta">sur '+esc(title)+(date?' • '+date:'')+'</div>';
-html+='</div>';
-html+='<div class="activity-points">+5 ⭐</div>';
-html+='</div>';
-});
-html+='</div>';
-}
-html+='</div>';
-
-// NOTES RÉCENTES
-html+='<div class="section">';
-html+='<div class="section-title">⭐ Notes Récentes</div>';
-if(data.ratings.length===0){
-html+='<div class="empty-state">Aucune note pour le moment</div>';
-}else{
-html+='<div class="activity-list">';
-data.ratings.slice(0,10).forEach(function(r){
-var title=r.video_stats?r.video_stats.title:'Film';
-var stars='';for(var i=1;i<=5;i++)stars+=i<=r.rating?'★':'☆';
-var date=r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-html+='<div class="activity-item">';
-html+='<div class="activity-icon">⭐</div>';
-html+='<div class="activity-content">';
-html+='<div class="activity-text">'+esc(title)+' — <span style="color:#d4af37">'+stars+'</span></div>';
-html+='<div class="activity-meta">'+(date?date:'')+'</div>';
-html+='</div>';
-html+='<div class="activity-points">+5 ⭐</div>';
-html+='</div>';
-});
-html+='</div>';
-}
-html+='</div>';
-container.innerHTML=html;
-}
-
 loadProfile();
 </script>
 </body>
