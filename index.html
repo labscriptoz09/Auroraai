@@ -202,7 +202,7 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 </head>
 <body>
 <canvas id="plexusCanvas"></canvas>
-<!-- ✅ v11.8 INTRO AUTO PREMIÈRE VISITE (BOT-FRIENDLY) -->
+<!-- ✅ INTRO AUTO PREMIÈRE VISITE (BOT-FRIENDLY) -->
 <script>if(!sessionStorage.getItem('aurora_intro_seen')&&navigator.userAgent.indexOf('bot')===-1){window.location.replace('/intro.html');}</script>
 <header>
 <a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
@@ -228,7 +228,6 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <nav class="menu-nav">
 <a href="/" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="menu-link-text">Accueil</span></a>
 <a href="/badges.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="menu-link-text">Mes Badges</span></a>
-<!-- ✅ v11.9 LIEN MON PROFIL AJOUTÉ -->
 <a href="/profil.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="menu-link-text">Mon Profil</span></a>
 <a href="/upload.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="menu-link-text">Publier une vidéo</span></a>
 <a href="#" class="menu-link" onclick="APP.toggleMenu();APP.showFavorites()"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="menu-link-text">Mes Favoris</span></a>
@@ -243,8 +242,8 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <button class="cat-btn" onclick="APP.filterCategory('Onirique',this)"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Onirique</button>
 <button class="cat-btn" onclick="APP.filterCategory('Thriller',this)"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Thriller</button>
 <button class="cat-btn" onclick="APP.filterCategory('Romance',this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Romance</button>
-<button class="cat-btn" onclick="APP.filterCategory('Pub',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Pub</button><button class="cat-btn" onclick="APP.filterCategory('Dessin animé',this)"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg> Animé</button>
-<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button>
+<button class="cat-btn" onclick="APP.filterCategory('Pub',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Pub</button>
+<button class="cat-btn" onclick="APP.filterCategory('Dessin animé',this)"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg> Animé</button><button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button>
 </div>
 </div>
 <div id="homePage">
@@ -292,8 +291,8 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <a href="#" class="share-option" onclick="APP.shareVia('telegram');return false"><span class="share-icon">✈️</span>Telegram</a>
 </div>
 <div class="share-copy" onclick="APP.copySiteLink()">📋 Copier le lien du site</div>
-</div></div><div class="save-modal" id="saveModal" onclick="if(event.target===this)APP.closeSaveModal()">
-<div class="save-modal-content"><button class="modal-close" onclick="APP.closeSaveModal()">✕</button><h3>💾 Sauvegarder mes points</h3>
+</div></div>
+<div class="save-modal" id="saveModal" onclick="if(event.target===this)APP.closeSaveModal()"><div class="save-modal-content"><button class="modal-close" onclick="APP.closeSaveModal()">✕</button><h3>💾 Sauvegarder mes points</h3>
 <p>Entrez votre email pour sécuriser vos <strong id="savePointsCount">0</strong> points dans le cloud.</p>
 <input type="email" id="saveEmail" placeholder="votre@email.com">
 <button onclick="APP.savePointsWithEmail()">Sauvegarder</button>
@@ -314,10 +313,10 @@ header{padding:0.8rem 1rem;gap:0.5rem}
 <a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a><a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
 <a href="/badges.html" style="color:rgba(212,175,55,0.4);font-size:0.8rem;text-decoration:none">🏆 Badges</a>
 </div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v11.9 PROFIL + SEO + BADGES</p>
+<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v12.0 POINTS FIX + PROFIL + SEO</p>
 </footer>
 <div class="toast" id="toast"></div>
-<!-- ✅ v11.8 NOSCRIPT FALLBACK SEO -->
+<!-- ✅ NOSCRIPT FALLBACK SEO -->
 <noscript>
 <div style="padding:2rem;text-align:center;color:#fff;font-family:sans-serif">
 <h1>AuroraAI.watch — Films et Séries générés par IA</h1>
@@ -341,7 +340,9 @@ throw new Error('OFFLINE_MODE');
 }catch(e){if(e.message==='OFFLINE_MODE')return;}
 })();
 
-// ========== v11.6 BADGE SYSTEM (HEADER VISIBLE) ==========var BADGES_DATA=[
+// ========== ✅ v12.0 BADGE SYSTEM — POINTS GLOBAL FIX ==========
+var userPoints=0;
+var BADGES_DATA=[
 {id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
 {id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
 {id:3,name:"Cinéphile",img:"https://i.ibb.co/zVLF58bZ/8f381275-f2d5-4eb7-a221-fcb15c10f529.jpg",check:function(s){return s.views>=50;}},
@@ -424,7 +425,7 @@ setTimeout(function(){t.classList.remove('show');},3500);
 
 var APP=(function(){
 var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
-var videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',sb=null,searchQuery='',userPoints=0,heroIdx=0,heroTimer=null,_touchX=0;
+var videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',sb=null,searchQuery='',heroIdx=0,heroTimer=null,_touchX=0;
 
 function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
 function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
@@ -447,467 +448,7 @@ if(savedEmail){existing=await sb.from('user_points').select('total_points,viewer
 if(!existing||existing.error)existing=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
 var nt=pts;
 if(!existing.error&&existing.data)nt=existing.data.total_points+pts;
-else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:savedEmail||null}]);updBadge(pts);animBadge();showPointReveal(pts,reason,pts);updateHeaderBadge(true);return;}
-await sb.from('user_points').update({total_points:nt,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);
-userPoints=nt;updBadge(nt);animBadge();showPointReveal(pts,reason,nt);
-updateHeaderBadge(true);
-if(creatorVid&&creatorVid!==viewerId){var ce=await sb.from('user_points').select('total_points').eq('viewer_id',creatorVid).single();if(!ce.error&&ce.data)await sb.from('user_points').update({total_points:ce.data.total_points+pts,updated_at:new Date().toISOString()}).eq('viewer_id',creatorVid);else await sb.from('user_points').insert([{viewer_id:creatorVid,total_points:pts}]);}}catch(e){console.log('[Points]',e);}
-}
-async function checkDailyLogin(){if(!sb)return;try{var today=new Date().toISOString().split('T')[0],r=await sb.from('user_points').select('last_login_date,current_streak').eq('viewer_id',viewerId).single();if(r.error||!r.data)return;if(r.data.last_login_date!==today){await sb.from('userChef, **INDEX v11.9 — LIEN PROFIL AJOUTÉ AU MENU MOBILE !** 👑✅
-
-Voici ton index v11.8 mémorisé avec **UNIQUEMENT** le lien "Mon Profil" ajouté dans le menu mobile après "Mes Badges". Zéro autre modification :
-
-```html
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AuroraAI.watch - Films et Séries IA | Plateforme de Cinéma Génératif</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpolygon points='12,8 24,16 12,24' fill='%23d4af37' stroke='%23d4af37' stroke-width='1.5' stroke-linejoin='round'%3E%3Canimate attributeName='opacity' values='1;0.6;1' dur='2.5s' repeatCount='indefinite'/%3E%3C/polygon%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23000'/%3E%3Cpolygon points='68,45 135,90 68,135' fill='%23d4af37' stroke='%23d4af37' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
-<meta name="theme-color" content="#000000">
-<meta name="description" content="Découvrez les meilleurs films et séries générés par intelligence artificielle. Regardez, notez et soutenez les créateurs IA sur AuroraAI.watch.">
-<meta name="keywords" content="films IA, cinéma génératif, séries IA, vidéos intelligence artificielle, AuroraAI, plateforme vidéo IA, créateurs IA">
-<meta name="author" content="AuroraAI">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://auroraai-one.vercel.app/">
-<meta property="og:title" content="AuroraAI.watch - Films et Séries IA">
-<meta property="og:description" content="Plateforme de cinéma génératif. Regardez, notez et soutenez les créateurs IA.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://auroraai-one.vercel.app/">
-<meta property="og:site_name" content="AuroraAI.watch">
-<meta property="og:locale" content="fr_FR">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AuroraAI.watch - Films et Séries IA">
-<meta name="twitter:description" content="Plateforme de cinéma génératif. Regardez, notez et soutenez les créateurs IA.">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "AuroraAI.watch",
-  "url": "https://auroraai-one.vercel.app/",
-  "description": "Plateforme de films et séries générés par intelligence artificielle",
-  "potentialAction": {    "@type": "SearchAction",
-    "target": "https://auroraai-one.vercel.app/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;min-height:100vh;font-family:sans-serif;overflow-x:hidden}
-#plexusCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(212,175,55,0.2);display:flex;justify-content:space-between;align-items:center;gap:0.8rem}
-.logo-container{display:flex;align-items:center;gap:0.6rem;flex-shrink:0;text-decoration:none}
-.play-icon{width:38px;height:38px;border:2px solid #d4af37;border-radius:8px;display:flex;align-items:center;justify-content:center;animation:iconPulse 2.5s ease-in-out infinite;box-shadow:0 0 15px rgba(212,175,55,0.5);flex-shrink:0}
-.play-icon::before{content:'';width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #d4af37;margin-left:3px}
-@keyframes iconPulse{0%,100%{box-shadow:0 0 10px rgba(212,175,55,0.4);transform:scale(1)}50%{box-shadow:0 0 25px rgba(212,175,55,0.9);transform:scale(1.05)}}
-.logo{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:1px}
-.search-bar{flex:1;max-width:400px;position:relative}
-.search-bar input{width:100%;padding:0.6rem 1rem 0.6rem 2.5rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:25px;color:#fff;font-size:0.95rem;outline:none;transition:all 0.3s}.search-bar input:focus{border-color:#d4af37;background:rgba(212,175,55,0.15);box-shadow:0 0 15px rgba(212,175,55,0.2)}
-.search-bar input::placeholder{color:rgba(255,255,255,0.4)}
-.search-bar .search-icon{position:absolute;left:0.8rem;top:50%;transform:translateY(-50%);color:rgba(212,175,55,0.6);font-size:1rem;pointer-events:none}
-.header-right{display:flex;align-items:center;gap:0.4rem;flex-shrink:0;z-index:101}
-.points-badge{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.5rem 0.9rem;border-radius:10px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem;white-space:nowrap;text-decoration:none}
-.points-badge:hover{background:rgba(212,175,55,0.3)}
-.points-badge.pulse{animation:pointsPulse 0.6s ease}
-@keyframes pointsPulse{0%{transform:scale(1)}50%{transform:scale(1.15);box-shadow:0 0 20px rgba(212,175,55,0.5)}100%{transform:scale(1)}}
-.header-badge-display{display:flex;align-items:center;gap:0.4rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:10px;padding:0.4rem 0.7rem;cursor:pointer;transition:all 0.3s;text-decoration:none;max-width:180px}
-.header-badge-display:hover{background:rgba(212,175,55,0.18);border-color:rgba(212,175,55,0.5);transform:translateY(-1px)}
-.header-badge-display.badge-pulse{animation:badgeHeaderPulse 0.8s ease}
-@keyframes badgeHeaderPulse{0%{transform:scale(1);box-shadow:none}30%{transform:scale(1.1);box-shadow:0 0 25px rgba(212,175,55,0.6)}60%{transform:scale(1.05)}100%{transform:scale(1);box-shadow:none}}
-.header-badge-img{width:28px;height:28px;object-fit:contain;border-radius:6px;filter:drop-shadow(0 0 6px rgba(212,175,55,0.4))}
-.header-badge-name{color:#d4af37;font-size:0.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
-.badge-toast-notification{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.7);z-index:600;background:rgba(0,0,0,0.97);border:2px solid #d4af37;border-radius:20px;padding:2rem 2.5rem;display:none;flex-direction:column;align-items:center;gap:0.8rem;text-align:center;box-shadow:0 0 100px rgba(212,175,55,0.5),0 0 40px rgba(212,175,55,0.2);opacity:0;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1)}
-.badge-toast-notification.show{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1)}
-.badge-toast-notification img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 25px rgba(212,175,55,0.7));animation:badgeToastFloat 2s ease-in-out infinite}
-@keyframes badgeToastFloat{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-6px) rotate(-2deg)}75%{transform:translateY(-6px) rotate(2deg)}}
-.badge-toast-notification .btl{color:#d4af37;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;font-weight:700}
-.badge-toast-notification .btn{color:#fff;font-size:1.6rem;font-weight:900;letter-spacing:1px;text-shadow:0 0 30px rgba(212,175,55,0.6)}
-.badge-toast-notification .btd{color:rgba(255,255,255,0.5);font-size:0.8rem}
-.menu-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.5rem 0.8rem;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:600;position:relative;flex-shrink:0;white-space:nowrap;transition:all 0.3s}
-.menu-btn:hover{background:rgba(212,175,55,0.25);box-shadow:0 0 15px rgba(212,175,55,0.2)}
-.fav-badge{position:absolute;top:-8px;right:-8px;background:#d4af37;color:#000;font-size:0.7rem;font-weight:800;width:22px;height:22px;border-radius:50%;display:none;align-items:center;justify-content:center}
-.fav-badge.visible{display:flex}
-.tagline-section{position:relative;z-index:10;text-align:center;padding:.6rem 1rem .4rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;background:linear-gradient(180deg,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.6) 70%,transparent 100%)}
-.mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,5,8,0.97);backdrop-filter:blur(40px);z-index:200;display:none;flex-direction:column;align-items:center;padding:0;overflow-y:auto;opacity:0;transition:opacity 0.3s ease}
-.mobile-menu.active{display:flex;opacity:1}
-.menu-header{width:100%;padding:1.5rem 1.5rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,0.1);margin-bottom:0.5rem}
-.menu-header-title{color:#d4af37;font-size:1.1rem;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:0.5rem}
-.menu-header-title svg{width:20px;height:20px;fill:#d4af37}
-.close-btn{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:#d4af37;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}.close-btn:hover{background:rgba(212,175,55,0.25);transform:rotate(90deg)}
-.menu-search-wrap{width:100%;max-width:350px;padding:0.5rem 1.5rem 1rem;position:relative}
-.menu-search-wrap input{width:100%;padding:0.7rem 1rem 0.7rem 2.8rem;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:14px;color:#fff;font-size:0.95rem;outline:none;transition:all 0.3s}
-.menu-search-wrap input:focus{border-color:#d4af37;background:rgba(212,175,55,0.1);box-shadow:0 0 20px rgba(212,175,55,0.1)}
-.menu-search-wrap input::placeholder{color:rgba(255,255,255,0.3)}
-.menu-search-wrap .ms-icon{position:absolute;left:2.2rem;top:50%;transform:translateY(-50%);color:rgba(212,175,55,0.5);pointer-events:none}
-.menu-search-wrap .ms-icon svg{width:16px;height:16px;stroke:rgba(212,175,55,0.5);fill:none;stroke-width:2}
-.menu-nav{width:100%;max-width:350px;padding:0 1.5rem;display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
-.menu-link{display:flex;align-items:center;gap:0.8rem;color:rgba(255,255,255,0.75);font-size:0.95rem;font-weight:600;text-decoration:none;padding:0.85rem 1rem;border-radius:12px;transition:all 0.3s;border:1px solid transparent;position:relative;overflow:hidden}
-.menu-link::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#d4af37;border-radius:0 2px 2px 0;opacity:0;transition:opacity 0.3s}
-.menu-link:hover{background:rgba(212,175,55,0.08);border-color:rgba(212,175,55,0.15);color:#fff;transform:translateX(4px)}
-.menu-link:hover::before{opacity:1}
-.menu-link svg{width:20px;height:20px;stroke:#d4af37;fill:none;stroke-width:1.8;flex-shrink:0;transition:all 0.3s}
-.menu-link:hover svg{stroke:#fff;filter:drop-shadow(0 0 6px rgba(212,175,55,0.5))}
-.menu-link-text{flex:1}
-.menu-divider{width:100%;max-width:350px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent);margin:0.5rem auto}
-.menu-cats-title{width:100%;max-width:350px;padding:0.8rem 1.5rem 0.5rem;color:rgba(212,175,55,0.5);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase}
-.menu-cats-grid{width:100%;max-width:350px;padding:0 1.5rem 2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem}
-.cat-btn{padding:0.65rem 0.5rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:10px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.4rem}
-.cat-btn:hover{background:rgba(212,175,55,0.12);border-color:rgba(212,175,55,0.3);color:#d4af37;transform:translateY(-1px)}
-.cat-btn.active{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;border-color:#d4af37;font-weight:700;box-shadow:0 4px 15px rgba(212,175,55,0.3)}
-.cat-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
-.hero-projector{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem 1rem 2rem;overflow:hidden}
-.hero-beam{position:absolute;top:-15%;left:50%;transform:translateX(-50%);width:130%;max-width:800px;height:130%;background:conic-gradient(from 180deg at 50% 0%,transparent 0deg,rgba(212,175,55,0.015) 12deg,rgba(212,175,55,0.04) 22deg,rgba(212,175,55,0.07) 32deg,rgba(212,175,55,0.04) 42deg,rgba(212,175,55,0.015) 52deg,transparent 65deg);pointer-events:none;animation:beamPulse 5s ease-in-out infinite;filter:blur(4px);mix-blend-mode:screen}
-@keyframes beamPulse{0%,100%{opacity:.7;transform:translateX(-50%) scaleX(1)}50%{opacity:1;transform:translateX(-50%) scaleX(1.015)}}
-.hero-stage{position:relative;z-index:2;width:100%;max-width:650px}
-.hero-frame{position:relative;background:rgba(0,0,0,0.5);border:1px solid rgba(212,175,55,0.25);border-radius:18px;overflow:hidden;backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.08);transition:all .7s cubic-bezier(.23,1,.32,1);cursor:pointer}
-.hero-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;filter:brightness(.65) contrast(1.1) saturate(1.1)}
-.hero-info{position:absolute;bottom:0;left:0;right:0;padding:2rem 1.5rem 1.5rem;background:linear-gradient(transparent 0%,rgba(0,0,0,.7) 30%,rgba(0,0,0,.97) 100%)}
-.hero-editorial{display:inline-block;padding:.25rem .8rem;background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);border-radius:20px;color:#d4af37;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:.6rem}
-.hero-badge-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap}.hero-cat{background:rgba(212,175,55,.2);padding:.2rem .7rem;border-radius:20px;font-size:.7rem;color:#d4af37;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.hero-rating{color:#d4af37;font-size:.8rem;letter-spacing:1px}
-.hero-title{color:#fff;font-size:clamp(1.4rem,4vw,2rem);font-weight:800;margin-bottom:.4rem;line-height:1.2;text-shadow:0 3px 15px rgba(0,0,0,.9)}
-.hero-author{color:rgba(255,255,255,.6);font-size:.85rem;margin-bottom:.6rem}
-.hero-desc{color:rgba(255,255,255,.65);font-size:.85rem;line-height:1.5;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.hero-btns{display:flex;gap:.7rem;flex-wrap:wrap}
-.hero-icon-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
-.hero-icon-btn.play{background:linear-gradient(135deg,#d4af37,#b8941f);box-shadow:0 4px 15px rgba(212,175,55,0.4)}
-.hero-icon-btn.play:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(212,175,55,0.6)}
-.hero-icon-btn.play svg{width:20px;height:20px;fill:#000;margin-left:2px}
-.hero-icon-btn.fav{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(5px)}
-.hero-icon-btn.fav:hover{background:rgba(255,255,255,0.2);transform:scale(1.1)}
-.hero-icon-btn.fav svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2}
-.hero-icon-btn.fav.is-fav svg{fill:#d4af37;stroke:#d4af37}
-.hero-nav{display:flex;justify-content:center;gap:.6rem;margin-top:1.5rem;align-items:center}
-.hero-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(212,175,55,.3);background:transparent;cursor:pointer;transition:all .3s}
-.hero-dot.active{background:#d4af37;border-color:#d4af37;box-shadow:0 0 10px rgba(212,175,55,.5);width:24px;border-radius:4px}
-.hero-label{color:rgba(212,175,55,.35);font-size:.6rem;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-top:1rem;font-weight:600}
-.publish-cta{margin-top:1.5rem;position:relative;z-index:3}
-.publish-cta-btn{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.4);color:#d4af37;padding:0.7rem 2rem;border-radius:50px;cursor:pointer;font-size:0.9rem;font-weight:700;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem}.publish-cta-btn:hover{background:rgba(212,175,55,0.25);border-color:#d4af37;transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.3)}
-.filters-bar{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:0 2rem 1rem;display:flex;align-items:center;gap:0.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.filters-bar::-webkit-scrollbar{display:none}
-.filter-chip{padding:0.4rem 1rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:20px;color:rgba(212,175,55,0.7);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;white-space:nowrap;flex-shrink:0}
-.filter-chip:hover{background:rgba(212,175,55,0.15);border-color:rgba(212,175,55,0.4);color:#d4af37}
-.filter-chip.active{background:linear-gradient(135deg,#d4af37,#b8941f);color:#000;border-color:#d4af37;font-weight:700}
-.filter-separator{width:1px;height:20px;background:rgba(212,175,55,0.2);flex-shrink:0;margin:0 0.3rem}
-.content{max-width:1200px;margin:0 auto;padding:2rem;position:relative;z-index:10}
-.section-title{color:#d4af37;font-size:1.5rem;margin-bottom:1.5rem}
-.video-grid{display:grid;grid-template-columns:1fr;gap:1rem}
-@media(min-width:768px){.video-grid{grid-template-columns:repeat(2,1fr)}}
-.video-card{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:1.5rem;cursor:pointer;transition:all 0.3s;position:relative}
-.video-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(212,175,55,0.2)}
-.video-card img{width:100%;border-radius:10px;margin-bottom:1rem;max-height:150px;object-fit:cover}
-.video-card h3{color:#d4af37;margin-bottom:.5rem}
-.video-card p{color:rgba(255,255,255,0.7);font-size:.9rem}
-.video-card-stats{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid rgba(212,175,55,0.15)}
-.stat{display:flex;align-items:center;gap:0.3rem;font-size:0.85rem;color:rgba(255,255,255,0.7)}
-.like-btn-card{background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);color:#d4af37;padding:0.4rem 0.8rem;border-radius:20px;cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.3s;display:flex;align-items:center;gap:0.3rem}
-.like-btn-card:hover{background:rgba(212,175,55,0.3)}
-.like-btn-card.liked{background:rgba(212,175,55,0.4);color:#000}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.success{border-left-color:#f4d03f}
-.toast.error{border-left-color:#ff4d4d}
-.share-modal,.save-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1rem}
-.share-modal.active,.save-modal.active{display:flex}
-.share-modal-content,.save-modal-content{background:rgba(10,10,10,0.98);border:1px solid rgba(212,175,55,0.3);border-radius:20px;padding:2rem;max-width:400px;width:100%;position:relative}
-.save-modal-content{text-align:center}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.5rem;cursor:pointer}.modal-close:hover{color:#d4af37}
-.share-modal h3,.save-modal-content h3{color:#d4af37;font-size:1.2rem;margin-bottom:1rem;text-align:center}
-.save-modal-content p{color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:1.5rem;line-height:1.5}
-.save-modal-content input{width:100%;padding:0.8rem;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#fff;font-size:0.95rem;margin-bottom:1rem;outline:none;text-align:center}
-.save-modal-content input:focus{border-color:#d4af37}
-.save-modal-content button{width:100%;padding:0.8rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:10px;color:#000;font-weight:700;font-size:1rem;cursor:pointer}
-.share-options{display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem}
-.share-option{display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:12px;cursor:pointer;transition:all 0.3s;text-decoration:none;color:#fff;font-size:0.8rem;font-weight:600}
-.share-option:hover{background:rgba(212,175,55,0.15);border-color:#d4af37;transform:translateY(-2px)}
-.share-option .share-icon{font-size:1.5rem}
-.share-copy{grid-column:span 2;margin-top:0.5rem;padding:0.8rem;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:10px;color:#d4af37;font-weight:700;cursor:pointer;font-size:0.9rem;text-align:center}
-.share-copy:hover{background:rgba(212,175,55,0.25)}
-.cinematic-preview{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;border:1px solid rgba(212,175,55,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.08)}
-.preview-video{width:100%;height:100%;object-fit:cover;display:block}
-.preview-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;z-index:5}
-.preview-overlay.logo-active{background:rgba(0,0,0,0.85);transition:background 0.8s ease}
-.preview-logo-reveal{opacity:0;transform:scale(0.7);transition:all 1.2s cubic-bezier(0.25,0.46,0.45,0.94);text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.5rem}
-.preview-logo-reveal.visible{opacity:1;transform:scale(1)}
-.logo-icon-wrapper{width:80px;height:80px;border:3px solid #d4af37;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(212,175,55,0.6),0 0 80px rgba(212,175,55,0.3);animation:logoPulse 1.5s ease-in-out infinite}
-.play-icon-cinematic{width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid #d4af37;margin-left:4px;filter:drop-shadow(0 0 10px rgba(212,175,55,0.8))}
-@keyframes logoPulse{0%,100%{box-shadow:0 0 30px rgba(212,175,55,0.4),0 0 60px rgba(212,175,55,0.2);transform:scale(1)}50%{box-shadow:0 0 50px rgba(212,175,55,0.8),0 0 100px rgba(212,175,55,0.4);transform:scale(1.05)}}.logo-text-cinematic{font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 0 30px rgba(212,175,55,0.6),0 0 60px rgba(212,175,55,0.3)}
-.logo-tagline-cinematic{font-size:0.85rem;color:rgba(212,175,55,0.8);letter-spacing:4px;text-transform:uppercase;font-weight:600}
-.preview-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(212,175,55,0.15);z-index:6}
-.preview-progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);width:0%;transition:width 0.1s linear;box-shadow:0 0 10px rgba(212,175,55,0.5)}
-.cinematic-preview.fade-out{opacity:0;transition:opacity 0.5s ease;pointer-events:none}
-@media(max-width:768px){
-.search-bar{display:none}
-.logo{font-size:1.3rem}
-.play-icon{width:30px;height:30px}
-.play-icon::before{border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #d4af37;margin-left:2px}
-.points-badge{padding:0.3rem 0.5rem;font-size:0.7rem}
-.header-badge-display{padding:0.3rem 0.5rem;max-width:120px}
-.header-badge-img{width:22px;height:22px}
-.header-badge-name{font-size:0.65rem;max-width:60px}
-.menu-btn{padding:0.4rem 0.7rem;font-size:0.8rem}
-header{padding:0.8rem 1rem;gap:0.5rem}
-.filters-bar{padding:0 1rem 1rem}
-.logo-text-cinematic{font-size:1.8rem;letter-spacing:2px}
-.logo-icon-wrapper{width:60px;height:60px;border-radius:12px}
-.play-icon-cinematic{border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:15px solid #d4af37;margin-left:3px}
-.logo-tagline-cinematic{font-size:0.7rem;letter-spacing:3px}
-}
-@media(min-width:769px){.mobile-menu .menu-search-wrap{display:none}}
-</style>
-</head>
-<body>
-<canvas id="plexusCanvas"></canvas>
-<!-- ✅ v11.8 INTRO AUTO PREMIÈRE VISITE (BOT-FRIENDLY) -->
-<script>if(!sessionStorage.getItem('aurora_intro_seen')&&navigator.userAgent.indexOf('bot')===-1){window.location.replace('/intro.html');}</script>
-<header>
-<a href="/" class="logo-container"><div class="play-icon"></div><div class="logo">AuroraAI</div></a>
-<div class="search-bar"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="Rechercher..." oninput="APP.handleSearch(this.value)"></div>
-<div class="header-right">
-<a href="/badges.html" class="header-badge-display" id="headerBadgeDisplay" title="Voir tous mes badges">
-<img class="header-badge-img" id="headerBadgeImg" src="https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg" alt="">
-<span class="header-badge-name" id="headerBadgeName">Pousse</span>
-</a>
-<a href="/badges.html" class="points-badge" id="pointsBadge" title="Mes Badges">⭐ <span id="pointsDisplay">0</span></a>
-<button class="menu-btn" onclick="APP.toggleMenu()">☰ Menu<span class="fav-badge" id="favBadge">0</span></button>
-</div>
-</header>
-<div class="mobile-menu" id="mobileMenu">
-<div class="menu-header">
-<div class="menu-header-title"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg> AuroraAI</div>
-<button class="close-btn" onclick="APP.toggleMenu()">✕</button>
-</div>
-<div class="menu-search-wrap">
-<span class="ms-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-<input type="text" id="mobileSearchInput" placeholder="Rechercher un film, un auteur..." oninput="APP.handleSearch(this.value)">
-</div><nav class="menu-nav">
-<a href="/" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="menu-link-text">Accueil</span></a>
-<a href="/badges.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="menu-link-text">Mes Badges</span></a>
-<!-- ✅ v11.9 LIEN MON PROFIL AJOUTÉ -->
-<a href="/profil.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="menu-link-text">Mon Profil</span></a>
-<a href="/upload.html" class="menu-link" onclick="APP.toggleMenu()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="menu-link-text">Publier une vidéo</span></a>
-<a href="#" class="menu-link" onclick="APP.toggleMenu();APP.showFavorites()"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="menu-link-text">Mes Favoris</span></a>
-<a href="#" class="menu-link" onclick="APP.toggleMenu();APP.showAllVideos()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="menu-link-text">Explorer tout</span></a>
-<a href="#" class="menu-link" onclick="APP.toggleMenu();APP.openShareModal()"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="menu-link-text">Partager AuroraAI</span></a>
-</nav>
-<div class="menu-divider"></div>
-<div class="menu-cats-title">Catégories</div>
-<div class="menu-cats-grid">
-<button class="cat-btn active" onclick="APP.filterCategory('all',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Tous</button>
-<button class="cat-btn" onclick="APP.filterCategory('Sci-Fi',this)"><svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.39 22.39 0 0 1-4 2z"/></svg> Sci-Fi</button>
-<button class="cat-btn" onclick="APP.filterCategory('Onirique',this)"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Onirique</button>
-<button class="cat-btn" onclick="APP.filterCategory('Thriller',this)"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Thriller</button>
-<button class="cat-btn" onclick="APP.filterCategory('Romance',this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Romance</button>
-<button class="cat-btn" onclick="APP.filterCategory('Pub',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Pub</button>
-<button class="cat-btn" onclick="APP.filterCategory('Dessin animé',this)"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg> Animé</button>
-<button class="cat-btn" onclick="APP.filterCategory('Divers',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Divers</button>
-</div>
-</div>
-<div id="homePage">
-<div id="heroTagline" class="tagline-section" style="padding-top:5.5rem"></div>
-<section class="hero-projector" id="heroProjector">
-<div class="hero-beam"></div>
-<div class="hero-stage">
-<div id="cinematicPreview" class="cinematic-preview">
-<video id="previewVideo" class="preview-video" muted playsinline preload="auto"></video>
-<div class="preview-overlay" id="previewOverlay">
-<div class="preview-logo-reveal" id="previewLogo">
-<div class="logo-icon-wrapper"><div class="play-icon-cinematic"></div></div>
-<div class="logo-text-cinematic">AuroraAI</div>
-<div class="logo-tagline-cinematic">Cinéma & Séries IA</div>
-</div>
-</div><div class="preview-progress" id="previewProgress"><div class="preview-progress-fill" id="previewProgressFill"></div></div>
-</div>
-<div id="heroFrame" class="hero-frame" style="display:none"><p style="text-align:center;color:rgba(255,255,255,.4);padding:4rem 1rem">Chargement...</p></div>
-</div>
-<div class="hero-nav" id="heroNav"></div>
-<div class="publish-cta"><a href="/upload.html" class="publish-cta-btn">🎬 Publier votre film IA</a></div>
-<div class="hero-label">AuroraAI • Cinéma & Séries IA</div>
-</section>
-<div class="filters-bar" id="filtersBar">
-<button class="filter-chip active" onclick="APP.filterCategory('all',this)">🌟 Tous</button>
-<div class="filter-separator"></div>
-<button class="filter-chip" onclick="APP.filterCategory('Sci-Fi',this)">🚀 Sci-Fi</button>
-<button class="filter-chip" onclick="APP.filterCategory('Onirique',this)">🌙 Onirique</button>
-<button class="filter-chip" onclick="APP.filterCategory('Thriller',this)">🔪 Thriller</button><button class="filter-chip" onclick="APP.filterCategory('Romance',this)">💜 Romance</button>
-<button class="filter-chip" onclick="APP.filterCategory('Pub',this)">📢 Pub</button>
-<button class="filter-chip" onclick="APP.filterCategory('Dessin animé',this)">🎨 Animé</button>
-<button class="filter-chip" onclick="APP.filterCategory('Divers',this)">✨ Divers</button>
-</div>
-<section class="content"><h2 class="section-title" id="sectionTitle">🔥 Tendances</h2><div class="video-grid" id="videoGrid"><p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">Chargement...</p></div></section>
-<section class="content" id="topRatedSection" style="display:none"><h2 class="section-title">🏆 Mieux notés</h2><div class="video-grid" id="topRatedGrid"></div></section>
-</div>
-<div id="playerOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;background:#000"><iframe id="playerFrame" style="width:100%;height:100%;border:none" allowfullscreen></iframe></div>
-<div class="share-modal" id="shareModal" onclick="if(event.target===this)APP.closeShareModal()">
-<div class="share-modal-content"><button class="modal-close" onclick="APP.closeShareModal()">✕</button><h3>📤 Partager AuroraAI</h3>
-<div class="share-options">
-<a href="#" class="share-option" onclick="APP.shareVia('twitter');return false"><span class="share-icon">🐦</span>Twitter / X</a>
-<a href="#" class="share-option" onclick="APP.shareVia('facebook');return false"><span class="share-icon">📘</span>Facebook</a>
-<a href="#" class="share-option" onclick="APP.shareVia('whatsapp');return false"><span class="share-icon">💬</span>WhatsApp</a>
-<a href="#" class="share-option" onclick="APP.shareVia('telegram');return false"><span class="share-icon">✈️</span>Telegram</a>
-</div>
-<div class="share-copy" onclick="APP.copySiteLink()">📋 Copier le lien du site</div>
-</div></div>
-<div class="save-modal" id="saveModal" onclick="if(event.target===this)APP.closeSaveModal()">
-<div class="save-modal-content"><button class="modal-close" onclick="APP.closeSaveModal()">✕</button><h3>💾 Sauvegarder mes points</h3>
-<p>Entrez votre email pour sécuriser vos <strong id="savePointsCount">0</strong> points dans le cloud.</p>
-<input type="email" id="saveEmail" placeholder="votre@email.com">
-<button onclick="APP.savePointsWithEmail()">Sauvegarder</button>
-</div></div>
-<div class="badge-toast-notification" id="badgeToastNotif">
-<div class="btl">🏆 Badge Débloqué</div>
-<img id="badgeToastImg" src="" alt="">
-<div class="btn" id="badgeToastName"></div>
-<div class="btd" id="badgeToastDesc"></div>
-</div>
-<footer style="position:relative;z-index:10;padding:2rem 1rem;border-top:1px solid rgba(212,175,55,0.15);text-align:center;margin-top:3rem;background:rgba(0,0,0,0.5)">
-<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
-<a href="/mentions-legales.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Mentions Légales</a>
-<a href="/cgu.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">CGU</a>
-<a href="/confidentialite.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Confidentialité</a>
-<a href="/faq.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">FAQ</a>
-<a href="/contact.html" style="color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none">Contact</a>
-<a href="#" onclick="APP.openShareModal();return false" style="color:#d4af37;font-size:0.8rem;text-decoration:none;font-weight:700">📤 Partager le site</a><a href="/admin.html" style="color:rgba(255,255,255,0.15);font-size:0.8rem;text-decoration:none">Admin</a>
-<a href="/badges.html" style="color:rgba(212,175,55,0.4);font-size:0.8rem;text-decoration:none">🏆 Badges</a>
-</div>
-<p style="color:rgba(255,255,255,0.3);font-size:0.75rem">© 2026 AuroraAI.watch — v11.9 PROFIL + SEO + BADGES</p>
-</footer>
-<div class="toast" id="toast"></div>
-<!-- ✅ v11.8 NOSCRIPT FALLBACK SEO -->
-<noscript>
-<div style="padding:2rem;text-align:center;color:#fff;font-family:sans-serif">
-<h1>AuroraAI.watch — Films et Séries générés par IA</h1>
-<p>Découvrez les meilleurs films et séries créés par intelligence artificielle. Regardez, notez et soutenez les créateurs IA.</p>
-<p>Catégories : Sci-Fi, Onirique, Thriller, Romance, Animation, Publicité</p><p><a href="/upload.html" style="color:#d4af37">Publier votre film IA</a></p>
-</div>
-</noscript>
-<script src="/plexus.js"></script>
-<script src="/point-reveal.js"></script>
-<script>
-// ========== MODE OFFLINE CHECK ==========
-(async function(){
-try{
-var _sb=window.supabase.createClient('https://knecqgspkalwepdwwpud.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww');
-var _r=await _sb.from('site_settings').select('offline_mode,offline_msg').eq('id',1).single();
-if(!_r.error&&_r.data&&_r.data.offline_mode){
-document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:2rem"><div><h1 style="color:#d4af37;font-size:2rem;margin-bottom:1rem">🚧 Site en maintenance</h1><p style="color:rgba(255,255,255,0.6);font-size:1.1rem;line-height:1.6;max-width:500px">'+(_r.data.offline_msg||'Revenez bientôt !')+'</p><p style="color:rgba(255,255,255,0.3);font-size:0.8rem;margin-top:2rem">AuroraAI.watch</p></div></div>';
-throw new Error('OFFLINE_MODE');
-}
-}catch(e){if(e.message==='OFFLINE_MODE')return;}
-})();
-
-// ========== v11.6 BADGE SYSTEM (HEADER VISIBLE) ==========
-var BADGES_DATA=[
-{id:1,name:"Pousse",img:"https://i.ibb.co/V0ppQXDT/1b294549-77c2-4240-906d-77d680463d4e.jpg",check:function(s){return s.points<100;}},
-{id:2,name:"Explorateur",img:"https://i.ibb.co/1YJDLDP0/c394726e-a62b-4b84-a342-c19a053763be.jpg",check:function(s){return s.points>=100&&s.points<500;}},
-{id:3,name:"Cinéphile",img:"https://i.ibb.co/zVLF58bZ/8f381275-f2d5-4eb7-a221-fcb15c10f529.jpg",check:function(s){return s.views>=50;}},
-{id:4,name:"Fan",img:"https://i.ibb.co/wrKs5PRh/167ab6e1-8a22-4aea-954d-0265fc8aca45.jpg",check:function(s){return s.likesGiven>=50;}},
-{id:5,name:"Commentateur",img:"https://i.ibb.co/vxMy7H4y/d6a5c693-69d0-4bde-ac96-491e9b5f36f3.jpg",check:function(s){return s.comments>=20;}},
-{id:6,name:"Critique",img:"https://i.ibb.co/n42jcCf/4a97b334-4ed1-4bd5-8997-edec135a0294.jpg",check:function(s){return s.ratings>=30;}},
-{id:7,name:"Streak 7j",img:"https://i.ibb.co/0Rsj1Wpx/b3fc8213-3927-4ae5-a55d-6d3c746b050c.jpg",check:function(s){return s.streak>=7;}},
-{id:8,name:"Créateur",img:"https://i.ibb.co/Ld94jFgc/d1ebe782-ae00-460a-83d9-2364cfe608d7.jpg",check:function(s){return s.videosPublished>=1;}},
-{id:9,name:"Réalisateur",img:"https://i.ibb.co/tMBH8wwg/24796f64-fa2d-443d-9224-b9ff097f3c7d.jpg",check:function(s){return s.videosPublished>=5;}},
-{id:10,name:"Primé",img:"https://i.ibb.co/999TrqYS/ad6492d7-66a5-42af-b837-0ea65ce71639.jpg",check:function(s){return s.hasRatedVideo;}},
-{id:11,name:"Vu 1K",img:"https://i.ibb.co/hJ7hBGDX/9227fc28-7dd7-49d5-a65e-08cf0635dfe8.jpg",check:function(s){return s.maxVideoViews>=1000;}},
-{id:12,name:"Aimé 100",img:"https://i.ibb.co/LdW4sSQb/44590e7c-ceb4-4d26-9f24-28e26f86216d.jpg",check:function(s){return s.maxVideoLikes>=100;}},
-{id:13,name:"Tipé",img:"https://i.ibb.co/LdMDwKvP/87106b1b-fa76-483c-aa5a-cb79333ab23f.jpg",check:function(s){return s.tipsReceived>=1;}},
-{id:14,name:"Producteur",img:"https://i.ibb.co/8gTbxh64/95ff432d-46fe-497d-889a-96b05087a75c.jpg",check:function(s){return s.videosPublished>=20;}},
-{id:15,name:"Ambassadeur",img:"https://i.ibb.co/bMwFHpSq/56c67dd7-84ce-42f9-af17-cbef82b7b6ed.jpg",check:function(s){return s.shares>=10;}},
-{id:16,name:"Fidèle",img:"https://i.ibb.co/7tvmYwHV/Firefly-Gemini-Flash-Hyperrealistic-3-D-render-of-a-crystalline-heart-encased-in-golden-lattice-stru.png",check:function(s){return s.emailSaved;}},
-{id:17,name:"Expert",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.points>=1500&&s.points<5000;}},
-{id:18,name:"Maître",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.points>=5000;}},
-{id:19,name:"Streak 30j",img:"https://i.ibb.co/s9vSHtC6/e66ef2b1-f3d4-4de2-970a-7ace3c808656.jpg",check:function(s){return s.streak>=30;}},
-{id:20,name:"Légende",img:"https://i.ibb.co/xSDWDLsp/c3bb8f36-8677-426c-882e-794c910ba999.jpg",check:function(s){return s.allOtherBadges;}}
-];
-
-function getBadgeStats(){
-var stats={points:userPoints,views:0,likesGiven:0,comments:0,ratings:0,streak:0,videosPublished:0,hasRatedVideo:false,maxVideoViews:0,maxVideoLikes:0,tipsReceived:0,shares:0,emailSaved:false,allOtherBadges:false};
-for(var i=0;i<localStorage.length;i++){
-var k=localStorage.key(i);
-if(k&&k.indexOf('liked_')===0&&localStorage.getItem(k)==='true')stats.likesGiven++;
-if(k&&k.indexOf('rated_')===0)stats.ratings++;
-if(k&&k.indexOf('viewed_')===0)stats.views++;
-}stats.shares=parseInt(localStorage.getItem('aurora_total_shares')||'0');
-stats.emailSaved=!!localStorage.getItem('aurora_saved_email');
-try{var sd=JSON.parse(localStorage.getItem('aurora_streak_data')||'{}');stats.streak=sd.current_streak||0;}catch(e){}
-return stats;
-}
-
-function getCurrentBadge(){
-var stats=getBadgeStats();
-var unlocked=[];
-var allExcept=true;
-BADGES_DATA.forEach(function(b){if(b.id===20)return;if(b.check(stats))unlocked.push(b.id);else allExcept=false;});
-if(allExcept&&unlocked.length===19)unlocked.push(20);
-var highest=BADGES_DATA[0];
-for(var i=BADGES_DATA.length-1;i>=0;i--){
-if(unlocked.indexOf(BADGES_DATA[i].id)!==-1){highest=BADGES_DATA[i];break;}
-}
-return{badge:highest,unlocked:unlocked};
-}
-
-function updateHeaderBadge(showNewBadgeToast){
-var result=getCurrentBadge();
-var b=result.badge;
-var imgEl=document.getElementById('headerBadgeImg');
-var nameEl=document.getElementById('headerBadgeName');
-var displayEl=document.getElementById('headerBadgeDisplay');
-if(imgEl)imgEl.src=b.img;
-if(nameEl)nameEl.textContent=b.name;
-if(showNewBadgeToast){
-var prev=JSON.parse(localStorage.getItem('aurora_badges_unlocked')||'[]');
-var newly=result.unlocked.filter(function(id){return prev.indexOf(id)===-1;});
-if(newly.length>0){
-if(displayEl){displayEl.classList.remove('badge-pulse');void displayEl.offsetWidth;displayEl.classList.add('badge-pulse');}
-newly.forEach(function(id,i){
-var bd=BADGES_DATA.find(function(x){return x.id===id;});
-if(bd)setTimeout(function(){showBadgeNotif(bd);},600*(i+1));
-});
-}
-}
-localStorage.setItem('aurora_badges_unlocked',JSON.stringify(result.unlocked));
-}
-
-function showBadgeNotif(badge){
-var t=document.getElementById('badgeToastNotif');
-if(!t||!badge.img)return;
-document.getElementById('badgeToastImg').src=badge.img;
-document.getElementById('badgeToastName').textContent=badge.name;
-document.getElementById('badgeToastDesc').textContent='';
-t.classList.add('show');
-setTimeout(function(){t.classList.remove('show');},3500);
-}
-var APP=(function(){
-var viewerId=(function(){var v=localStorage.getItem('aurora_viewer_id');if(!v){v='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('aurora_viewer_id',v);}return v;})();
-var videos=[],favorites=JSON.parse(localStorage.getItem('aurorafavs')||'[]'),currentCategory='all',sb=null,searchQuery='',userPoints=0,heroIdx=0,heroTimer=null,_touchX=0;
-
-function fmt(n){n=parseInt(n);if(isNaN(n))return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return''+n;}
-function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(t||'');setTimeout(function(){e.classList.remove('show');},3000);}
-
-function showPointReveal(amount, reason, currentTotal) {
-    window.dispatchEvent(new CustomEvent('aurora:points', {
-        detail: { amount: amount, reason: reason, total: currentTotal }
-    }));
-}
-
-(function(){var el=document.getElementById('heroTagline');if(!el)return;var l1=['Ici,','chaque','vue','récompense.'],l2=['Chaque','création','inspire.'];function span(t,last){var s=document.createElement('span');s.textContent=t;s.style.cssText='display:inline-block;opacity:0;transition:opacity 0.6s ease;font-size:.85rem;letter-spacing:1.5px;color:rgba(212,175,55,.75);font-weight:600;margin-right:.35rem';if(last){s.style.color='#d4af37';s.style.fontWeight='800';s.style.fontSize='1rem';s.style.textShadow='0 0 20px rgba(212,175,55,.4)';s.style.marginRight='0';}return s;}var r1=document.createElement('div');r1.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center';var r2=document.createElement('div');r2.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:.15rem';el.appendChild(r1);el.appendChild(r2);var d=600;l1.forEach(function(w,i){var s=span(w,false);r1.appendChild(s);setTimeout(function(){s.style.opacity='1';},d+i*300);});d+=l1.length*300+350;l2.forEach(function(w,i){var s=span(w,i===l2.length-1);r2.appendChild(s);setTimeout(function(){s.style.opacity='1';},d+i*300);});})();
-
-(function(){var hp=document.querySelector('.hero-projector');if(hp){hp.addEventListener('touchstart',function(e){_touchX=e.changedTouches[0].screenX;},{passive:true});hp.addEventListener('touchend',function(e){var diff=e.changedTouches[0].screenX-_touchX;if(Math.abs(diff)>50){var max=Math.min(videos.length,10);if(diff<0&&heroIdx<max-1)heroGoTo(heroIdx+1);else if(diff>0&&heroIdx>0)heroGoTo(heroIdx-1);}},{passive:true});}})();
-
-async function addPoints(pts,reason,creatorVid){
-if(!sb)return;
-try{
-var savedEmail=localStorage.getItem('aurora_saved_email'),existing=null;
-if(savedEmail){existing=await sb.from('user_points').select('total_points,viewer_id').eq('email',savedEmail).single();if(!existing.error&&existing.data&&existing.data.viewer_id!==viewerId)await sb.from('user_points').update({viewer_id:viewerId,updated_at:new Date().toISOString()}).eq('email',savedEmail);}
-if(!existing||existing.error)existing=await sb.from('user_points').select('total_points').eq('viewer_id',viewerId).single();
-var nt=pts;
-if(!existing.error&&existing.data)nt=existing.data.total_points+pts;
-else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:savedEmail||null}]);updBadge(pts);animBadge();showPointReveal(pts,reason,pts);updateHeaderBadge(true);return;}
+else{await sb.from('user_points').insert([{viewer_id:viewerId,total_points:pts,email:savedEmail||null}]);userPoints=pts;updBadge(pts);animBadge();showPointReveal(pts,reason,pts);updateHeaderBadge(true);return;}
 await sb.from('user_points').update({total_points:nt,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);
 userPoints=nt;updBadge(nt);animBadge();showPointReveal(pts,reason,nt);
 updateHeaderBadge(true);
@@ -929,7 +470,8 @@ document.querySelectorAll('.filters-bar .filter-chip').forEach(function(x){if((c
 document.querySelectorAll('.cat-btn').forEach(function(x){x.classList.remove('active');});
 if(b&&b.classList.contains('cat-btn'))b.classList.add('active');
 var tm={'all':'🔥 Tendances','Sci-Fi':'🚀 Sci-Fi','Onirique':'🌙 Onirique','Thriller':'🔪 Thriller','Romance':'💜 Romance','Pub':'📢 Pub','Dessin animé':'🎨 Dessin animé','Divers':'✨ Divers'};
-document.getElementById('sectionTitle').textContent=tm[c]||'🔥 Tendances';renderVideos();
+document.getElementById('sectionTitle').textContent=tm[c]||'🔥 Tendances';
+renderVideos();
 }
 function updFavBadge(){var b=document.getElementById('favBadge');var valid=favorites.filter(function(id){return videos.some(function(v){return v.id===id;});});if(valid.length!==favorites.length){favorites=valid;localStorage.setItem('aurorafavs',JSON.stringify(favorites));}if(favorites.length>0){b.textContent=favorites.length;b.classList.add('visible');}else b.classList.remove('visible');}
 function toggleFav(id){var i=favorites.indexOf(id);if(i>-1){favorites.splice(i,1);toast('Retiré des favoris');}else{favorites.push(id);toast('❤️ Ajouté aux favoris','success');}localStorage.setItem('aurorafavs',JSON.stringify(favorites));updFavBadge();renderVideos();renderHero();}
@@ -946,8 +488,7 @@ await sb.from('video_likes').delete().eq('video_id',vid).eq('viewer_id',viewerId
 }else{
 var r=await sb.from('video_likes').insert([{video_id:vid,viewer_id:viewerId}]);
 if(r.error&&r.error.code!=='23505')throw r.error;
-v.likes=(v.likes||0)+1;
-var history=await sb.from('video_likes_history').select('id').eq('video_id',vid).eq('viewer_id',viewerId).single();
+v.likes=(v.likes||0)+1;var history=await sb.from('video_likes_history').select('id').eq('video_id',vid).eq('viewer_id',viewerId).single();
 if(history.error||!history.data){
 await sb.from('video_likes_history').insert([{video_id:vid,viewer_id:viewerId}]);
 addPoints(3,'Vidéo aimée',v.viewer_id);
@@ -978,6 +519,7 @@ function copySiteLink(){var sk='shares_today_'+new Date().toISOString().split('T
 function openSaveModal(){document.getElementById('savePointsCount').textContent=fmt(userPoints);document.getElementById('saveModal').classList.add('active');document.body.style.overflow='hidden';}
 function closeSaveModal(){document.getElementById('saveModal').classList.remove('active');document.body.style.overflow='';}
 async function savePointsWithEmail(){var email=document.getElementById('saveEmail').value.trim();if(!email||!email.includes('@')){toast('❌ Email invalide','error');return;}if(!sb){toast('❌ Connexion requise','error');return;}try{var ex=await sb.from('user_points').select('id').eq('viewer_id',viewerId).single();if(!ex.error&&ex.data)await sb.from('user_points').update({email:email,updated_at:new Date().toISOString()}).eq('viewer_id',viewerId);else await sb.from('user_points').insert([{viewer_id:viewerId,total_points:userPoints,email:email}]);localStorage.setItem('aurora_saved_email',email);toast('✅ Points sauvegardés !','success');closeSaveModal();document.getElementById('saveEmail').value='';updateHeaderBadge(true);}catch(e){toast('❌ '+e.message,'error');}}
+
 function renderVideos(){var f=currentCategory==='all'?videos:videos.filter(function(v){return v.category===currentCategory;});if(searchQuery)f=f.filter(function(v){return v.title.toLowerCase().indexOf(searchQuery)!==-1||v.author.toLowerCase().indexOf(searchQuery)!==-1||(v.description&&v.description.toLowerCase().indexOf(searchQuery)!==-1)||v.category.toLowerCase().indexOf(searchQuery)!==-1;});renderList(f);}
 function renderList(list){var g=document.getElementById('videoGrid');if(!list.length){g.innerHTML='<p style="text-align:center;color:rgba(255,255,255,0.5);padding:3rem">'+(searchQuery?'Aucun résultat':'Aucune vidéo')+'</p>';return;}g.innerHTML=list.map(function(v){var lk='liked_'+v.id,isL=localStorage.getItem(lk)==='true',vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"'),img=v.thumbnail?'<img src="'+v.thumbnail+'" alt="'+esc(v.title)+'" loading="lazy">':'';return'<div class="video-card" onclick=\'APP.playVideo('+vs+')\'>'+img+'<h3>'+esc(v.title)+'</h3><p>'+esc(v.author)+' • 👁️ '+fmt(v.views)+' vues</p><p style="color:rgba(255,255,255,0.5);font-size:.8rem">'+esc(v.category)+(v.rating?' • ⭐ '+v.rating+'/5':'')+'</p><div class="video-card-stats"><span class="stat">👁️ '+fmt(v.views)+'</span><button class="like-btn-card '+(isL?'liked':'')+'" onclick="APP.quickLike(event,'+v.id+')">'+(isL?'❤️ Aimé':'🤍 J\'aime')+' ('+fmt(v.likes)+')</button></div></div>';}).join('');}
 function renderTopRated(){var sec=document.getElementById('topRatedSection'),grid=document.getElementById('topRatedGrid');if(!sec||!grid)return;var rated=videos.filter(function(v){return v.rating&&v.rating>0;}).sort(function(a,b){return b.rating-a.rating;});if(!rated.length){sec.style.display='none';return;}sec.style.display='block';grid.innerHTML=rated.map(function(v){var vs=JSON.stringify(v).replace(/'/g,"'").replace(/"/g,'"'),img=v.thumbnail?'<img src="'+v.thumbnail+'" loading="lazy">':'',stars='';for(var i=1;i<=5;i++)stars+=i<=Math.round(v.rating)?'⭐':'☆';return'<div class="video-card" onclick=\'APP.playVideo('+vs+')\'>'+img+'<h3>'+esc(v.title)+'</h3><p>'+esc(v.author)+' • '+stars+'</p><div class="video-card-stats"><span class="stat">⭐ '+v.rating+'/5</span><span class="stat">👁️ '+fmt(v.views)+'</span></div></div>';}).join('');}
@@ -995,8 +537,7 @@ for(var i=1;i<=5;i++)st+=i<=Math.round(v.rating||0)?'⭐':'☆';var playSvg='<sv
 fr.innerHTML=(v.thumbnail?'<img class="hero-thumb" src="'+v.thumbnail+'" alt="'+esc(v.title)+'">':'<div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);display:flex;align-items:center;justify-content:center;color:rgba(212,175,55,.2);font-size:3rem">🎬</div>')+'<div class="hero-info"><div class="hero-editorial">'+getLabel(v,heroIdx)+'</div><div class="hero-badge-row"><span class="hero-cat">'+esc(v.category)+'</span>'+(v.rating?'<span class="hero-rating">'+st+'</span>':'')+'<span style="font-size:.75rem;color:rgba(255,255,255,.45)">👁️ '+fmt(v.views)+'</span></div><div class="hero-title">'+esc(v.title)+'</div><div class="hero-author">par '+esc(v.author)+'</div><div class="hero-desc">'+esc(v.description||'Film généré par IA.')+'</div><div class="hero-btns"><button class="hero-icon-btn play" onclick="event.stopPropagation();APP.playVideo('+vs+')">'+playSvg+'</button><button class="hero-icon-btn fav'+(isFav?' is-fav':'')+'" onclick="event.stopPropagation();APP.toggleFav('+v.id+')">'+heartSvg+'</button></div></div>';
 fr.onclick=function(){playVideo(v);};
 var d='';for(var j=0;j<Math.min(s.length,10);j++)d+='<div class="hero-dot'+(j===heroIdx?' active':'')+'" onclick="APP.heroGoTo('+j+')"></div>';
-nv.innerHTML=d;
-}
+nv.innerHTML=d;}
 
 var cinematicPlayed=false;
 function playCinematicPreview(firstVideoUrl){
@@ -1027,7 +568,8 @@ function playCinematicPreview(firstVideoUrl){
                 overlay.classList.add('logo-active');
                 logo.classList.add('visible');
             }
-            if(elapsed<totalDuration){                requestAnimationFrame(updateProgress);
+            if(elapsed<totalDuration){
+                requestAnimationFrame(updateProgress);
             }else{
                 endCinematicPreview(container,heroFrame);
             }
@@ -1044,8 +586,7 @@ function endCinematicPreview(container,heroFrame){
         container.style.display='none';
         if(heroFrame)heroFrame.style.display='';
         renderHero();
-        startHeroAuto();
-    },500);
+        startHeroAuto();    },500);
 }
 
 (async function(){
@@ -1076,7 +617,8 @@ if(!r2.error&&r2.data){videos=r2.data;renderVideos();renderHero();renderTopRated
 }catch(e){document.getElementById('videoGrid').innerHTML='<p style="text-align:center;color:#f44336;padding:3rem">❌ '+e.message+'</p>';}
 })();
 
-return{handleSearch:handleSearch,filterCategory:filterCategory,toggleMenu:toggleMenu,showAllVideos:showAllVideos,showFavorites:showFavorites,quickLike:quickLike,playVideo:playVideo,toggleFav:toggleFav,openShareModal:openShareModal,closeShareModal:closeShareModal,shareVia:shareVia,copySiteLink:copySiteLink,openSaveModal:openSaveModal,closeSaveModal:closeSaveModal,savePointsWithEmail:savePointsWithEmail,heroGoTo:heroGoTo};})();
+return{handleSearch:handleSearch,filterCategory:filterCategory,toggleMenu:toggleMenu,showAllVideos:showAllVideos,showFavorites:showFavorites,quickLike:quickLike,playVideo:playVideo,toggleFav:toggleFav,openShareModal:openShareModal,closeShareModal:closeShareModal,shareVia:shareVia,copySiteLink:copySiteLink,openSaveModal:openSaveModal,closeSaveModal:closeSaveModal,savePointsWithEmail:savePointsWithEmail,heroGoTo:heroGoTo};
+})();
 </script>
 </body>
 </html>
