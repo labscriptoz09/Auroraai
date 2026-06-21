@@ -46,12 +46,13 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 .submit-btn{width:100%;padding:0.9rem;background:linear-gradient(135deg,#d4af37,#b8941f);border:none;border-radius:12px;color:#000;font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.3s;margin-top:0.5rem}
 .submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.4)}
 .submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:500;transition:transform 0.3s;max-width:90%;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0)}.toast.success{border-left-color:#4caf50}
-.toast.error{border-left-color:#ff4d4d}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(0,0,0,0.95);border:1px solid rgba(212,175,55,0.3);border-left:3px solid #d4af37;padding:1rem 1.5rem;border-radius:12px;color:#fff;font-weight:600;z-index:9999;transition:transform 0.3s;max-width:90%;text-align:center;white-space:pre-line}
+.toast.show{transform:translateX(-50%) translateY(0)}.toast.success{border-left-color:#4caf50}.toast.error{border-left-color:#ff4d4d}
 .progress-bar{width:100%;height:4px;background:rgba(212,175,55,0.15);border-radius:2px;margin-top:1rem;overflow:hidden;display:none}
 .progress-bar.active{display:block}
 .progress-fill{height:100%;background:#d4af37;border-radius:2px;transition:width 0.3s ease;width:0%}
+.debug-log{margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.05);border-radius:8px;font-size:0.7rem;color:rgba(255,255,255,0.5);display:none;word-break:break-all}
+.debug-log.visible{display:block}
 @media(max-width:768px){.main{padding:4.5rem 0.8rem 2rem}h1{font-size:1.3rem}}
 </style>
 </head>
@@ -95,8 +96,8 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 <option value="Sci-Fi">🚀 Sci-Fi</option>
 <option value="Onirique">🌙 Onirique</option>
 <option value="Thriller">🔪 Thriller</option>
-<option value="Romance">💜 Romance</option>
-<option value="Pub">📢 Pub</option><option value="Dessin animé">🎨 Dessin animé</option>
+<option value="Romance">💜 Romance</option><option value="Pub">📢 Pub</option>
+<option value="Dessin animé">🎨 Dessin animé</option>
 <option value="Divers">✨ Divers</option>
 </select>
 </div>
@@ -127,6 +128,7 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 
 <button class="submit-btn" id="submitBtn" onclick="handleUpload()">🚀 Publier le film</button>
 <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="debug-log" id="debugLog"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -137,15 +139,28 @@ h1{color:#d4af37;font-size:1.6rem;margin-bottom:0.5rem;text-align:center}
 document.getElementById('title').addEventListener('input',function(){document.getElementById('titleCount').textContent=this.value.length;});
 document.getElementById('description').addEventListener('input',function(){document.getElementById('descCount').textContent=this.value.length;});
 
+// ========== DEBUG LOGGER ==========
+function logDebug(msg){
+    var el=document.getElementById('debugLog');
+    el.classList.add('visible');
+    el.textContent+='['+new Date().toLocaleTimeString()+'] '+msg+'\n';
+    console.log('[AuroraUpload]',msg);
+}
 // ========== TOAST ==========
-function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');setTimeout(function(){t.classList.remove('show');},4000);}
+function showToast(msg,type){
+    var t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast show '+(type||'');
+    setTimeout(function(){t.classList.remove('show');},6000);
+}
 
 // ========== VALIDATION CONSTANTS ==========
 var ALLOWED_VIDEO_TYPES=['video/mp4','video/quicktime','video/webm','video/x-msvideo','video/x-matroska'];
 var ALLOWED_VIDEO_EXT=['.mp4','.mov','.webm','.avi','.mkv'];
 var ALLOWED_IMAGE_TYPES=['image/jpeg','image/png','image/webp'];
 var ALLOWED_IMAGE_EXT=['.jpg','.jpeg','.png','.webp'];
-var MAX_VIDEO_SIZE=100*1024*1024;var MAX_IMAGE_SIZE=5*1024*1024;
+var MAX_VIDEO_SIZE=100*1024*1024;
+var MAX_IMAGE_SIZE=5*1024*1024;
 var VALID_CATEGORIES=['Sci-Fi','Onirique','Thriller','Romance','Pub','Dessin animé','Divers'];
 var MAX_LINKS=5;
 
@@ -179,7 +194,6 @@ function validateTitle(val){
     if(v.length>100)return'❌ Le titre ne peut pas dépasser 100 caractères.';
     return null;
 }
-
 function validateAuthor(val){
     var v=val.trim();
     if(!v)return'❌ L\'auteur est obligatoire.';
@@ -194,7 +208,8 @@ function validateCategory(val){
     return null;
 }
 
-function validateDescription(val){    if(val&&val.length>500)return'❌ La description ne peut pas dépasser 500 caractères.';
+function validateDescription(val){
+    if(val&&val.length>500)return'❌ La description ne peut pas dépasser 500 caractères.';
     return null;
 }
 
@@ -225,30 +240,43 @@ function validateLinks(val){
     return null;
 }
 
-// ========== UPLOAD TO CLOUDINARY (IDENTIFIANTS EN DUR) ==========
+// ========== UPLOAD TO CLOUDINARY ==========
 async function uploadToCloudinary(file,resourceType){
-    var formData=new FormData();
-    formData.append('file',file);
+    logDebug('Upload Cloudinary '+resourceType+' : '+file.name+' ('+Math.round(file.size/1024)+' Ko)');
+    var formData=new FormData();    formData.append('file',file);
     formData.append('upload_preset','auroraai_upload');
     formData.append('resource_type',resourceType);
+    
     var res=await fetch('https://api.cloudinary.com/v1_1/dcnldgsyn/'+resourceType+'/upload',{
         method:'POST',
         body:formData
     });
+    
     if(!res.ok){
-        var errText='';
-        try{var errData=await res.json();errText=errData.error?errData.error.message:res.status;}catch(e){errText=res.status;}
+        var errText='HTTP '+res.status;
+        try{var errData=await res.json();errText=errData.error?errData.error.message:errText;}catch(e){}
+        logDebug('ERREUR Cloudinary '+resourceType+' : '+errText);
         throw new Error('Cloudinary '+resourceType+' : '+errText);
     }
-    return await res.json();
+    
+    var data=await res.json();
+    logDebug('✅ Cloudinary '+resourceType+' OK : '+data.secure_url.substring(0,60)+'...');
+    return data;
 }
 
-// ========== MAIN UPLOAD HANDLER ==========async function handleUpload(){
+// ========== MAIN UPLOAD HANDLER ==========
+async function handleUpload(){
     var btn=document.getElementById('submitBtn');
     var progressBar=document.getElementById('progressBar');
     var progressFill=document.getElementById('progressFill');
+    var debugLog=document.getElementById('debugLog');
 
     if(btn.disabled)return;
+    
+    // Reset debug
+    debugLog.textContent='';
+    debugLog.classList.remove('visible');
+    logDebug('=== DÉBUT UPLOAD ===');
 
     var videoFile=document.getElementById('videoFile').files[0];
     var thumbFile=document.getElementById('thumbFile').files[0];
@@ -260,12 +288,11 @@ async function uploadToCloudinary(file,resourceType){
     var tipEmail=document.getElementById('tipEmail').value;
     var creatorLinks=document.getElementById('creatorLinks').value;
 
-    // ===== VALIDATION COMPLÈTE (9 vérifications) =====
+    // ===== VALIDATION COMPLÈTE =====
     var errors=[];
     var e;
     e=validateVideoFile(videoFile);if(e)errors.push(e);
-    e=validateThumbFile(thumbFile);if(e)errors.push(e);
-    e=validateTitle(title);if(e)errors.push(e);
+    e=validateThumbFile(thumbFile);if(e)errors.push(e);    e=validateTitle(title);if(e)errors.push(e);
     e=validateAuthor(author);if(e)errors.push(e);
     e=validateCategory(category);if(e)errors.push(e);
     e=validateDescription(description);if(e)errors.push(e);
@@ -274,9 +301,11 @@ async function uploadToCloudinary(file,resourceType){
     e=validateLinks(creatorLinks);if(e)errors.push(e);
 
     if(errors.length>0){
+        logDebug('ERREURS VALIDATION : '+errors.join(' | '));
         showToast(errors.join('\n'),'error');
         return;
     }
+    logDebug('✅ Validation OK');
 
     // ===== UPLOAD =====
     btn.disabled=true;
@@ -285,16 +314,20 @@ async function uploadToCloudinary(file,resourceType){
     progressFill.style.width='10%';
 
     try{
+        // Init Supabase
+        logDebug('Initialisation Supabase...');
         var sb=window.supabase.createClient(
             'https://knecqgspkalwepdwwpud.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZWNxZ3Nwa2Fsd2VwZHd3cHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODUyNjUsImV4cCI6MjA5Njk2MTI2NX0.giDQFM5k2wQBlXAD10XKF8BRcg_jmABkjvQQ8ai7pww'
         );
+        logDebug('✅ Client Supabase créé');
 
-        // Upload image couverture
+        // Upload thumbnail
         progressFill.style.width='20%';
-        var thumbData=await uploadToCloudinary(thumbFile,'image');        var thumbUrl=thumbData.secure_url;
+        var thumbData=await uploadToCloudinary(thumbFile,'image');
+        var thumbUrl=thumbData.secure_url;
 
-        // Upload vidéo
+        // Upload video
         progressFill.style.width='50%';
         var videoData=await uploadToCloudinary(videoFile,'video');
         var videoUrl=videoData.secure_url;
@@ -307,8 +340,9 @@ async function uploadToCloudinary(file,resourceType){
             viewerId='viewer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
             localStorage.setItem('aurora_viewer_id',viewerId);
         }
-
-        // Insertion Supabase
+        logDebug('Viewer ID : '+viewerId);
+        // Insertion Supabase AVEC status
+        logDebug('Insertion Supabase...');
         var insertRes=await sb.from('videos').insert([{
             title:title.trim(),
             author:author.trim(),
@@ -321,15 +355,20 @@ async function uploadToCloudinary(file,resourceType){
             viewer_id:viewerId,
             views:0,
             likes:0,
-            rating:null
+            rating:null,
+            status:'pending'
         }]);
 
-        if(insertRes.error)throw new Error(insertRes.error.message);
+        if(insertRes.error){
+            logDebug('ERREUR SUPABASE : '+JSON.stringify(insertRes.error));
+            throw new Error('Supabase : '+insertRes.error.message);
+        }
 
+        logDebug('✅ Insertion Supabase OK');
         progressFill.style.width='100%';
         showToast('✅ Film publié avec succès !','success');
 
-        // ===== POINT REVEAL POUR L'UPLOAD =====
+        // Points reveal
         window.dispatchEvent(new CustomEvent('aurora:points', {
             detail: { amount: 50, reason: 'Film publié !', total: 50 }
         }));
@@ -339,9 +378,11 @@ async function uploadToCloudinary(file,resourceType){
         },2500);
 
     }catch(err){
+        logDebug('❌ ERREUR FINALE : '+err.message);
         console.error('Upload error:',err);
         showToast('❌ Erreur : '+err.message,'error');
-        btn.disabled=false;        btn.textContent='🚀 Publier le film';
+        btn.disabled=false;
+        btn.textContent='🚀 Publier le film';
         progressBar.classList.remove('active');
         progressFill.style.width='0%';
     }
